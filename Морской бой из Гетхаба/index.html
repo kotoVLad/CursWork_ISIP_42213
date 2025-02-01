@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8" >
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" href="css/style.css"><!---->
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> <!--Лого-->
+	<title>Морской бой</title>
+</head>
+<body>
+	<div class="developer noselect" id="developer"></div>
+	<div class="dev-block noselect" id="dev-block">
+		<div class="dev-btn draw" id="dev-btn">draw</div>
+		<div class="dev-btn hide-ships dev active" id="hide-ships">hide</div>
+		<div class="dev-btn order" id="order-btn">onlyPlayer</div>
+		<div class="dev-btn order" id="order-btn-camp">onlyCamp</div>
+	</div>
+	<div class="container">
+		<div class="game noselect">
+			<div class="game-sound">
+				<audio id="sound-click1" src="sound/click1.ogg"></audio>
+
+				<audio id="sound-shot1" src="sound/shot/shot1.ogg"></audio>
+				<audio id="sound-shot2" src="sound/shot/shot2.ogg"></audio>
+				<audio id="sound-shot3" src="sound/shot/shot3.ogg"></audio>
+				<audio id="sound-shot4" src="sound/shot/shot4.ogg"></audio>
+				<audio id="sound-shot5" src="sound/shot/shot5.ogg"></audio>
+				<audio id="sound-shot6" src="sound/shot/shot6.ogg"></audio>
+				<audio id="sound-shot7" src="sound/shot/shot1.ogg"></audio>
+				<audio id="sound-shot8" src="sound/shot/shot2.ogg"></audio>
+				<audio id="sound-shot9" src="sound/shot/shot3.ogg"></audio>
+				<audio id="sound-shot10" src="sound/shot/shot4.ogg"></audio>
+				<audio id="sound-shot11" src="sound/shot/shot5.ogg"></audio>
+				<audio id="sound-shot12" src="sound/shot/shot6.ogg"></audio>
+				
+				<audio id="sound-fail1" src="sound/fail.ogg"></audio>
+				<audio id="sound-win1" src="sound/win.ogg"></audio>
+				<audio id="sound-win2" src="sound/win2.ogg"></audio>
+
+				<audio id="sound-hit1" src="sound/hit/hit1.ogg"></audio>
+				<audio id="sound-hit2" src="sound/hit/hit2.ogg"></audio>
+				<audio id="sound-hit3" src="sound/hit/hit3.ogg"></audio>
+				<audio id="sound-hit4" src="sound/hit/hit4.ogg"></audio>
+				<audio id="sound-hit5" src="sound/hit/hit5.ogg"></audio>
+
+				<audio id="sound-kill1" src="sound/kill/kill1.ogg"></audio>
+				<audio id="sound-kill2" src="sound/kill/kill2.ogg"></audio>
+				<audio id="sound-kill3" src="sound/kill/kill3.ogg"></audio>
+				<audio id="sound-kill4" src="sound/kill/kill4.ogg"></audio>
+			</div>
+			<div class="input-block active" id="input-block">
+				<div class="input-block_item-name"><span>Имя игрока:</span><input type="text" maxlength="14" name="form[]" onkeyup="playSound('sound-click');" class="input-block_item-input" id="namePlayer"></div>
+				<div class="input-block_item-name"><span>Имя компьютера:</span><input type="text" maxlength="14" name="form[]" onkeyup="playSound('sound-click');" class="input-block_item-input" id="nameCamp"></div>
+				<div class="input-block_item-text active" id="input-text">Ввод имени можно пропустить</div>
+				<div class="btn_block">
+					<div class="btn active btn_skip" id="btn-skip">Пропустить</div>
+					<div class="btn active btn_ok" id="btn-ok">Далее</div>
+				</div>
+			</div>
+			<div class="name">
+				<div class="name_player" id="mainNamePlayer"><span>Player</span></div>
+				<div class="name_camp" id="mainNameCamp"><span>Camp</span></div>
+			</div>
+			<div class="game_status">
+				<div class="version">v1.085</div>
+				<div class="btn_rename" id="rename">Сменить имена</div>
+				<div class="btn-checkbox btn-checkbox_speedy" id="speedy">ускорить ходы компьютера</div>
+				<div class="btn-checkbox btn-checkbox_safeShips" id="safeShips">сохранить расположение кораблей после раунда</div>
+				<div class="btn_not-sound" id="not-sound">
+					<span class="yes"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 480 480" style="enable-background:new 0 0 480 480;" xml:space="preserve"><path d="M278.944,17.577c-5.568-2.656-12.128-1.952-16.928,1.92L106.368,144.009H32c-17.632,0-32,14.368-32,32v128c0,17.664,14.368,32,32,32h74.368l155.616,124.512c2.912,2.304,6.464,3.488,10.016,3.488c2.368,0,4.736-0.544,6.944-1.6c5.536-2.656,9.056-8.256,9.056-14.4v-416C288,25.865,284.48,20.265,278.944,17.577z"/><path d="M368.992,126.857c-6.304-6.208-16.416-6.112-22.624,0.128c-6.208,6.304-6.144,16.416,0.128,22.656C370.688,173.513,384,205.609,384,240.009s-13.312,66.496-37.504,90.368c-6.272,6.176-6.336,16.32-0.128,22.624c3.136,3.168,7.264,4.736,11.36,4.736c4.064,0,8.128-1.536,11.264-4.64C399.328,323.241,416,283.049,416,240.009S399.328,156.777,368.992,126.857z"/><path d="M414.144,81.769c-6.304-6.24-16.416-6.176-22.656,0.096c-6.208,6.272-6.144,16.416,0.096,22.624C427.968,140.553,448,188.681,448,240.009s-20.032,99.424-56.416,135.488c-6.24,6.24-6.304,16.384-0.096,22.656	c3.168,3.136,7.264,4.704,11.36,4.704c4.064,0,8.16-1.536,11.296-4.64C456.64,356.137,480,299.945,480,240.009S456.64,123.881,414.144,81.769z"/><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg></span>
+					<span class="no"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 448.075 448.075" style="enable-background:new 0 0 448.075 448.075;" xml:space="preserve"><path d="M352.021,16.075c0-6.08-3.52-11.84-8.96-14.4c-5.76-2.88-12.16-1.92-16.96,1.92l-141.76,112.96l167.68,167.68V16.075z"/><path d="M443.349,420.747l-416-416c-6.24-6.24-16.384-6.24-22.624,0s-6.24,16.384,0,22.624l100.672,100.704h-9.376c-9.92,0-18.56,4.48-24.32,11.52c-4.8,5.44-7.68,12.8-7.68,20.48v128c0,17.6,14.4,32,32,32h74.24l155.84,124.48c2.88,2.24,6.4,3.52,9.92,3.52c2.24,0,4.8-0.64,7.04-1.6c5.44-2.56,8.96-8.32,8.96-14.4v-57.376l68.672,68.672c3.136,3.136,7.232,4.704,11.328,4.704s8.192-1.568,11.328-4.672C449.589,437.131,449.589,427.019,443.349,420.747z"/><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg></span>
+				</div>
+				
+				<!-- для разработчика -->
+				
+				<!-- ================ -->
+				
+				<div class="win-point">
+					<span id="winPlayer">0</span>
+					<span class="win-point_element">:</span>
+					<span id="winCamp">0</span>
+				</div>
+				<div>
+					<div class="time" id="time"><span id="hrs">00</span>:<span id="min">00</span>:<span id="sec">00</span></div>
+					<div class="volume">Vol: <input type="number" min="0" readonly max="100" step="10" value="100" maxlength="2" id="volume" oninput=""><span class="volume_btn" id="vol-plus"></span><span class="volume_btn" id="vol-minus"></span></div>
+				</div>
+				<div class="game_status-item" id="game_status">Подготовка к бою</div>
+				<div class="game_console">
+					<div class="game_order-text active" id="order">Расставь свои корабли</div>
+					<div class="game_order-steps" id="steps">
+					</div>
+					<div class="gameOver" id="gameOver">
+						<span class="gameOver_text"><span id="winner">Ты победил, поздравляем!</span></span>
+						<div class="btn_block">
+							<div class="gameOver_btn btn btn_main" id="btn-main">Главная</div>
+							<div class="gameOver_btn btn btn_replay" id="btn-replay">Ещё разок</div>
+						</div>
+					</div>
+					<div class="level">
+						<div>
+							<p id="level-text">Выбери уровень сложности компьютера</p>
+							<div class="level_btn-block active" id="level-block">
+								<span class="level_item" id="levelButton1">1</span>
+								<span class="level_item" id="levelButton2">2</span>
+								<span class="level_item active" id="levelButton3">3</span>
+								<span class="level_item" id="levelButton4">4</span>
+								<span class="level_item" id="levelButton5">5</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="btn_block main-btn active" id="btn-block">
+					<div class="btn btn_random active" id="btn_self">Расставить вручную</div>
+					<div class="btn btn_random active" id="btn_random">Случайные позиции</div>
+					<div class="btn btn_play" id="btn_play">Играть</div>
+
+				</div>
+			</div>
+		</div>
+		<canvas></canvas>
+	</div>
+	
+	<script src="js/Game.js"></script>
+	<script src="js/Topology.js"></script><!---->
+	<script src="js/mouse.js"></script>
+	<script src="js/aspect.js"></script>
+	<script src="js/script.js"></script>
+</body>
+</html>
