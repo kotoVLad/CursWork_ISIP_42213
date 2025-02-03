@@ -48,8 +48,8 @@
 		// первый элемент которого указывает кол-во кораблей данного типа,
 		// второй элемент указывает кол-во палуб у корабля данного типа
 		static SHIP_DATA = {
-			fourdeck: [1, 4],
-			tripledeck: [2, 3],
+			fourdeck: [1, 4], // Четырёхпалубник
+			tripledeck: [2, 3], // Трёхпалубник и тд.
 			doubledeck: [3, 2],
 			singledeck: [4, 1]
 		};
@@ -921,6 +921,7 @@
 				if (this.coordsAroundHit.length == 0 && this.tempShip.hits > 0) {
 					// корабль потоплен, отмечаем useless cell вокруг него
 					this.markUselessCellAroundShip();
+					console.log ("Корабль убит.")
 					this.resetTempShip();
 				}
 				this.player = human;
