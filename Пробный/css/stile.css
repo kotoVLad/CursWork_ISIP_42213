@@ -1,0 +1,39 @@
+/*.Field{
+    background-color: rgb(255, 205, 205);
+    width: 700px;
+    height: 172px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cletca{
+    display: inline-block;
+    border: 1px solid #aaa;
+    background-color: #eee;
+    width: 66px;
+    height: 66px;
+}*/
+
+#wrapperBlock{
+    margin: 10% auto;
+    padding: 0;
+    display: flex;
+    flex-flow: row wrap;
+    /*width: calc(100vmin - 10px); //Соотношение 1-поле,2-промежуток
+    height: calc(100vmin - 10px);*/
+    width: calc(50vmin - 10px); /**/
+    /*height: calc(10ыvmin - 10px);*/
+}
+.square{
+    margin: 0;
+    padding: 0;
+    width: calc(5vmin - 1px); /* Размер клетки*/
+    height: calc(5vmin - 1px);
+    border: 1px solid #aaa;
+    background-color: #eee;
+    box-sizing: border-box;
+}
+
+.square:hover{
+    background-color: rgb(175, 255, 228);
+}
