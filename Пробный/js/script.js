@@ -7,8 +7,15 @@ let field_xy = [];
 var a = 0;
 var b = 0;
 
-//var field = document.querySelector('.Field');
+//document.getElementById('title')
+/*
+const body = document.body;
+body.addEventListener('click', e => {
+  console.log('clicked body');
+});
+*/
 
+//var field = document.querySelector('.Field');
 /*var div = document.createElement("div");
 div.style.width = "100px";
 div.style.height = "100px";
@@ -26,11 +33,11 @@ document.getElementById("field").appendChild(div);*/
     div.innerHTML = "Hello";
     console.log(div);
     document.getElementById("field").appendChild(div);
-};*/
+};
 
 //el.setAttribute('id', 'my-id');
 
-/*for (i=0;i<2;i++) {
+for (i=0;i<2;i++) {
     for (a=0;a<10;a++){
         var div = document.createElement("div");
         div.classList.add('cletca');
@@ -39,29 +46,27 @@ document.getElementById("field").appendChild(div);*/
     }
     
 };*/
-
 var wrapperBlock = document.getElementById("wrapperBlock");
-
-window.onload = function(){
-  for(var i=0; i<20; i++){
+window.onload = function(){ //Функция которая создаёт поле 10х2 (10х10)
+  for(var i=0; i<10; i++){
     var square = document.createElement("div");
     
     if(a<10){
         c= field_x[a]+field_y[b]
-        console.log(c)
+        field_xy.push(
+            [field_x[a], field_y[b]] 
+        );
         a= a+1
     }; if(a==10){
         a= a-10
         b= b+1
     }
-    field_xy.push({
-        name: c
-    });
+    //square.id = c //Даём каждому div свой ID
     /*if(a<10){
         console.log("Координаты в массиве", c)
     };*/
     square.classList.add("square");
     square.innerText =c;
     wrapperBlock.appendChild(square);
-  }  
+  }
 }

@@ -21,17 +21,30 @@
     flex-flow: row wrap;
     /*width: calc(100vmin - 10px); //Соотношение 1-поле,2-промежуток
     height: calc(100vmin - 10px);*/
-    width: calc(50vmin - 10px); /**/
+    width: 450px; /**/
     /*height: calc(10ыvmin - 10px);*/
 }
 .square{
     margin: 0;
     padding: 0;
-    width: calc(5vmin - 1px); /* Размер клетки*/
-    height: calc(5vmin - 1px);
+    width: 45px; /* Размер клетки*/
+    height: 45px;
     border: 1px solid #aaa;
     background-color: #eee;
     box-sizing: border-box;
+}
+
+#TripShip{
+    width: 120px ;
+    height: 40px;
+    background-color: rgb(214, 214, 214);
+    border: 1px solid #808080;
+}
+
+#FdShips{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #aaa;
 }
 
 .square:hover{
