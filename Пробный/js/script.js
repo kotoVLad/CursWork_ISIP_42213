@@ -1,8 +1,5 @@
 //Создаём поле размером 330х330
 //Клетка будет 33х33
-
-let field_x = ['А','Б','В','Г','Д','Е','Ё','Ж','З','И'];
-let field_y = [0,1,2,3,4,5,6,7,8,9];
 let field_xy = [
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
@@ -11,13 +8,16 @@ let field_xy = [
     [0,0,0,0,0,1,0,0,0,0],
     [0,0,0,0,0,1,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
-    [1,0,1,1,0,0,1,1,1,1],
+    [1,0,1,1,0,0,0,1,1,1],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0]
 ];
-var a = 0;
+let Tr1 = ["Alive", 3];
+let Tr2 = ["Alive", 3];
 var b = 0;
 
+
+// Можно - true, нельзя - false
 //var field = document.querySelector('.Field');
 
 /*var div = document.createElement("div");
@@ -61,9 +61,10 @@ window.onload = function(){
         for(j=0;j<10;j++){
             var square = document.createElement("div");
             // создаем столбцы
-            if(field_xy[i][j]==1){
-                square.classList.add("square_fill");    
-            }else  square.classList.add("square");
+            // if(field_xy[i][j]==1){
+            //     square.classList.add("square_fill");    
+            // }else  
+            square.classList.add("square");
             square.id=i+";"+j;
             //.setAttribute('id', 'my-id');
             square.addEventListener('click',handleClick);
@@ -71,7 +72,7 @@ window.onload = function(){
             wrapperBlock.appendChild(square)
         }
   }
-
+}
     //   for(var i=0; i<100; i++){
     // var square = document.createElement("div");
     // // if(a<10){
@@ -94,17 +95,24 @@ window.onload = function(){
     // square.addEventListener('click',handleClick);
     // square.innerText = " ";
     // wrapperBlock.appendChild(square);
-  }  
 
 function handleClick(event){
      // На каком элементе (div) произошёл Клик (событие) (отслеживаем имя идентификатора)
     coords=event.srcElement.id.split(";");
+    let att= document.getElementById(event.srcElement.id)
+    
+    console.log(att);
+    
+    
     x_coord=coords[0];
     y_coord=coords[1];
 
-     if(field_xy[x_coord][y_coord]==1){
-        alert("Попал");
-    } else alert("Мимо");
+    if(field_xy[x_coord][y_coord]==1){
+        att.style.backgroundColor = '#ffa1a1'
+    } else {
+        att.style.backgroundColor = '#b882ff'
+    }
+
 
 
      // На каком элементе (div) произошёл Клик (событие) (отслеживаем имя класса элемента)
