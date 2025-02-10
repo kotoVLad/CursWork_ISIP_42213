@@ -1,24 +1,62 @@
-//Создаём поле размером 330х330
-//Клетка будет 33х33
+
+//Массив, куда помещаются корабли.
 let field_xy = [
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,1,0,0,0,0],
-    [0,0,0,0,0,1,0,0,0,0],
-    [0,0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,"Tr1",0,0,0,0],
+    [0,0,0,0,0,"Tr1",0,0,0,0],
+    [0,0,0,0,0,"Tr1",0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
-    [1,0,1,1,0,0,0,1,1,1],
+    [1,0,1,1,0,0,"Ch","Ch","Ch","Ch"],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0]
 ];
-let Tr1 = ["Alive", 3];
-let Tr2 = ["Alive", 3];
+//Корабли и их ХП (кол-во целых палуб.)
+//Однопалубники
+let on1 = 1
+let on2 = 1
+let on3 = 1
+let on4 = 1
+//Двухпалубники
+let db1 = 2
+let db2 = 2
+let db3 = 2
+//Трёхпалубники
+let Tr1 = 3
+let Tr2 = 3
+//Однопалубники
+let Ch = 4;
+
+/*-----------------------*/ 
+
 var b = 0;
+var hit= 0;
+
+let dead_ship = [];
+
+//Массив для регистрации попадания по кораблю.
+let hit_ship = [
+    [],[],[],[], //0-3   - Однопалубники
+    [],[],[],    //4-6   - Двухпалубники
+    [],[],       // 7-8  - Трёхпалубники
+    [],          // 9    - Однопалубники
+];
 
 
-// Можно - true, нельзя - false
-//var field = document.querySelector('.Field');
+
+//Моё виденье попаданий кораблей
+/*let hit_ship = [
+    // Координаты Попадания (КП) могут быть в разном порядек, не важно как начать бить корабль
+    [id_N, id_N, id_N] // трёхпалублин и его КП
+    [id_N, id_N, id_N, id_N] // чётырёхпалубник и его КП
+    и тд.
+]; 
+*/
+
+
+// Можно - true, нельзя - false не знаю англиский
+//var field = document.querySelector('.Field'); Класс
 
 /*var div = document.createElement("div");
 div.style.width = "100px";
@@ -60,66 +98,72 @@ window.onload = function(){
         // создаем строку  
         for(j=0;j<10;j++){
             var square = document.createElement("div");
-            // создаем столбцы
-            // if(field_xy[i][j]==1){
-            //     square.classList.add("square_fill");    
-            // }else  
             square.classList.add("square");
             square.id=i+";"+j;
-            //.setAttribute('id', 'my-id');
             square.addEventListener('click',handleClick);
             square.innerText = " ";
             wrapperBlock.appendChild(square)
         }
   }
 }
-    //   for(var i=0; i<100; i++){
-    // var square = document.createElement("div");
-    // // if(a<10){
-    // //     c= field_x[a]+field_y[b]
-    // //     console.log(c)
-    // //     a= a+1
-    // // }; if(a==10){
-    // //     a= a-10
-    // //     b= b+1
-    // // }
-    // // field_xy.push({
-    // //     name: c
-    // // });
-    // /*if(a<10){
-    //     console.log("Координаты в массиве", c)
-    // };*/
-    // square.classList.add("square");
-    // square.id="cell_"+i;
-    // //.setAttribute('id', 'my-id');
-    // square.addEventListener('click',handleClick);
-    // square.innerText = " ";
-    // wrapperBlock.appendChild(square);
+
 
 function handleClick(event){
-     // На каком элементе (div) произошёл Клик (событие) (отслеживаем имя идентификатора)
+    // Берём id div-ва и разделяем на координаты Х и У.
     coords=event.srcElement.id.split(";");
-    let att= document.getElementById(event.srcElement.id)
-    
-    console.log(att);
-    
-    
     x_coord=coords[0];
-    y_coord=coords[1];
+    y_coord=coords[1]; 
 
-    if(field_xy[x_coord][y_coord]==1){
+    // Берём id div-ва
+    let att= document.getElementById(event.srcElement.id)
+
+    /*--------------------------------------------*/
+
+    // Регестрация попадания.
+    if(field_xy[x_coord][y_coord]=="Tr1"){
+        hit_ship[7].push(att)
         att.style.backgroundColor = '#ffa1a1'
-    } else {
+        Tr1 = Tr1 - 1
+        hit = hit + 1
+    
+    } else if(field_xy[x_coord][y_coord]=="Ch"){
+        
+        hit_ship[9].push(att)
+        att.style.backgroundColor = '#ffa1a1'
+        Ch = Ch - 1
+        hit = hit + 1
+    
+    }
+    else {
         att.style.backgroundColor = '#b882ff'
     }
 
-
-
-     // На каком элементе (div) произошёл Клик (событие) (отслеживаем имя класса элемента)
-    // if(event.srcElement.classList.contains('square_fill')){
-    //  alert("Попал");
-    // } else alert("Мимо");
+    /*--------------------------------------------*/
     
+    //Проверка при потопление корабля.
+    if (Tr1==0){
+        for(var arr = 0; arr < 3; arr++){
+            stl = hit_ship[7][arr];
+            stl.style.backgroundColor = '#3dffae'
+        }
+    }
+    if (Ch==0){
+        for(var arr = 0; arr < 4; arr++){
+            stl = hit_ship[9][arr];
+            stl.style.backgroundColor = '#3dffae'
+        }
+    }
+
+    /*--------------------------------------------*/
+
+    //Результат при потапление кораблей
+    if (hit==7){
+        //Таймер, перед объевлением. 
+        setInterval(function(){
+            let result2 = document.getElementById("Win_Lozz")
+            result2.innerText = "Вы уничтожели все корабли.";
+        }, 200);
+    }
 }
 
 
