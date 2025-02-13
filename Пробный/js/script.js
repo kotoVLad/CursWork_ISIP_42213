@@ -28,12 +28,12 @@ let field_CanShot= [
 //Корабли и их ХП (кол-во целых палуб.)
 
 //Массив, в котором хронятся данные: (0)Имя, (1)кол-во палуб или оставшихся палуб, а в дальнейшем Id div-ов, чтобы осуществить пометку убитого коробля. 
-/*data_ship = [
+data_ship = [
     ["on1",1],["on2",1],["on3",1],["on4",1], //Однопалубники
     ["db1",2],["db2",2],["db3",2], //Двухпалубники
     ["Tr1",3],["Tr2",3],//Трёхпалубники
     ["Ch",4]//Однопалубники
-]*/
+]
 //Массив для регистрации попадания по кораблю.
 let hit_ship = [
     [],[],[],[], //0-3   - Однопалубники
@@ -152,7 +152,7 @@ function handleClick(event){
     let att= document.getElementById(event.srcElement.id)
 
     /*--------------------------------------------*/
-    /*if(field_CanShot[x_coord][y_coord]==true){
+    if(field_CanShot[x_coord][y_coord]==true){
         field_CanShot[x_coord][y_coord] = false//Проверка на выстрел 
         
         //Проверка на попадания по карабл, и если он попал, то данные изменяются и переносятся в массив data_ship
@@ -164,29 +164,29 @@ function handleClick(event){
                 hp = hp-1
                 hit = hit + 1
                 data_ship[g][1] = hp
-                hit_ship[g].push(att)
-                console.log(hit_ship[g])
+                data_ship[g].push(att)
                 att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
 
             }if (field_xy[x_coord][y_coord]==0){ //Промах.
                 att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
             }
+            if (data_ship[g][1]==0){
+                for(k=2;k<data_ship.length;k++){
+                    stl= data_ship[g][k]
+                    stl.style.backgroundColor = '#3dffae'
+                }
+            }    
         }
-        for (g1=0;g1<10;g1++){
-            gh=g1
-            if(data_ship[gh][1]==0){
-                console.log(data_ship[gh][0])
-            }
-        }
+        
         if(hit == 7){
             setInterval(function(){
                 let result2 = document.getElementById("Win_Lozz")
                 result2.innerText = "Вы уничтожели все корабли.";
             }, 200);
         }
-    }*/
+    }
     
-    if(field_CanShot[x_coord][y_coord]==true){//Проверка на выстрел 
+    /*if(field_CanShot[x_coord][y_coord]==true){//Проверка на выстрел 
         field_CanShot[x_coord][y_coord] = false
         
         // Регестрация попадания.
@@ -235,7 +235,7 @@ function handleClick(event){
                 result2.innerText = "Вы уничтожели все корабли.";
             }, 200);
         }
-    }
+    }*/
         
 }
 
