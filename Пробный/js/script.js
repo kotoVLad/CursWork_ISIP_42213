@@ -150,6 +150,8 @@ function handleClick(event){
 
     // Берём id div-ва
     let att= document.getElementById(event.srcElement.id)
+    
+
 
     /*--------------------------------------------*/
     if(field_CanShot[x_coord][y_coord]==true){
@@ -165,16 +167,21 @@ function handleClick(event){
                 hit = hit + 1
                 data_ship[g][1] = hp
                 data_ship[g].push(att)
+                console.log(data_ship[g])
                 att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
 
             }if (field_xy[x_coord][y_coord]==0){ //Промах.
                 att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
             }
+            //Мертвяк.
             if (data_ship[g][1]==0){
-                for(k=2;k<data_ship.length;k++){
+                for(k=2;k<data_ship[g].length;k++){
+                    
                     stl= data_ship[g][k]
+                    //console.log(data_ship[g])
                     stl.style.backgroundColor = '#3dffae'
                 }
+
             }    
         }
         
@@ -215,12 +222,14 @@ function handleClick(event){
         if (Tr1==0){
             for(var arr = 0; arr < 3; arr++){
                 stl = hit_ship[7][arr];
+                console.log(hit_ship[7][arr])
                 stl.style.backgroundColor = '#3dffae'
             }
         }
         if (Ch==0){
             for(var arr = 0; arr < 4; arr++){
                 stl = hit_ship[9][arr];
+                console.log(hit_ship[9][arr])
                 stl.style.backgroundColor = '#3dffae'
             }
         }
