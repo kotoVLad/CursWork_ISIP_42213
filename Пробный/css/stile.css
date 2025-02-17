@@ -46,3 +46,15 @@
 .square:hover{
     background-color: rgb(175, 255, 228);
 }
+
+.Clk{
+    width: 200px;
+    height: 50px;
+    background-color: #aaa;
+    align-content: center;
+    text-align: center;
+}
+.Clk:hover{
+    background-color: #4e4e4e;
+    color: #f7f7f7;
+}
