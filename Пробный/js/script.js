@@ -157,9 +157,9 @@ function Random(){
         x = Math.floor(Math.random() * (max - min + 1)) + min
         y = Math.floor(Math.random() * (max - dask - min + 2)) + min;//Диапозон с учётом с размером корабля.
         absl = max - dask+1 //Максимум по координатам, котором можно поставить корабль,
-        console.log(absl)   //чтобы не зайти за поле.
+                            //чтобы не зайти за поле.
         alf = dask
-        let vr_coord =[]//Временный массив
+        let vr_coord =[]//Временный массив координат кораблей.
         for (i=0;i<alf;i++){
             console.log("Горизонтальная")
             field_xy[x][y] = data_ship[9][0] //Тут будут уже сами корабли подставлятьчя через цикл**.
@@ -182,7 +182,44 @@ function Random(){
 
            //^^Почти всё тоже саммое, но уже для вертикальных^^
         }
+        for(c=0;c<vr_coord.length;c++){
+            let vr_Check_Ship =[]
+            //Начальные координаты палубы корабля.
+            x1=vr_coord[c][0]
+            y1=vr_coord[c][1]
+            y1=y1+1 //Сдвиг вправо 1 раз.
+            vr_Check_Ship.push([x1,y1])
+            x1=x1+1//Сдвиг вниз 1 раз.
+            vr_Check_Ship.push([x1,y1])
+            for(t=0;t<2;t++){//Сдвиг влево 2 раза.
+                y1=y1-1
+                vr_Check_Ship.push([x1,y1])
+            }
+            for(tg=0;tg<2;tg++){//Сдвиг вверх 2 раза
+                x1=x1-1
+                vr_Check_Ship.push([x1,y1])
+            }
+            for(th=0;th<2;th++){//Сдвиг право 2 раза
+                y1=y1+1
+                vr_Check_Ship.push([x1,y1])
+            }
+            console.log(vr_Check_Ship) //Координаты вокруг клетки.
+            
+            //Проверка координат, чтобы пометить поле возле корабля.
+            for(chk=0;chk<vr_Check_Ship.length;chk++){
+                x2= vr_Check_Ship[chk][0]
+                y2= vr_Check_Ship[chk][1]
+                if (-1<x2<10){ //9>=x2>=0
+                    if (-1<y2<10){
+                        if(field_xy[x2][y2]==0){
+                            field_xy[x2][y2] = 1
+                        }
+                    }
+                    
+                }
+            }
 
+        }
     } else{     // 1 - вертекаль
         console.log("Вертекаль")
         min = 0 
@@ -193,10 +230,10 @@ function Random(){
         alf = dask
         for (i=0;i<alf;i++){
             field_xy[x][y] = data_ship[9][0]
-            console.log(field_xy[x][y])
             x= x+1
         }
-    }   
+    }
+    console.log("Поле",field_xy)   
 }
 
 function Position_Creat(){
@@ -232,7 +269,7 @@ function handleClick(event){
                 console.log(data_ship[g])
                 att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
 
-            }if (field_xy[x_coord][y_coord]==0){ //Промах.
+            }else{ //Промах.
                 att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
             }
             //Мертвяк.
