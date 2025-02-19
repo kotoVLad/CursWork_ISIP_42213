@@ -204,13 +204,13 @@ function Random(){
                 vr_Check_Ship.push([x1,y1])
             }
             console.log(vr_Check_Ship) //Координаты вокруг клетки.
-            
+
             //Проверка координат, чтобы пометить поле возле корабля.
             for(chk=0;chk<vr_Check_Ship.length;chk++){
                 x2= vr_Check_Ship[chk][0]
                 y2= vr_Check_Ship[chk][1]
-                if (-1<x2<10){ //9>=x2>=0
-                    if (-1<y2<10){
+                if (x2>-1 && x2<10){ //9>=x2>=0
+                    if (y2>-1 && y2<10){
                         if(field_xy[x2][y2]==0){
                             field_xy[x2][y2] = 1
                         }
