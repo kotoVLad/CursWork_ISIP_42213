@@ -160,6 +160,10 @@ function Random(){
                             //чтобы не зайти за поле.
         alf = dask
         let vr_coord =[]//Временный массив координат кораблей.
+        
+        /*--------------------------------------------------------------------------------- */
+
+        //Из первой координаты создаём уже сам корабль.
         for (i=0;i<alf;i++){
             console.log("Горизонтальная")
             field_xy[x][y] = data_ship[9][0] //Тут будут уже сами корабли подставлятьчя через цикл**.
@@ -169,6 +173,11 @@ function Random(){
 
            //^^Почти всё тоже саммое, но уже для вертикальных^^
         }
+
+
+        /*-------------------------------------------------------------------------------- */
+        
+        //Обводка.
         for(c=0;c<vr_coord.length;c++){
             let vr_Check_Ship =[]
             //Начальные координаты палубы корабля.
@@ -215,12 +224,21 @@ function Random(){
         y = Math.floor(Math.random() * (max - min + 1)) + min
         absl = max - dask+1
         alf = dask
-        let vr_coord =[]
+        let vr_coord =[]//Координаты временного массива.
+
+        /*--------------------------------------------------------------------------------- */
+
+        //Из первой координаты создаём уже сам корабль.
         for (i=0;i<alf;i++){
             field_xy[x][y] = data_ship[9][0]
             vr_coord[i] = [x,y]
             x= x+1
         }
+        
+
+        /*-------------------------------------------------------------------------------- */
+
+        //Обводка.
         for(c=0;c<vr_coord.length;c++){
             let vr_Check_Ship =[]
             //Начальные координаты палубы корабля.
@@ -318,60 +336,7 @@ function handleClick(event){
             }, 200);
         }
     }
-    
-    /*if(field_CanShot[x_coord][y_coord]==true){//Проверка на выстрел 
-        field_CanShot[x_coord][y_coord] = false
-        
-        // Регестрация попадания.
-
-        if(field_xy[x_coord][y_coord]=="Tr1"){
-            hit_ship[7].push(att)
-            att.style.backgroundColor = '#ffa1a1'
-            Tr1 = Tr1 - 1
-            hit = hit + 1
-        
-        } else if(field_xy[x_coord][y_coord]=="Ch"){
-            
-            hit_ship[9].push(att)
-            att.style.backgroundColor = '#ffa1a1'
-            Ch = Ch - 1
-            hit = hit + 1
-        
-        }
-        else {
-            att.style.backgroundColor = '#b882ff'
-        }
-
-        //--------------------------------------------
-        
-        //Проверка при потопление корабля.
-        if (Tr1==0){
-            for(var arr = 0; arr < 3; arr++){
-                stl = hit_ship[7][arr];
-                console.log(hit_ship[7][arr])
-                stl.style.backgroundColor = '#3dffae'
-            }
-        }
-        if (Ch==0){
-            for(var arr = 0; arr < 4; arr++){
-                stl = hit_ship[9][arr];
-                console.log(hit_ship[9][arr])
-                stl.style.backgroundColor = '#3dffae'
-            }
-        }
-
-        //--------------------------------------------
-
-        //Результат при потапление кораблей
-        if (hit==7){
-            //Таймер, перед объевлением. 
-            setInterval(function(){
-                let result2 = document.getElementById("Win_Lozz")
-                result2.innerText = "Вы уничтожели все корабли.";
-            }, 200);
-        }
-    }*/
-        
+      
 }
 
 
