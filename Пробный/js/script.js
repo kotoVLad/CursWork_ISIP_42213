@@ -29,11 +29,12 @@ let field_CanShot= [
 
 //Массив, в котором хронятся данные: (0)Имя, (1)кол-во палуб или оставшихся палуб, а в дальнейшем Id div-ов, чтобы осуществить пометку убитого коробля. 
 data_ship = [
-    ["on1",1],["on2",1],["on3",1],["on4",1], //Однопалубники
-    ["db1",2],["db2",2],["db3",2], //Двухпалубники
+    ["Ch",4],//Однопалубники
     ["Tr1",3],["Tr2",3],//Трёхпалубники
-    ["Ch",4]//Однопалубники
+    ["db1",2],["db2",2],["db3",2], //Двухпалубники
+    ["on1",1],["on2",1],["on3",1],["on4",1] //Однопалубники
 ]
+Ship_Sum = 10
 //Массив для регистрации попадания по кораблю.
 let Position_ship = [
     [],[],[],[], //0-3   - Однопалубники
@@ -42,6 +43,7 @@ let Position_ship = [
     [],          // 9    - Однопалубники
 ];
 
+var dead_ship = 0
 
 
 /*
@@ -65,7 +67,6 @@ let Ch = 4;
 var b = 0;
 var hit= 0;
 
-let dead_ship = [];
 
 
 
@@ -125,7 +126,7 @@ document.getElementById("field").appendChild(div);*/
 
 var wrapperBlock = document.getElementById("wrapperBlock");
 let Rand = document.getElementById("Random")
-Rand.addEventListener('click', Random)
+Rand.addEventListener('click', Random)//Вызвать функцию рандом при клике.
 window.onload = function(){
 
    for(i=0;i<10;i++){
@@ -147,102 +148,134 @@ function Random(){
     // 0 - горизонталь; 1 - вертекаль
 
     //Добавить отчистку, если игрок решит заново пересгенерировать положение кораблей.
-
-    var xy = Math.round(Math.random()) //Рандомное число от 0 до 1
-    
-    dask = data_ship[9][1]//Тут будут уже сами корабли подставлятьчя через цикл**.
-    let vr_coord =[]
-    if (xy==0){ // 0 - горизонталь
-        min = 0
-        max = 9
-        x = Math.floor(Math.random() * (max - min + 1)) + min
-        y = Math.floor(Math.random() * (max - dask - min + 2)) + min;//Диапозон с учётом с размером корабля.
-        absl = max - dask+1 //Максимум по координатам, котором можно поставить корабль,
-                            //чтобы не зайти за поле.
-        alf = dask//Временный массив координат кораблей.
-        
-        /*--------------------------------------------------------------------------------- */
-
-        //Из первой координаты создаём уже сам корабль.
-        for (i=0;i<alf;i++){
-            console.log("Горизонтальная")
-            field_xy[x][y] = data_ship[9][0] //Тут будут уже сами корабли подставлятьчя через цикл**.
-            vr_coord[i] = [x,y]//Координаты временного массива.
-            y= y+1
-            //Проверяем координаты временого массива, если одна из них налезает на 1 или др, то генерируется заново.
-
-           //^^Почти всё тоже саммое, но уже для вертикальных^^
-        }
-
-        
-    } else{     // 1 - вертекаль
-        console.log("Вертекаль")
-        min = 0 
-        max = 9
-        x = Math.floor(Math.random() * (max - dask - min + 2)) + min;//Диапозон с учётом с размером корабля.
-        y = Math.floor(Math.random() * (max - min + 1)) + min
-        absl = max - dask+1
-        alf = dask//Координаты временного массива.
-
-        /*--------------------------------------------------------------------------------- */
-
-        //Из первой координаты создаём уже сам корабль.
-        for (i=0;i<alf;i++){
-            field_xy[x][y] = data_ship[9][0]
-            vr_coord[i] = [x,y]
-            x= x+1
-        }
-        
-
-        /*-------------------------------------------------------------------------------- */
-
-        //Обводка.
-        
-    }
-    for(c=0;c<vr_coord.length;c++){
-        let vr_Check_Ship =[]
-        //Начальные координаты палубы корабля.
-        x1=vr_coord[c][0]
-        y1=vr_coord[c][1]
-        y1=y1+1 //Сдвиг вправо 1 раз.
-        vr_Check_Ship.push([x1,y1])
-        x1=x1+1//Сдвиг вниз 1 раз.
-        vr_Check_Ship.push([x1,y1])
-        for(t=0;t<2;t++){//Сдвиг влево 2 раза.
-            y1=y1-1
-            vr_Check_Ship.push([x1,y1])
-        }
-        for(tg=0;tg<2;tg++){//Сдвиг вверх 2 раза
-            x1=x1-1
-            vr_Check_Ship.push([x1,y1])
-        }
-        for(th=0;th<2;th++){//Сдвиг право 2 раза
-            y1=y1+1
-            vr_Check_Ship.push([x1,y1])
-        }
-        console.log(vr_Check_Ship) //Координаты вокруг клетки.
-
-        //Проверка координат, чтобы пометить поле возле корабля.
-        for(chk=0;chk<vr_Check_Ship.length;chk++){
-            x2= vr_Check_Ship[chk][0]
-            y2= vr_Check_Ship[chk][1]
-            if (x2>-1 && x2<10){ //9>=x2>=0
-                if (y2>-1 && y2<10){
-                    if(field_xy[x2][y2]==0){
-                        field_xy[x2][y2] = 1
-                    }
-                }
+    for(r=0;r<Ship_Sum;r++){
+        console.log(r)
+        Name_Ship = data_ship[r][0]//Название корабля.
+        console.log(Name_Ship)
+        dask = data_ship[r][1]//Кол-во палуб.
+        let vr_coord =[]//Временый массив, мнимых координат корабля на поле.
+        Wh_tf=true
+        /* 
+            Цикл while нужен, чтобы генерировать координаты и проверять(функция checkShipBoard), можно ли на этих координатах ставить корабль.
+            Есла "да", то выполнится функция и прервётся цикл while.
+            Если "нет", то цикл не завершится и заново будет генерировать координаты.
+        */
+        while(Wh_tf == true){
+            var xy = Math.round(Math.random()) //Рандомное число от 0 до 1
+            if (xy==0){ // 0 - горизонталь
+                min = 0
+                max = 9
+                x = Math.floor(Math.random() * (max - min + 1)) + min
+                y = Math.floor(Math.random() * (max - dask - min + 2)) + min;//Диапозон с учётом с размером корабля.
+                absl = max - dask+1 //Максимум по координатам, котором можно поставить корабль,
+                                    //чтобы не зайти за поле.
+                alf = dask//Временный массив координат кораблей.
                 
+                /*--------------------------------------------------------------------------------- */
+        
+                //Из первой координаты создаём уже сам корабль.
+                for (i=0;i<alf;i++){
+                    
+                    vr_coord[i] = [x,y]//Координаты временного массива.
+                    y= y+1
+                }
+        
+                
+            }else{     // 1 - вертекаль
+                min = 0 
+                max = 9
+                x = Math.floor(Math.random() * (max - dask - min + 2)) + min;//Диапозон с учётом с размером корабля.
+                y = Math.floor(Math.random() * (max - min + 1)) + min
+                absl = max - dask+1
+                alf = dask//Координаты временного массива.
+        
+                /*--------------------------------------------------------------------------------- */
+        
+                //Из первой координаты создаём уже сам корабль.
+                for (i=0;i<alf;i++){
+                    vr_coord[i] = [x,y]
+                    x= x+1
+                }    
             }
-        }
+            console.log("Запущен.")
+            if(checkShipBoard(vr_coord)==true){
+                
+                for(r1=0;r1<vr_coord.length;r1++){
+                    x5=vr_coord[r1][0]
+                    y5=vr_coord[r1][1]
+                    field_xy[x5][y5] = Name_Ship
+                }
+                console.log(field_xy)
+                for(c=0;c<vr_coord.length;c++){ //Обводка вокруг корабля.
+                    let vr_Check_Ship =[]
+                    //Начальные координаты палубы корабля.
+                    x1=vr_coord[c][0]
+                    y1=vr_coord[c][1]
+                    y1=y1+1 //Сдвиг вправо 1 раз.
+                    vr_Check_Ship.push([x1,y1])
+                    x1=x1+1//Сдвиг вниз 1 раз.
+                    vr_Check_Ship.push([x1,y1])
+                    for(t=0;t<2;t++){//Сдвиг влево 2 раза.
+                        y1=y1-1
+                        vr_Check_Ship.push([x1,y1])
+                    }
+                    for(tg=0;tg<2;tg++){//Сдвиг вверх 2 раза
+                        x1=x1-1
+                        vr_Check_Ship.push([x1,y1])
+                    }
+                    for(th=0;th<2;th++){//Сдвиг право 2 раза
+                        y1=y1+1
+                        vr_Check_Ship.push([x1,y1])
+                    }
+                    //console.log(vr_Check_Ship) //Координаты вокруг клетки.
+            
+                    //Проверка координат, чтобы пометить поле возле корабля.
+                    for(chk=0;chk<vr_Check_Ship.length;chk++){
+                        x2= vr_Check_Ship[chk][0]
+                        y2= vr_Check_Ship[chk][1]
+                        if (x2>-1 && x2<10){ //9>=x2>=0
+                            if (y2>-1 && y2<10){
+                                if(field_xy[x2][y2]==0){
+                                    field_xy[x2][y2] = 1
+                                }
+                            }
+                            
+                        }
+                    }
+            
+                }
+                Wh_tf = false
+            }
 
-    }
+        }//Конец цикла while
+        
+    }//Конец цикла for
     console.log("Поле",field_xy) 
 
 }
 
-function Position_Creat(){
-    //Сюда приходят данные из 
+function checkShipBoard(vr_coord){ //Проверяем можно ли поставить корабль
+    
+    Can=0
+    for(i=0;i<vr_coord.length;i++){
+        x4= vr_coord[i][0]
+        y4= vr_coord[i][1]
+        if(field_xy[x4][y4] == 0){
+            Can=Can+1    
+        } else {
+            break;
+        }
+    }
+    if(Can==vr_coord.length){
+        console.log("Можно")
+        return true;
+    }else{
+        console.log("Нельзя")
+        return false;
+    } 
+    
+
+
 }
 
 
@@ -274,22 +307,21 @@ function handleClick(event){
                 console.log(data_ship[g])
                 att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
 
-            }else{ //Промах.
+            }else if(field_xy[x_coord][y_coord]==0 || field_xy[x_coord][y_coord]==1){ //Промах.
                 att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
             }
             //Мертвяк.
             if (data_ship[g][1]==0){
                 for(k=2;k<data_ship[g].length;k++){
-                    
                     stl= data_ship[g][k]
                     //console.log(data_ship[g])
                     stl.style.backgroundColor = '#3dffae'
                 }
-
+                dead_ship = dead_ship + 1
             }    
         }
         
-        if(hit == 7){
+        if(Ship_Sum == dead_ship){
             setInterval(function(){
                 let result2 = document.getElementById("Win_Lozz")
                 result2.innerText = "Вы уничтожели все корабли.";
