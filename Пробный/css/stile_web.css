@@ -1,0 +1,45 @@
+.block{
+    margin-top: 20%;
+}
+
+.button{
+    width: 200px;
+    height: 50px;
+    background-color: rgb(95, 169, 255);
+    
+}
+
+.button:hover{
+    background-color: rgb(17, 17, 255);
+    color: rgb(255, 255, 255);
+}
+
+.button_game{
+    width: 200px;
+    height: 50px;
+    background-color: rgb(95, 169, 255);
+}
+
+.crests{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: aquamarine;
+    float: right;
+    margin-right: 2%;
+    margin-top: 2%;
+    
+}
+
+.block_wind{
+    width: 800px;
+    height: 800px;
+    background-color: rgb(212, 212, 212);
+    border-radius: 25px;
+}
+
+p{
+    padding: 4%;
+    text-align: center;
+    font-size: 24px;
+}

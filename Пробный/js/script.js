@@ -45,6 +45,7 @@ let Position_ship = [
 
 var dead_ship = 0
 
+var triger = 0
 
 /*
 //Однопалубники
@@ -143,15 +144,27 @@ window.onload = function(){
   }
 }
 
-function Random(){
+function Random(){//Создание кораблей по методу рандома.
+    //Проверяем, был ли поле уже запонино. 0 - не было установленые корабли, 1 - уже установленны корабли, нужно их удалить их.
+    if(triger == 1){
+        for(xd=0;xd<10;xd++){
+            for(yd=0;yd<10;yd++){
+                //Очищаем массив и поле.
+                if(Delet(xd,yd)== 1){
+                    field_xy[xd][yd] = 0 //Очистака массива по координатам
+                    document.getElementById(xd+";"+yd).classList.remove("Ship_shadow") //Удаляем палубу на поле.
+                }
+            }
+        }
+    } else{
+        triger= triger + 1
+    }
     //Определяем расположение по вертикали или по горизонтали.ы
     // 0 - горизонталь; 1 - вертекаль
-
+    //remove('active')
     //Добавить отчистку, если игрок решит заново пересгенерировать положение кораблей.
     for(r=0;r<Ship_Sum;r++){
-        console.log(r)
         Name_Ship = data_ship[r][0]//Название корабля.
-        console.log(Name_Ship)
         dask = data_ship[r][1]//Кол-во палуб.
         let vr_coord =[]//Временый массив, мнимых координат корабля на поле.
         Wh_tf=true
@@ -197,12 +210,12 @@ function Random(){
                     x= x+1
                 }    
             }
-            console.log("Запущен.")
             if(checkShipBoard(vr_coord)==true){
                 
                 for(r1=0;r1<vr_coord.length;r1++){
                     x5=vr_coord[r1][0]
                     y5=vr_coord[r1][1]
+                    document.getElementById(x5+";"+y5).classList.add("Ship_shadow")
                     field_xy[x5][y5] = Name_Ship
                 }
                 console.log(field_xy)
@@ -250,8 +263,16 @@ function Random(){
         }//Конец цикла while
         
     }//Конец цикла for
-    console.log("Поле",field_xy) 
+    
 
+}
+
+function Delet(xd,yd){
+    if (field_xy[xd][yd]==0){ // Нет в массиве ничего
+        return 0
+    } else{
+        return 1 // Есть в массиве палуба или очертания вокруг корабля(1) 
+    }
 }
 
 function checkShipBoard(vr_coord){ //Проверяем можно ли поставить корабль
@@ -267,10 +288,8 @@ function checkShipBoard(vr_coord){ //Проверяем можно ли пост
         }
     }
     if(Can==vr_coord.length){
-        console.log("Можно")
         return true;
     }else{
-        console.log("Нельзя")
         return false;
     } 
     
@@ -279,7 +298,7 @@ function checkShipBoard(vr_coord){ //Проверяем можно ли пост
 }
 
 
-function handleClick(event){
+function handleClick(event){//Выстрел.
     // Берём id div-ва и разделяем на координаты Х и У.
     coords=event.srcElement.id.split(";");
     x_coord=coords[0];
@@ -291,20 +310,18 @@ function handleClick(event){
 
 
     /*--------------------------------------------*/
-    if(field_CanShot[x_coord][y_coord]==true){
-        field_CanShot[x_coord][y_coord] = false//Проверка на выстрел 
+    if(field_CanShot[x_coord][y_coord]==true){//Проверка на выстрел 
+        field_CanShot[x_coord][y_coord] = false
         
         //Проверка на попадания по карабл, и если он попал, то данные изменяются и переносятся в массив data_ship
         
         for(g = 0;g<10;g++){
             if(field_xy[x_coord][y_coord]==data_ship[g][0]){//Если попал
                 hp = data_ship[g][1]
-                console.log(att)
                 hp = hp-1
                 hit = hit + 1
                 data_ship[g][1] = hp
                 data_ship[g].push(att)
-                console.log(data_ship[g])
                 att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
 
             }else if(field_xy[x_coord][y_coord]==0 || field_xy[x_coord][y_coord]==1){ //Промах.
@@ -314,7 +331,6 @@ function handleClick(event){
             if (data_ship[g][1]==0){
                 for(k=2;k<data_ship[g].length;k++){
                     stl= data_ship[g][k]
-                    //console.log(data_ship[g])
                     stl.style.backgroundColor = '#3dffae'
                 }
                 dead_ship = dead_ship + 1
