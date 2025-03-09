@@ -15,7 +15,6 @@
 }*/
 
 #wrapperBlock{
-    margin: 10% auto;
     padding: 0;
     display: flex;
     flex-flow: row wrap;
@@ -24,6 +23,17 @@
     width: calc(50vmin - 10px); /**/
     /*height: calc(10ыvmin - 10px);*/
 }
+
+#wrapperBlock2 {
+    padding: 0;
+    display: flex;
+    flex-flow: row wrap;
+    /*width: calc(100vmin - 10px); //Соотношение 1-поле,2-промежуток
+    height: calc(100vmin - 10px);*/
+    width: calc(50vmin - 10px); /**/
+    /*height: calc(10ыvmin - 10px);*/
+}
+
 .square{
     margin: 0;
     padding: 0;
@@ -33,6 +43,30 @@
     background-color: #eee;
     box-sizing: border-box;
 }
+.square2{
+    margin: 0;
+    padding: 0;
+    width: calc(5vmin - 1px); /* Размер клетки*/
+    height: calc(5vmin - 1px);
+    border: 1px solid #aaa;
+    background-color: #eee;
+    box-sizing: border-box;
+}
+
+#big_box{
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#box{
+    column-count: 2;
+    
+    
+}
+
+
 .square_fill{
     margin: 0;
     padding: 0;
@@ -43,7 +77,7 @@
     box-sizing: border-box;
 }
 
-.square:hover{
+.square2:hover{
     background-color: rgb(175, 255, 228);
 }
 
