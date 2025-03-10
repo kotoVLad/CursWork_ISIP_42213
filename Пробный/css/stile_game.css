@@ -65,8 +65,11 @@
     
     
 }
-
-
+/*
+#Play{
+    display: none;
+}
+*/
 .square_fill{
     margin: 0;
     padding: 0;
@@ -76,6 +79,12 @@
     background-color: #1100ff;
     box-sizing: border-box;
 }
+
+.Hover_on{
+    background-color: rgb(142, 200, 255);
+}
+
+
 
 .square2:hover{
     background-color: rgb(175, 255, 228);

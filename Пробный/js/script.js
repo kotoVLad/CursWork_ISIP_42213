@@ -85,6 +85,8 @@ var dead_ship2 = 0
 var triger = 0
 var key_play = false
 
+Ship = 0
+
 
 /*-----------------------------------------*/
 
@@ -98,33 +100,30 @@ var key_play = false
 //var field = document.querySelector('.Field'); Класс
 
 
-/*for (i=0;i<2;i++) {
-    for (a=0;a<10;a++){
-        var div = document.createElement("div");
-        div.classList.add('cletca');
-        console.log(div);
-        document.getElementById("field").appendChild(div);
-    }
-    
-};*/
-
-
 /*-----------------------------------------*/ 
 
-// Берём места, куда поместим 2 поля (визуально).
+//Берём из HTML те или иные элементы.
 
+
+// Берём места, куда поместим 2 поля (визуально).
 var wrapperBlock = document.getElementById("wrapperBlock");
 var wrapperBlock2 = document.getElementById("wrapperBlock2");
+
+// Поле с кнопками.
+var Block_button = document.getElementById("Block_button")
 
 /*-----------------------------------------*/ 
 
 //Кнопки.
 
 
-//Вызвать функцию рандом, чтобы рандомно раставить корабли.
+//Вызвать функцию "рандом", чтобы рандомно раставить корабли.
 let Rand = document.getElementById("Random")
 Rand.addEventListener('click', Random)
 
+//Выбрать функцию "Раставить в ручную", чтобы игрок мог раставить корабли как ему нужно.
+let Pos = document.getElementById("Position")
+Pos.addEventListener('click', Position)
 
 //Запустить игру.
 let Play = document.getElementById("Play")
@@ -161,21 +160,10 @@ for(i=0;i<10;i++){
 //Функции пользователя.
 
 function Random(){//Создание кораблей по методу рандома.
-    //Проверяем, был ли поле уже запонино. 0 - не было установленые корабли, 1 - уже установленны корабли, нужно их удалить их.
     key_play = true
-    if(triger == 1){
-        for(xd=0;xd<10;xd++){
-            for(yd=0;yd<10;yd++){
-                //Очищаем массив и поле.
-                if(Delet(xd,yd)== 1){
-                    field_xy[xd][yd] = 0 //Очистака массива по координатам
-                    document.getElementById(xd+";"+yd).classList.remove("Ship_shadow") //Удаляем палубу на поле.
-                }
-            }
-        }
-    } else{
-        triger= triger + 1
-    }
+
+    if(check_Fl()==true){}//Проверяем, был ли поле уже запонино.
+
     //Определяем расположение по вертикали или по горизонтали.ы
     // 0 - горизонталь; 1 - вертекаль
     //remove('active')
@@ -283,11 +271,23 @@ function Random(){//Создание кораблей по методу ранд
 
 }
 
+function Position(){
+    key_play = false
+    if(check_Fl()==true){}
+    for(i=0;i<10;i++){
+        for(j=0;j<10;j++){
+            document.getElementById(i+";"+j).addEventListener('click', Pos_ship)
+            document.getElementById(i+";"+j).addEventListener("mouseover", Hover_on)
+            document.getElementById(i+";"+j).addEventListener("mouseleave", Hover_off)
+        }
+    }
+    
+}
+
 function Play_game(){
     if(key_play == true){
         if(Random2()==true){
-            Rand.style.display = "none"
-            Play.style.display = "none"
+            Block_button.style.display = "none"
         }
     }else{
         alert("Пожалуйта, раставте корабли.")
@@ -296,35 +296,7 @@ function Play_game(){
 
 }
 
-function Delet(xd,yd){
-    if (field_xy[xd][yd]==0){ // Нет в массиве ничего
-        return 0
-    } else{
-        return 1 // Есть в массиве палуба или очертания вокруг корабля(1) 
-    }
-}
 
-function checkShipBoard(vr_coord){ //Проверяем можно ли поставить корабль
-    
-    Can=0
-    for(i=0;i<vr_coord.length;i++){
-        x4= vr_coord[i][0]
-        y4= vr_coord[i][1]
-        if(field_xy[x4][y4] == 0){
-            Can=Can+1    
-        } else {
-            break;
-        }
-    }
-    if(Can==vr_coord.length){
-        return true;
-    }else{
-        return false;
-    } 
-    
-
-
-}
 function handleClick(event){//Выстрел.
     // Берём id div-ва и разделяем на координаты Х и У.
     coords=event.srcElement.id.split(";;");
@@ -376,6 +348,26 @@ function handleClick(event){//Выстрел.
       
 }
 
+function Pos_ship(event){
+    console.log("Yes")
+    /*
+    key_pos = false
+    vr_coord=[]
+
+    coords=event.srcElement.id.split(";");
+    x_coord=coords[0];
+    y_coord=coords[1]; 
+    console.log(event.srcElement.id)
+    */
+
+}
+
+/*
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault(); // Отменяем вызов стандартного контекстного меню браузера
+    console.log("ПКМ")
+});
+*/
 /*-----------------------------------------*/ 
 
 //Функции робота.
@@ -489,7 +481,60 @@ function Random2(){//Создание кораблей по методу ран�
     return true
 }
 
-function checkShipBoard2(vr_coord){ //Проверяем можно ли поставить корабль
+
+
+/*-----------------------------------------*/ 
+
+//Системные функции
+
+function Delet(xd,yd){//Проверка и удаление кораблей, если они уже на поле.
+    if (field_xy[xd][yd]==0){ // Нет в массиве ничего
+        return 0
+    } else{
+        return 1 // Есть в массиве палуба или очертания вокруг корабля(1) 
+    }
+}
+
+function check_Fl(){
+    if(triger == 1){
+        for(xd=0;xd<10;xd++){
+            for(yd=0;yd<10;yd++){
+                //Очищаем массив и поле.
+                if(Delet(xd,yd)== 1){
+                    field_xy[xd][yd] = 0 //Очистака массива по координатам
+                    document.getElementById(xd+";"+yd).classList.remove("Ship_shadow") //Удаляем палубу на поле.
+                }
+            }
+        }
+    } else{
+        triger= triger + 1
+    }
+    return true
+}
+
+function checkShipBoard(vr_coord){ //Проверяем можно ли поставить корабль
+    
+    Can=0
+    for(i=0;i<vr_coord.length;i++){
+        x4= vr_coord[i][0]
+        y4= vr_coord[i][1]
+        if(field_xy[x4][y4] == 0){
+            Can=Can+1    
+        } else {
+            break;
+        }
+    }
+    if(Can==vr_coord.length){
+        return true;
+    }else{
+        return false;
+    } 
+    
+
+
+}
+
+function checkShipBoard2(vr_coord){ //Проверяем можно ли поставить корабль робота
     
     Can=0
     for(i=0;i<vr_coord.length;i++){
@@ -511,6 +556,9 @@ function checkShipBoard2(vr_coord){ //Проверяем можно ли пос�
 
 }
 
-
-
-
+function Hover_on(event){
+    document.getElementById(event.srcElement.id).classList.add("Hover_on")
+}
+function Hover_off(event){
+    document.getElementById(event.srcElement.id).classList.remove("Hover_on")
+}
