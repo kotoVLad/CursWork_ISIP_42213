@@ -85,6 +85,8 @@ var dead_ship2 = 0
 var triger = 0
 var key_play = false
 
+coord_xy = 0
+
 Ship = 0
 
 
@@ -279,6 +281,7 @@ function Position(){
             document.getElementById(i+";"+j).addEventListener('click', Pos_ship)
             document.getElementById(i+";"+j).addEventListener("mouseover", Hover_on)
             document.getElementById(i+";"+j).addEventListener("mouseleave", Hover_off)
+            document.getElementById(i+";"+j).addEventListener('contextmenu', Change_Pos)
         }
     }
     
@@ -289,8 +292,13 @@ function Play_game(){
         if(Random2()==true){
             Block_button.style.display = "none"
         }
+    }
+    if(Ship==9){
+        if(Random2()==true){
+            Block_button.style.display = "none"
+        }
     }else{
-        alert("Пожалуйта, раставте корабли.")
+        alert("Раставте корабли.")
     }
     
 
@@ -302,7 +310,6 @@ function handleClick(event){//Выстрел.
     coords=event.srcElement.id.split(";;");
     x_coord=coords[0];
     y_coord=coords[1]; 
-
     // Берём id div-ва
     let att= document.getElementById(event.srcElement.id)
     
@@ -349,25 +356,82 @@ function handleClick(event){//Выстрел.
 }
 
 function Pos_ship(event){
-    console.log("Yes")
-    /*
-    key_pos = false
-    vr_coord=[]
+    if(Ship<10){
+        coords2= event.srcElement.id.split(";")
+        Name_Ship = data_ship[Ship][0]
+        x_coord = Number(coords2[0])
+        y_coord = Number(coords2[1])
 
-    coords=event.srcElement.id.split(";");
-    x_coord=coords[0];
-    y_coord=coords[1]; 
-    console.log(event.srcElement.id)
-    */
+        let vr_coord2 = []
+        for(i=0;i<data_ship[Ship][1];i++){
+            if(coord_xy==0){
+                vr_coord2.push([x_coord,y_coord ])
+                field_xy[x_coord][y_coord]=Name_Ship
+                document.getElementById(x_coord+";"+y_coord).classList.add("Ship_shadow")
+                y_coord=y_coord+1
+            } else{
+                vr_coord2.push([x_coord,y_coord ])
+                field_xy[x_coord][y_coord]=Name_Ship
+                document.getElementById(x_coord+";"+y_coord).classList.add("Ship_shadow")
+                x_coord=x_coord+1
+            }
+        }
+        for(c=0;c<vr_coord2.length;c++){ //Обводка вокруг корабля.
+            let vr_Check_Ship =[]
+            //Начальные координаты палубы корабля.
+            x1=vr_coord2[c][0]
+            y1=vr_coord2[c][1]
+            y1=y1+1 //Сдвиг вправо 1 раз.
+            vr_Check_Ship.push([x1,y1])
+            x1=x1+1//Сдвиг вниз 1 раз.
+            vr_Check_Ship.push([x1,y1])
+            for(t=0;t<2;t++){//Сдвиг влево 2 раза.
+                y1=y1-1
+                vr_Check_Ship.push([x1,y1])
+            }
+            for(tg=0;tg<2;tg++){//Сдвиг вверх 2 раза
+                x1=x1-1
+                vr_Check_Ship.push([x1,y1])
+            }
+            for(th=0;th<2;th++){//Сдвиг право 2 раза
+                y1=y1+1
+                vr_Check_Ship.push([x1,y1])
+            }
+            
+            //console.log(vr_Check_Ship) //Координаты вокруг клетки.
 
+            //Проверка координат, чтобы пометить поле возле корабля.
+            for(chk=0;chk<vr_Check_Ship.length;chk++){
+                x2= vr_Check_Ship[chk][0]
+                y2= vr_Check_Ship[chk][1]
+                if (x2>-1 && x2<10){ //9>=x2>=0
+                    if (y2>-1 && y2<10){
+                        if(field_xy[x2][y2]==0){
+                            field_xy[x2][y2] = 1
+                        }
+                    }
+                    
+                }
+            }
+
+        }
+        Ship++
+    }
+    
 }
 
-/*
-document.addEventListener('contextmenu', function(event) {
+
+function Change_Pos(event){
     event.preventDefault(); // Отменяем вызов стандартного контекстного меню браузера
-    console.log("ПКМ")
-});
-*/
+    if(coord_xy == 0){
+        coord_xy = 1
+        console.log(coord_xy)
+    }else{
+        coord_xy = 0
+        console.log(coord_xy)
+    }
+}
+
 /*-----------------------------------------*/ 
 
 //Функции робота.
@@ -556,9 +620,115 @@ function checkShipBoard2(vr_coord){ //Проверяем можно ли пос�
 
 }
 
+function Chek_pos(vr_coord){
+    Can = 0
+    Can_Fl = 0
+    for(i=0;i<vr_coord.length;i++){
+        kx= vr_coord[i][0]
+        ky= vr_coord[i][1]
+        if(ky>-1 && ky<10){
+            if(kx>-1 && kx<10){
+                Can++
+            }
+        }
+    }
+    if(Can==vr_coord.length){
+        for(j=0;j<vr_coord.length;j++){
+            kx2= vr_coord[j][0]
+            ky2= vr_coord[j][1]
+            if(field_xy[kx2][ky2]==0){
+                Can_Fl++
+            }else{
+                break
+            }
+        }
+    }
+    if(Can_Fl==vr_coord.length){
+        return true
+    } else {
+        return false
+    }
+}
+
 function Hover_on(event){
-    document.getElementById(event.srcElement.id).classList.add("Hover_on")
+    if(Ship<10){
+        coords=event.srcElement.id.split(";");
+        x_coord=coords[0];
+        y_coord=coords[1];
+        let vr_coord=[]
+        if(coord_xy==0){//x y+
+            x= x_coord
+            y= y_coord
+            for(i=0;i<data_ship[Ship][1];i++){
+                vr_coord.push([x,y])
+                y++
+            }
+        }
+        if(coord_xy==1){//x+ y
+            x= x_coord
+            y= y_coord
+            for(i=0;i<data_ship[Ship][1];i++){
+                vr_coord.push([x,y])
+                x++
+            }
+        }
+        if(Chek_pos(vr_coord)==true){
+            for (k=0;k<vr_coord.length;k++){
+                a= vr_coord[k][0]
+                b= vr_coord[k][1]
+                document.getElementById(a+";"+b).classList.add("Hover_on")
+            }
+        }else{
+            for (k=0;k<vr_coord.length;k++){
+                a= vr_coord[k][0]
+                b= vr_coord[k][1]
+                if(a>-1 && a<10){
+                    if(b>-1&& b<10){
+                        document.getElementById(a+";"+b).classList.add("Hover_on_red")
+                    }
+                }
+            }
+        }
+    }
+    
+    //document.getElementById(event.srcElement.id).classList.add("Hover_on")
 }
 function Hover_off(event){
-    document.getElementById(event.srcElement.id).classList.remove("Hover_on")
+    if(Ship<10){
+        coords=event.srcElement.id.split(";");
+        x_coord=coords[0];
+        y_coord=coords[1];
+        let vr_coord2=[]
+        if(coord_xy==0){//x y+
+            x= x_coord
+            y= y_coord
+            for(i=0;i<data_ship[Ship][1];i++){
+                vr_coord2.push([x,y])
+                y++
+            }
+
+        }
+        if(coord_xy==1){//x+ y
+            x= x_coord
+            y= y_coord
+            for(i=0;i<data_ship[Ship][1];i++){
+                vr_coord2.push([x,y])
+                x++
+            }
+        }
+    }
+    for(i=0;i<10;i++){
+        for(j=0;j<10;j++){
+            elm= document.getElementById(i+";"+j)
+            if(elm.classList.contains("Hover_on_red")){
+                elm.classList.remove("Hover_on_red")
+            }
+            if(elm.classList.contains("Hover_on")){
+                elm.classList.remove("Hover_on")
+            }
+        }
+    }
+    
+    
+    //document.getElementById(event.srcElement.id).classList.remove("Hover_on")
 }

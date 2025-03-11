@@ -82,8 +82,13 @@
 
 .Hover_on{
     background-color: rgb(142, 200, 255);
+    z-index: 1;
 }
 
+.Hover_on_red{
+    background-color: #ff3636;
+    z-index: 1;
+}
 
 
 .square2:hover{
