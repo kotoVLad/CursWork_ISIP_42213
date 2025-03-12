@@ -84,6 +84,8 @@ var dead_ship2 = 0
 
 var triger = 0
 var key_play = false
+var key_f_pos
+var key_pos
 
 coord_xy = 0
 
@@ -163,7 +165,7 @@ for(i=0;i<10;i++){
 
 function Random(){//Создание кораблей по методу рандома.
     key_play = true
-
+    key_f_pos = false
     if(check_Fl()==true){}//Проверяем, был ли поле уже запонино.
 
     //Определяем расположение по вертикали или по горизонтали.ы
@@ -275,6 +277,7 @@ function Random(){//Создание кораблей по методу ранд
 
 function Position(){
     key_play = false
+    key_f_pos = true
     if(check_Fl()==true){}
     for(i=0;i<10;i++){
         for(j=0;j<10;j++){
@@ -293,11 +296,12 @@ function Play_game(){
             Block_button.style.display = "none"
         }
     }
-    if(Ship==9){
+    if(Ship==10){
         if(Random2()==true){
             Block_button.style.display = "none"
         }
-    }else{
+    }
+    if(key_play == false && Ship<10){
         alert("Раставте корабли.")
     }
     
@@ -356,7 +360,7 @@ function handleClick(event){//Выстрел.
 }
 
 function Pos_ship(event){
-    if(Ship<10){
+    if(Ship<10 && key_pos==true){
         coords2= event.srcElement.id.split(";")
         Name_Ship = data_ship[Ship][0]
         x_coord = Number(coords2[0])
@@ -421,14 +425,16 @@ function Pos_ship(event){
 }
 
 
-function Change_Pos(event){
-    event.preventDefault(); // Отменяем вызов стандартного контекстного меню браузера
-    if(coord_xy == 0){
-        coord_xy = 1
-        console.log(coord_xy)
-    }else{
-        coord_xy = 0
-        console.log(coord_xy)
+function Change_Pos(event){//ПКМ
+    if(key_f_pos==true && Ship<11){
+        event.preventDefault(); // Отменяем вызов стандартного контекстного меню браузера
+        if(coord_xy == 0){
+            coord_xy = 1
+            console.log(coord_xy)
+        }else{
+            coord_xy = 0
+            console.log(coord_xy)
+        }
     }
 }
 
@@ -561,6 +567,7 @@ function Delet(xd,yd){//Проверка и удаление кораблей, �
 
 function check_Fl(){
     if(triger == 1){
+        Ship=0
         for(xd=0;xd<10;xd++){
             for(yd=0;yd<10;yd++){
                 //Очищаем массив и поле.
@@ -651,7 +658,7 @@ function Chek_pos(vr_coord){
 }
 
 function Hover_on(event){
-    if(Ship<10){
+    if(Ship<10 && key_f_pos==true){
         coords=event.srcElement.id.split(";");
         x_coord=coords[0];
         y_coord=coords[1];
@@ -678,6 +685,7 @@ function Hover_on(event){
                 b= vr_coord[k][1]
                 document.getElementById(a+";"+b).classList.add("Hover_on")
             }
+            key_pos = true
         }else{
             for (k=0;k<vr_coord.length;k++){
                 a= vr_coord[k][0]
@@ -688,6 +696,7 @@ function Hover_on(event){
                     }
                 }
             }
+            key_pos = false
         }
     }
     
