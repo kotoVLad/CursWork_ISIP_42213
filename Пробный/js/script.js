@@ -56,16 +56,20 @@ let field_CanShot2= [//Поле робота для проверки выстр�
 
 /*-----------------------------------------*/
 
+let hit_bot=[]
+
+/*-----------------------------------------*/
+
 //Массив, в котором хронятся данные: (0)Имя, (1)кол-во палуб или оставшихся палуб, а в дальнейшем Id div-ов, чтобы осуществить пометку убитого коробля. 
 
-data_ship = [
+data_ship = [//Корабли игрока
     ["Ch",4],//Однопалубники
     ["Tr1",3],["Tr2",3],//Трёхпалубники
     ["db1",2],["db2",2],["db3",2], //Двухпалубники
     ["on1",1],["on2",1],["on3",1],["on4",1] //Однопалубники
 ]
 
-data_ship2 = [
+data_ship2 = [//Корабли бота
     ["Ch",4],//Однопалубники
     ["Tr1",3],["Tr2",3],//Трёхпалубники
     ["db1",2],["db2",2],["db3",2], //Двухпалубники
@@ -87,10 +91,16 @@ var key_play = false
 var key_f_pos
 var key_pos
 
+var hit=0
+var hit_crest = 1
+var hit_xy //0-горизонталь, 1-вертикаль
+
 coord_xy = 0
 
 Ship = 0
-
+var move
+var move_pc = false
+var move_user = false
 
 /*-----------------------------------------*/
 
@@ -294,11 +304,24 @@ function Play_game(){
     if(key_play == true){
         if(Random2()==true){
             Block_button.style.display = "none"
+            move = Math.round(Math.random())
+            console.log("0-Я, 1-ПК",move)
+            if(move==0){
+                move_user = true
+                
+            }else{
+                move_pc = true
+                move_bot()
+            }
         }
     }
     if(Ship==10){
         if(Random2()==true){
             Block_button.style.display = "none"
+            move = Math.round(Math.random())
+            if(move==1){
+                move_bot()
+            }
         }
     }
     if(key_play == false && Ship<10){
@@ -311,51 +334,57 @@ function Play_game(){
 
 function handleClick(event){//Выстрел.
     // Берём id div-ва и разделяем на координаты Х и У.
-    coords=event.srcElement.id.split(";;");
-    x_coord=coords[0];
-    y_coord=coords[1]; 
-    // Берём id div-ва
-    let att= document.getElementById(event.srcElement.id)
-    
-
-
-    /*--------------------------------------------*/
-    if(field_CanShot2[x_coord][y_coord]==true){//Проверка на выстрел 
-        field_CanShot2[x_coord][y_coord] = false
+    if(move_user==true){
+        console.log("Клик")
+        coords=event.srcElement.id.split(";;");
+        x_coord=coords[0];
+        y_coord=coords[1]; 
+        // Берём id div-ва
+        let att= document.getElementById(event.srcElement.id)
         
-        //Проверка на попадания по карабл, и если он попал, то данные изменяются и переносятся в массив data_ship
-        
-        for(g = 0;g<10;g++){
-            if(field_xy2[x_coord][y_coord]==data_ship[g][0]){//Если попал
-                hp = data_ship2[g][1]
-                hp = hp-1
-                data_ship2[g][1] = hp
-                data_ship2[g].push(att)
-                att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
 
-            }else if(field_xy2[x_coord][y_coord]==0 || field_xy2[x_coord][y_coord]==1){ //Промах.
-                att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
-            }
-            //Мертвяк.
-            if (data_ship2[g][1]==0){
-                for(k=2;k<data_ship2[g].length;k++){
-                    stl= data_ship2[g][k]
-                    stl.style.backgroundColor = '#3dffae'
+
+        /*--------------------------------------------*/
+        if(field_CanShot2[x_coord][y_coord]==true){//Проверка на выстрел 
+            field_CanShot2[x_coord][y_coord] = false
+            
+            //Проверка на попадания по карабл, и если он попал, то данные изменяются и переносятся в массив data_ship
+            
+            for(g = 0;g<10;g++){
+                if(field_xy2[x_coord][y_coord]==data_ship2[g][0]){//Если попал
+                    hp = data_ship2[g][1]
+                    hp = hp-1
+                    data_ship2[g][1] = hp
+                    data_ship2[g].push(att)
+                    att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
+
+                }else if(field_xy2[x_coord][y_coord]==0 || field_xy2[x_coord][y_coord]==1){ //Промах.
+                    att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
+                    move_user=false
+                    move_pc = true
+
+                    move_bot()
                 }
-                dead_ship = dead_ship + 1
-                data_ship2[g][1] = "dead"
-                console.log(dead_ship)
-                console.log(data_ship2[g])
-            }    
-        }
-        
-        if(Ship_Sum == dead_ship){
-            setInterval(function(){
-                let result2 = document.getElementById("Win_Lozz")
-                result2.innerText = "Вы уничтожели все корабли.";
-            }, 200);
+                //Мертвяк.
+                if (data_ship2[g][1]==0){
+                    for(k=2;k<data_ship2[g].length;k++){
+                        stl= data_ship2[g][k]
+                        stl.style.backgroundColor = '#3dffae'
+                    }
+                    dead_ship = dead_ship + 1
+                    data_ship2[g][1] = "dead"
+                }    
+            }
+            
+            if(Ship_Sum == dead_ship){
+                setInterval(function(){
+                    let result2 = document.getElementById("Win_Lozz")
+                    result2.innerText = "Вы уничтожели все корабли.";
+                }, 200);
+            }
         }
     }
+    
       
 }
 
@@ -550,12 +579,330 @@ function Random2(){//Создание кораблей по методу ран�
     
     return true
 }
+console.log(field_xy)
+function move_bot(){
+    console.log("Работает функция")
+    while(move_pc==true){
+        console.log("Цикл сработал")
+        if(hit<1){//Новый выстрел.
+            console.log("Условие выполнено")
+            min = 0
+            max = 9
+            x = Math.floor(Math.random() * (max - min + 1)) + min
+            y = Math.floor(Math.random() * (max - min + 1)) + min
+            att = document.getElementById(x+";"+y)
+            console.log(x,y,att)
+            if(field_CanShot[x][y]==true){
+                field_CanShot[x][y]=false
+                for(i=0;i<10;i++){
+                    if(field_xy[x][y]==data_ship[i][0]){//Попал
+                        console.log("Попал")
+                        hp = data_ship[i][1]
+                        hp = hp-1
+                        data_ship[i][1] = hp
+                        hit_bot.push([x,y,"hit"])
+                        att.classList.add("hit")
+                        hit = hit+1
+                    }
+                    
+                }
+                if(field_xy2[x][y]==0 || field_xy2[x][y]==1){//Мимо
+                    console.log("Мимо")
+                    att.classList.add("miss")
+                    move_pc= false
+                    move_user = true
+                }
+            }
+            dead_ship_check()
+        }
+        if(hit==1){
+            console.log("Бот один раз попал.")
+            move_pc= false
+            move_user = true
+        }
+        /*
+        if(hit==1){//Обстрел первого попадания крестом"+"
 
-
+            if(hit_crest==1){//Проперка правой клетки 1(+)
+                kx= hit_bot[0][0]
+                ky= hit_bot[0][1]
+                ky= ky+1
+                att = document.getElementById(kx+";"+ky)
+                if(ky<10){
+                    if(field_CanShot[kx][ky]==true){
+                        field_CanShot[kx][ky]=false
+                        for(i=0;i;i++){
+                            if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                                hp = data_ship[i][1]
+                                hp = hp-1
+                                data_ship[i][1] = hp
+                                hit_bot.push([kx,ky,"hit"])
+                                att.classList.add("hit")
+                                hit = hit+1
+                                hit_xy = 0
+                                break
+                            }else{
+                                att.classList.add("miss")
+                                move=0
+                            }
+                        }
+                    }else{hit_crest=hit_crest+1}
+                }else{hit_crest=hit_crest+1}
+            }if(hit_crest==2){//Проперка нижния клетка 2(+)
+                kx= hit_bot[0][0]
+                ky= hit_bot[0][1]
+                kx= kx+1
+                att = document.getElementById(kx+";"+ky)
+                if(kx<10){
+                    if(field_CanShot[kx][ky]==true){
+                        field_CanShot[kx][ky]=false
+                        for(i=0;i;i++){
+                            if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                                hp = data_ship[i][1]
+                                hp = hp-1
+                                data_ship[i][1] = hp
+                                hit_bot.push([kx,ky,"hit"])
+                                att.classList.add("hit")
+                                hit = hit+1
+                                hit_xy = 1
+                                break
+                            }else{
+                                att.classList.add("miss")
+                                move=0
+                            }
+                        }
+                    }else{hit_crest=hit_crest+1}
+                }else{hit_crest=hit_crest+1}
+            }if(hit_crest==3){//Проперка левой клетки 3(-)
+                kx= hit_bot[0][0]
+                ky= hit_bot[0][1]
+                ky= ky-1
+                att = document.getElementById(kx+";"+ky)
+                if(ky>-1){
+                    if(field_CanShot[kx][ky]==true){
+                        field_CanShot[kx][ky]=false
+                        for(i=0;i;i++){
+                            if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                                hp = data_ship[i][1]
+                                hp = hp-1
+                                data_ship[i][1] = hp
+                                hit_bot.push([kx,ky,"hit"])
+                                att.classList.add("hit")
+                                hit = hit+1
+                                hit_xy = 0
+                                break
+                            }else{
+                                att.classList.add("miss")
+                                move=0
+                            }
+                        }
+                    }else{hit_crest=hit_crest+1}
+                }else{hit_crest=hit_crest+1}
+            }if(hit_crest==4){//Проперка верхней клетки 4(-)
+                kx= hit_bot[0][0]
+                ky= hit_bot[0][1]
+                kx= kx-1
+                att = document.getElementById(kx+";"+ky)
+                if(kx>-1){
+                    if(field_CanShot[kx][ky]==true){
+                        field_CanShot[kx][ky]=false
+                        for(i=0;i;i++){
+                            if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                                hp = data_ship[i][1]
+                                hp = hp-1
+                                data_ship[i][1] = hp
+                                hit_bot.push([kx,ky,"hit"])
+                                att.classList.add("hit")
+                                hit = hit+1
+                                hit_xy = 1
+                                break
+                            }else{
+                                att.classList.add("miss")
+                                move=0
+                            }
+                        }
+                    }
+                }
+            }
+            dead_ship_check()
+        }
+        if(hit>1){//Добить корабль.
+            if(hit_xy==0){//Горизонталь
+                x_last= hit_bot[hit_bot.length -1][0]
+                y_last= hit_bot[hit_bot.length -1][1]
+                z_last= hit_bot[hit_bot.length -1][2]//Попал или промазал.
+                if(z_last=="hit"){
+                    y_last=y_last+1
+                    att = document.getElementById(x_last+";"+y_last)
+                    if(y_last<10){
+                        if(field_CanShot[x_last][y_last]==true){
+                            field_CanShot[x_last][y_last]=false
+                            for(i=0;i;i++){
+                                if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
+                                    hp = data_ship[i][1]
+                                    hp = hp-1
+                                    data_ship[i][1] = hp
+                                    hit_bot.push([x_last,y_last,"hit"])
+                                    att.classList.add("hit")
+                                    hit = hit+1
+                                    break
+                                }else{
+                                    att.classList.add("miss")
+                                    hit_bot.push([x_last,y_last,"miss"])
+                                    move=0
+                                }
+                            }
+                        }else{MISS_X()}
+                    }else{MISS_X()}
+                }//Конец hit
+                if(z_last=="miss"){MISS_X()}
+            }
+            if(hit_xy==1){//Вертикаль
+                x_last= hit_bot[hit_bot.length -1][0]
+                y_last= hit_bot[hit_bot.length -1][1]
+                z_last= hit_bot[hit_bot.length -1][2]//Попал или промазал.
+                if(z_last=="hit"){
+                    x_last=x_last+1
+                    att = document.getElementById(x_last+";"+y_last)
+                    if(x_last<10){
+                        if(field_CanShot[x_last][y_last]==true){
+                            field_CanShot[x_last][y_last]=false
+                            for(i=0;i;i++){
+                                if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
+                                    hp = data_ship[i][1]
+                                    hp = hp-1
+                                    data_ship[i][1] = hp
+                                    hit_bot.push([x_last,y_last,"hit"])
+                                    att.classList.add("hit")
+                                    hit = hit+1
+                                    break
+                                }else{
+                                    att.classList.add("miss")
+                                    hit_bot.push([x_last,y_last,"miss"])
+                                    move=0
+                                }
+                            }
+                        }else{MISS_Y()}
+                    }else{MISS_Y()}
+                }
+                if(z_last=="miss"){MISS_Y()}
+            }
+            dead_ship_check()
+        }
+        */
+    }
+    
+}
 
 /*-----------------------------------------*/ 
 
 //Системные функции
+
+function MISS_X(){
+    x_last= hit_bot[0][0]
+    y_last= hit_bot[0][1]
+    y_last= y_last-1
+    att = document.getElementById(x_last+";"+y_last)
+    if(y_last>-1){
+        if(field_CanShot[x_last][y_last]==true){
+            field_CanShot[x_last][y_last]=false
+            for(i=0;i;i++){
+                if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
+                    hp = data_ship[i][1]
+                    hp = hp-1
+                    data_ship[i][1] = hp
+                    hit_bot.unshift([x_last,y_last,"hit"])
+                    att.classList.add("hit")
+                    hit = hit+1
+                    break
+                }
+            }
+        }
+    }
+}
+
+function MISS_Y(){
+    x_last= hit_bot[0][0]
+    y_last= hit_bot[0][1]
+    x_last= x_last-1
+    att = document.getElementById(x_last+";"+y_last)
+    if(x_last>-1){
+        if(field_CanShot[x_last][y_last]==true){
+            field_CanShot[x_last][y_last]=false
+            for(i=0;i;i++){
+                if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
+                    hp = data_ship[i][1]
+                    hp = hp-1
+                    data_ship[i][1] = hp
+                    hit_bot.unshift([x_last,y_last,"hit"])
+                    att.classList.add("hit")
+                    hit = hit+1
+                    break
+                }
+            }
+        }
+    }
+}
+
+
+function dead_ship_check(){
+    for(j=0;j<data_ship.length;j++){//Мертвяк.
+        if(data_ship[j][1]==0){
+            data_ship[j][1]="dead"
+            for(g=0;g<hit_bot.length;g++){
+                if(hit_bot[g][2]=="hit"){
+                    x1= hit_bot[g][0]
+                    y1= hit_bot[g][1]
+                    document.getElementById(x1+";"+y1).classList.add("dead")
+                }
+            }
+            for(c=0;c<hit_bot.length;c++){ //Обводка вокруг, чтобы бот не стрелял по полям, где 100% нет корабля.
+                let vr_Check_Ship =[]
+                //Начальные координаты палубы корабля.
+                if(hit_bot[c][2]=="hit"){
+                    x2=hit_bot[c][0]
+                    y2=hit_bot[c][1]
+                    y2=y2+1 //Сдвиг вправо 1 раз.
+                    vr_Check_Ship.push([x2,y2])
+                    x2=x2+1//Сдвиг вниз 1 раз.
+                    vr_Check_Ship.push([x2,y2])
+                    for(t=0;t<2;t++){//Сдвиг влево 2 раза.
+                        y2=y2-1
+                        vr_Check_Ship.push([x2,y2])
+                    }
+                    for(tg=0;tg<2;tg++){//Сдвиг вверх 2 раза
+                        x2=x2-1
+                        vr_Check_Ship.push([x2,y2])
+                    }
+                    for(th=0;th<2;th++){//Сдвиг право 2 раза
+                        y2=y2+1
+                        vr_Check_Ship.push([x2,y2])
+                    }
+                    //console.log(vr_Check_Ship) //Координаты вокруг клетки.
+            
+                    //Проверка координат, чтобы пометить поле возле корабля.
+                    for(chk=0;chk<vr_Check_Ship.length;chk++){
+                        x3= vr_Check_Ship[chk][0]
+                        y3= vr_Check_Ship[chk][1]
+                        if (x3>-1 && x3<10){ //9>=x2>=0
+                            if (y3>-1 && y3<10){
+                                if(field_CanShot[x3][y3]==true){
+                                    field_CanShot[x3][y3] = false
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+        
+            }
+            dead_ship2 = dead_ship2 + 1
+            hit = 0
+            hit_bot.length = 0
+            hit_crest = 1
+        }
+    }//конец мертвека
+}
 
 function Delet(xd,yd){//Проверка и удаление кораблей, если они уже на поле.
     if (field_xy[xd][yd]==0){ // Нет в массиве ничего

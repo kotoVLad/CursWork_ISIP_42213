@@ -110,3 +110,15 @@
 .Ship_shadow{
     background-color: #abffd6;
 }
+
+.miss{
+    background-color: #b882ff;
+}
+
+.hit{
+    background-color: #ffa1a1;
+}
+
+.dead{
+    background-color: #0a9afa;
+}
