@@ -348,50 +348,50 @@ function Play_game(){
 
 function handleClick(event){//Выстрел.
     // Берём id div-ва и разделяем на координаты Х и У.
-    if(move_user==true){
-        coords=event.srcElement.id.split(";;");
-        x_coord=coords[0];
-        y_coord=coords[1]; 
-        // Берём id div-ва
-        let att= document.getElementById(event.srcElement.id)
+    if(Ship_Sum > dead_ship2){
+        if(move_user==true){
+            coords=event.srcElement.id.split(";;");
+            x_coord=coords[0];
+            y_coord=coords[1]; 
+            // Берём id div-ва
+            let att= document.getElementById(event.srcElement.id)
         
+            if(field_CanShot2[x_coord][y_coord]==true){//Проверка на выстрел 
+                field_CanShot2[x_coord][y_coord] = false
+                
+                //Проверка на попадания по карабл, и если он попал, то данные изменяются и переносятся в массив data_ship
+                
+                for(g = 0;g<10;g++){
+                    if(field_xy2[x_coord][y_coord]==data_ship2[g][0]){//Если попал
+                        hp = data_ship2[g][1]
+                        hp = hp-1
+                        data_ship2[g][1] = hp
+                        data_ship2[g].push(att)
+                        att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
 
-
-        /*--------------------------------------------*/
-        if(field_CanShot2[x_coord][y_coord]==true){//Проверка на выстрел 
-            field_CanShot2[x_coord][y_coord] = false
-            
-            //Проверка на попадания по карабл, и если он попал, то данные изменяются и переносятся в массив data_ship
-            
-            for(g = 0;g<10;g++){
-                if(field_xy2[x_coord][y_coord]==data_ship2[g][0]){//Если попал
-                    hp = data_ship2[g][1]
-                    hp = hp-1
-                    data_ship2[g][1] = hp
-                    data_ship2[g].push(att)
-                    att.style.backgroundColor = '#ffa1a1' //Цвет, что ты попал.
-
-                }else if(field_xy2[x_coord][y_coord]==0 || field_xy2[x_coord][y_coord]==1){ //Промах.
-                    att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
-                    move_user=false
-                    move_pc = true
-                    move_bot()
-                    console.log(">>Я сработал<<")
-                    break
-                }
-                //Мертвяк.
-                if (data_ship2[g][1]==0){
-                    for(k=2;k<data_ship2[g].length;k++){
-                        stl= data_ship2[g][k]
-                        stl.style.backgroundColor = '#0a9afa'
+                    }else if(field_xy2[x_coord][y_coord]==0 || field_xy2[x_coord][y_coord]==1){ //Промах.
+                        att.style.backgroundColor = '#b882ff' //Цвет, что ты промазал.
+                        move_user=false
+                        move_pc = true
+                        move_bot()
+                        console.log(">>Я сработал<<")
+                        break
                     }
-                    dead_ship = dead_ship + 1
-                    data_ship2[g][1] = "dead"
-                    Result()
-                }    
+                    //Мертвяк.
+                    if (data_ship2[g][1]==0){
+                        for(k=2;k<data_ship2[g].length;k++){
+                            stl= data_ship2[g][k]
+                            stl.style.backgroundColor = '#0a9afa'
+                        }
+                        dead_ship = dead_ship + 1
+                        data_ship2[g][1] = "dead"
+                        Result()
+                    }    
+                }
             }
         }
     }
+    
     
       
 }
