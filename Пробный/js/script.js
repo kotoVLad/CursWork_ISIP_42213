@@ -348,7 +348,7 @@ function Play_game(){
 
 function handleClick(event){//Выстрел.
     // Берём id div-ва и разделяем на координаты Х и У.
-    if(Ship_Sum > dead_ship2){
+    if(Ship_Sum > dead_ship){
         if(move_user==true){
             coords=event.srcElement.id.split(";;");
             x_coord=coords[0];
@@ -587,7 +587,6 @@ function Random2(){//Создание кораблей по методу ран�
     
     return true
 }
-console.log(field_xy)
 function move_bot(){
     if(Ship_Sum > dead_ship2){
         while(move_pc==true){
@@ -844,6 +843,17 @@ function Result(){
         }, 3000);
     }
     if(Ship_Sum == dead_ship2){
+        for(i=0;i<10;i++){
+            for(j=0;j<10;j++){
+                for(f=0;f<10;f++){
+                    if(field_xy2[i][j]==data_ship2[f][0]){
+                        if(data_ship2[f][1]!="dead"){
+                            document.getElementById(i+";;"+j).classList.add("Ship_shadow")
+                        }
+                    }
+                }
+            }
+        }
         setInterval(function(){
             let result2 = document.getElementById("Win_Lozz")
             result2.innerText = "Ваши корабли уничтожены, победа робота.";
@@ -1149,4 +1159,12 @@ function Hover_off(event){
     
     
     //document.getElementById(event.srcElement.id).classList.remove("Hover_on")
+}
+
+function sleep(milsec){
+    const date = Date.now();
+    let = currentDate = null;
+    do{
+        currentDate = Date.now(); 
+    }while(currentDate - date<milsec)
 }
