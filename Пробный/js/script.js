@@ -595,147 +595,24 @@ function move_bot(){
                 console.log("Ход робота:",test_move)
                 min = 0
                 max = 9
+                console.log(">>>2<<<")
                 x = Math.floor(Math.random() * (max - min + 1)) + min
                 y = Math.floor(Math.random() * (max - min + 1)) + min
                 att = document.getElementById(x+";"+y)
                 console.log("Hit 0",att)
                 if(field_CanShot[x][y]==true){
-                    for(i=0;i<10;i++){
-                        if(field_xy[x][y]==data_ship[i][0]){//Попал
-                            console.log("1. Попал")
-                            hp = data_ship[i][1]
-                            hp = hp-1
-                            data_ship[i][1] = hp
-                            hit_bot.push([x,y,"hit"])
-                            att.classList.add("hit")
-                            hit = hit+1
-                            field_CanShot[x][y]=false
-                        }
-                    }
-                    if(field_xy[x][y]==0 || field_xy[x][y]==1){//Мимо
-                        console.log("1. Мимо")
-                        att.classList.add("miss")
-                        move_pc= false
-                        move_user = true
-                        field_CanShot[x][y]=false
-                    }
-                    console.log("Ок")
+                    setTimeout(Naw_hit,3000, x,y,att)
                 }
                 dead_ship_check()
             }
             console.log("-------------------------------------")
             console.log(field_CanShot)
             console.log("-------------------------------------")
+
             if(hit==1){//Обстрел первого попадания крестом"+"
                 test_move++
                 console.log("Ход робота:",test_move)
-                if(hit_crest==1){//Проперка правой клетки 1(+)
-                    kx= hit_bot[0][0]
-                    ky= hit_bot[0][1]
-                    ky= ky+1
-                    att = document.getElementById(kx+";"+ky)
-                    console.log("Hit 1",att)
-                    if(ky<10){
-                        if(field_CanShot[kx][ky]==true){
-                            field_CanShot[kx][ky]=false
-                            for(i=0;i<10;i++){
-                                if(field_xy[kx][ky]==data_ship[i][0]){//Попал
-                                    hp = data_ship[i][1]
-                                    hp = hp-1
-                                    data_ship[i][1] = hp
-                                    hit_bot.push([kx,ky,"hit"])
-                                    att.classList.add("hit")
-                                    hit_xy = 0
-                                    hit = hit+1
-                                }
-                            }
-                            if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
-                                att.classList.add("miss")
-                                move_pc= false
-                                move_user = true
-                                hit_crest=hit_crest+1
-                            }
-                        }else{hit_crest=hit_crest+1}
-                    }else{hit_crest=hit_crest+1}
-                }if(hit_crest==2 && move_pc==true){//Проперка нижния клетка 2(+)
-                    kx= hit_bot[0][0]
-                    ky= hit_bot[0][1]
-                    kx= kx+1
-                    att = document.getElementById(kx+";"+ky)
-                    console.log("Hit 1",att)
-                    if(kx<10){
-                        if(field_CanShot[kx][ky]==true){
-                            field_CanShot[kx][ky]=false
-                            for(i=0;i<10;i++){
-                                if(field_xy[kx][ky]==data_ship[i][0]){//Попал
-                                    hp = data_ship[i][1]
-                                    hp = hp-1
-                                    data_ship[i][1] = hp
-                                    hit_bot.push([kx,ky,"hit"])
-                                    att.classList.add("hit")
-                                    hit = hit+1
-                                    hit_xy = 1
-                                }
-                            }
-                            if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
-                                att.classList.add("miss")
-                                move_pc= false
-                                move_user = true
-                                hit_crest=hit_crest+1
-                            }
-                        }else{hit_crest=hit_crest+1}
-                    }else{hit_crest=hit_crest+1}
-                }if(hit_crest==3 && move_pc==true){//Проперка левой клетки 3(-)
-                    kx= hit_bot[0][0]
-                    ky= hit_bot[0][1]
-                    ky= ky-1
-                    att = document.getElementById(kx+";"+ky)
-                    console.log("Hit 1",att)
-                    if(ky>-1){
-                        if(field_CanShot[kx][ky]==true){
-                            field_CanShot[kx][ky]=false
-                            for(i=0;i<10;i++){
-                                if(field_xy[kx][ky]==data_ship[i][0]){//Попал
-                                    hp = data_ship[i][1]
-                                    hp = hp-1
-                                    data_ship[i][1] = hp
-                                    hit_bot.unshift([kx,ky,"hit"])
-                                    att.classList.add("hit")
-                                    hit = hit+1
-                                    hit_xy = 0
-                                }
-                            }
-                            if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
-                                att.classList.add("miss")
-                                move_pc= false
-                                move_user = true
-                                hit_crest=hit_crest+1
-                            }
-                        }else{hit_crest=hit_crest+1}
-                    }else{hit_crest=hit_crest+1}
-                }if(hit_crest==4 && move_pc==true){//Проперка верхней клетки 4(-)
-                    kx= hit_bot[0][0]
-                    ky= hit_bot[0][1]
-                    kx= kx-1
-                    att = document.getElementById(kx+";"+ky)
-                    console.log("Hit 1",att)
-                    if(kx>-1){
-                        if(field_CanShot[kx][ky]==true){
-                            field_CanShot[kx][ky]=false
-                            for(i=0;i<10;i++){
-                                if(field_xy[kx][ky]==data_ship[i][0]){//Попал
-                                    hp = data_ship[i][1]
-                                    hp = hp-1
-                                    data_ship[i][1] = hp
-                                    hit_bot.unshift([kx,ky,"hit"])
-                                    att.classList.add("hit")
-                                    hit = hit+1
-                                    hit_xy = 1
-                                }
-                            }
-                        }
-                    }
-                }
+                setTimeout(Hit_crest, 6000)
                 dead_ship_check()
             }
               
@@ -744,82 +621,10 @@ function move_bot(){
                 console.log("-------------------------------------")
                 test_move++
                 console.log("Ход робота:",test_move)
-                if(hit_xy==0){//Горизонталь
-                    //Берём последний элемент массива, его координаты
-                    x_last= hit_bot[hit_bot.length-1][0]
-                    y_last= hit_bot[hit_bot.length-1][1]
-                    z_last= hit_bot[hit_bot.length-1][2]//Попал или промазал.
-                    console.log(x_last,y_last)
-                    console.log(hit_bot)
-                    if(z_last=="hit"){
-                        console.log(">>Сработал HIT<<")
-                        y_last=y_last+1
-                        att = document.getElementById(x_last+";"+y_last)
-                        console.log("Hit 3 X",att)
-                        if(y_last<10){
-                            if(field_CanShot[x_last][y_last]==true){
-                                field_CanShot[x_last][y_last]=false
-                                for(i=0;i<10;i++){
-                                    if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
-                                        console.log(">>3.Попал<<")
-                                        hp = data_ship[i][1]
-                                        hp = hp-1
-                                        data_ship[i][1] = hp
-                                        hit_bot.push([x_last,y_last,"hit"])
-                                        att.classList.add("hit")
-                                        hit = hit+1
-                                    }
-                                }
-                                if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
-                                    console.log(">>3.Мимо<<")
-                                    att.classList.add("miss")
-                                    hit_bot.push([x_last,y_last,"miss"])
-                                    move_pc= false
-                                    move_user = true
-                                }
-                            }else{MISS_X()}
-                        }else{MISS_X()}
-                    }//Конец hit
-                    if(z_last=="miss"){MISS_X()}
-                }
-                if(hit_xy==1){//Вертикаль
-                    x_last= hit_bot[hit_bot.length -1][0]
-                    y_last= hit_bot[hit_bot.length -1][1]
-                    z_last= hit_bot[hit_bot.length -1][2]//Попал или промазал.
-                    if(z_last=="hit"){
-                        console.log(">>Сработал HIT<<")
-                        x_last=x_last+1
-                        att = document.getElementById(x_last+";"+y_last)
-                        console.log(att)
-                        console.log("Hit 3 Y",att)
-                        if(x_last<10){
-                            if(field_CanShot[x_last][y_last]==true){
-                                field_CanShot[x_last][y_last]=false
-                                for(i=0;i<10;i++){
-                                    if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
-                                        console.log(">>3.Попал<<")
-                                        hp = data_ship[i][1]
-                                        hp = hp-1
-                                        data_ship[i][1] = hp
-                                        hit_bot.push([x_last,y_last,"hit"])
-                                        att.classList.add("hit")
-                                        hit = hit+1
-                                    }
-                                }
-                                if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
-                                    console.log(">>3.Мимо<<")
-                                    att.classList.add("miss")
-                                    hit_bot.push([x_last,y_last,"miss"])
-                                    move_pc= false
-                                    move_user = true
-                                }
-                            }else{MISS_Y()}
-                        }else{MISS_Y()}
-                    }
-                    if(z_last=="miss"){MISS_Y()}
-                }
+                setTimeout(Hit_Finishing, 6000)
                 dead_ship_check()
             }
+
             if(trig==1){
                 move_pc= true
                 move_user = false
@@ -835,6 +640,218 @@ function move_bot(){
 /*-----------------------------------------*/ 
 
 //Системные функции
+
+function Naw_hit(x,y, att){
+    for(i=0;i<10;i++){
+        if(field_xy[x][y]==data_ship[i][0]){//Попал
+            console.log("1. Попал")
+            hp = data_ship[i][1]
+            hp = hp-1
+            data_ship[i][1] = hp
+            hit_bot.push([x,y,"hit"])
+            att.classList.add("hit")
+            hit = hit+1
+            field_CanShot[x][y]=false
+        }
+    }
+    if(field_xy[x][y]==0 || field_xy[x][y]==1){//Мимо
+        console.log("1. Мимо")
+        att.classList.add("miss")
+        move_pc= false
+        move_user = true
+        field_CanShot[x][y]=false
+    }
+    console.log("Ок")
+}
+
+function Hit_crest(){
+    if(hit_crest==1){//Проперка правой клетки 1(+)
+        kx= hit_bot[0][0]
+        ky= hit_bot[0][1]
+        ky= ky+1
+        att = document.getElementById(kx+";"+ky)
+        console.log("Hit 1",att)
+        if(ky<10){
+            if(field_CanShot[kx][ky]==true){
+                field_CanShot[kx][ky]=false
+                for(i=0;i<10;i++){
+                    if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                        hp = data_ship[i][1]
+                        hp = hp-1
+                        data_ship[i][1] = hp
+                        hit_bot.push([kx,ky,"hit"])
+                        att.classList.add("hit")
+                        hit_xy = 0
+                        hit = hit+1
+                    }
+                }
+                if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
+                    att.classList.add("miss")
+                    move_pc= false
+                    move_user = true
+                    hit_crest=hit_crest+1
+                }
+            }else{hit_crest=hit_crest+1}
+        }else{hit_crest=hit_crest+1}
+    }if(hit_crest==2 && move_pc==true){//Проперка нижния клетка 2(+)
+        kx= hit_bot[0][0]
+        ky= hit_bot[0][1]
+        kx= kx+1
+        att = document.getElementById(kx+";"+ky)
+        console.log("Hit 1",att)
+        if(kx<10){
+            if(field_CanShot[kx][ky]==true){
+                field_CanShot[kx][ky]=false
+                for(i=0;i<10;i++){
+                    if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                        hp = data_ship[i][1]
+                        hp = hp-1
+                        data_ship[i][1] = hp
+                        hit_bot.push([kx,ky,"hit"])
+                        att.classList.add("hit")
+                        hit = hit+1
+                        hit_xy = 1
+                    }
+                }
+                if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
+                    att.classList.add("miss")
+                    move_pc= false
+                    move_user = true
+                    hit_crest=hit_crest+1
+                }
+            }else{hit_crest=hit_crest+1}
+        }else{hit_crest=hit_crest+1}
+    }if(hit_crest==3 && move_pc==true){//Проперка левой клетки 3(-)
+        kx= hit_bot[0][0]
+        ky= hit_bot[0][1]
+        ky= ky-1
+        att = document.getElementById(kx+";"+ky)
+        console.log("Hit 1",att)
+        if(ky>-1){
+            if(field_CanShot[kx][ky]==true){
+                field_CanShot[kx][ky]=false
+                for(i=0;i<10;i++){
+                    if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                        hp = data_ship[i][1]
+                        hp = hp-1
+                        data_ship[i][1] = hp
+                        hit_bot.unshift([kx,ky,"hit"])
+                        att.classList.add("hit")
+                        hit = hit+1
+                        hit_xy = 0
+                    }
+                }
+                if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
+                    att.classList.add("miss")
+                    move_pc= false
+                    move_user = true
+                    hit_crest=hit_crest+1
+                }
+            }else{hit_crest=hit_crest+1}
+        }else{hit_crest=hit_crest+1}
+    }if(hit_crest==4 && move_pc==true){//Проперка верхней клетки 4(-)
+        kx= hit_bot[0][0]
+        ky= hit_bot[0][1]
+        kx= kx-1
+        att = document.getElementById(kx+";"+ky)
+        console.log("Hit 1",att)
+        if(kx>-1){
+            if(field_CanShot[kx][ky]==true){
+                field_CanShot[kx][ky]=false
+                for(i=0;i<10;i++){
+                    if(field_xy[kx][ky]==data_ship[i][0]){//Попал
+                        hp = data_ship[i][1]
+                        hp = hp-1
+                        data_ship[i][1] = hp
+                        hit_bot.unshift([kx,ky,"hit"])
+                        att.classList.add("hit")
+                        hit = hit+1
+                        hit_xy = 1
+                    }
+                }
+            }
+        }
+    }
+}
+
+function Hit_Finishing(){
+    if(hit_xy==0){//Горизонталь
+        //Берём последний элемент массива, его координаты
+        x_last= hit_bot[hit_bot.length-1][0]
+        y_last= hit_bot[hit_bot.length-1][1]
+        z_last= hit_bot[hit_bot.length-1][2]//Попал или промазал.
+        console.log(x_last,y_last)
+        console.log(hit_bot)
+        if(z_last=="hit"){
+            console.log(">>Сработал HIT<<")
+            y_last=y_last+1
+            att = document.getElementById(x_last+";"+y_last)
+            console.log("Hit 3 X",att)
+            if(y_last<10){
+                if(field_CanShot[x_last][y_last]==true){
+                    field_CanShot[x_last][y_last]=false
+                    for(i=0;i<10;i++){
+                        if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
+                            console.log(">>3.Попал<<")
+                            hp = data_ship[i][1]
+                            hp = hp-1
+                            data_ship[i][1] = hp
+                            hit_bot.push([x_last,y_last,"hit"])
+                            att.classList.add("hit")
+                            hit = hit+1
+                        }
+                    }
+                    if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
+                        console.log(">>3.Мимо<<")
+                        att.classList.add("miss")
+                        hit_bot.push([x_last,y_last,"miss"])
+                        move_pc= false
+                        move_user = true
+                    }
+                }else{MISS_X()}
+            }else{MISS_X()}
+        }//Конец hit
+        if(z_last=="miss"){MISS_X()}
+    }
+    if(hit_xy==1){//Вертикаль
+        x_last= hit_bot[hit_bot.length -1][0]
+        y_last= hit_bot[hit_bot.length -1][1]
+        z_last= hit_bot[hit_bot.length -1][2]//Попал или промазал.
+        if(z_last=="hit"){
+            console.log(">>Сработал HIT<<")
+            x_last=x_last+1
+            att = document.getElementById(x_last+";"+y_last)
+            console.log(att)
+            console.log("Hit 3 Y",att)
+            if(x_last<10){
+                if(field_CanShot[x_last][y_last]==true){
+                    field_CanShot[x_last][y_last]=false
+                    for(i=0;i<10;i++){
+                        if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
+                            console.log(">>3.Попал<<")
+                            hp = data_ship[i][1]
+                            hp = hp-1
+                            data_ship[i][1] = hp
+                            hit_bot.push([x_last,y_last,"hit"])
+                            att.classList.add("hit")
+                            hit = hit+1
+                        }
+                    }
+                    if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
+                        console.log(">>3.Мимо<<")
+                        att.classList.add("miss")
+                        hit_bot.push([x_last,y_last,"miss"])
+                        move_pc= false
+                        move_user = true
+                    }
+                }else{MISS_Y()}
+            }else{MISS_Y()}
+        }
+        if(z_last=="miss"){MISS_Y()}
+    }
+}
+
+
 function Result(){
     if(Ship_Sum == dead_ship){
         setInterval(function(){
