@@ -11,6 +11,9 @@ settings_bt.addEventListener('click', Settings_button);
 let description_bt = document.getElementById("Description");
 description_bt.addEventListener('click', Description_button);
 
+let Solo_game = document.getElementById("solo_game");
+Solo_game.addEventListener('click', solo_play);
+
 /*------------------------------------------------------------*/
 //Своеобразные ключи.
 Cod_Wind_1 = 0
@@ -60,3 +63,7 @@ function remove_wind(){//Убрать окно.
     }
 }
 
+function solo_play(){
+    document.getElementById("web").style.display = 'none';
+    document.getElementById("Bord_ship").style.display = 'block';
+}

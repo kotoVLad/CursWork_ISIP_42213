@@ -345,7 +345,6 @@ function Play_game(){
 
 }
 
-
 function handleClick(event){//Выстрел.
     // Берём id div-ва и разделяем на координаты Х и У.
     if(Ship_Sum > dead_ship){
@@ -637,10 +636,6 @@ function move_bot(){
     
 }
 
-/*-----------------------------------------*/ 
-
-//Системные функции
-
 function Naw_hit(x,y, att){
     for(i=0;i<10;i++){
         if(field_xy[x][y]==data_ship[i][0]){//Попал
@@ -851,33 +846,6 @@ function Hit_Finishing(){
     }
 }
 
-
-function Result(){
-    if(Ship_Sum == dead_ship){
-        setInterval(function(){
-            let result2 = document.getElementById("Win_Lozz")
-            result2.innerText = "Вы уничтожели все корабли, победа игрока";
-        }, 3000);
-    }
-    if(Ship_Sum == dead_ship2){
-        for(i=0;i<10;i++){
-            for(j=0;j<10;j++){
-                for(f=0;f<10;f++){
-                    if(field_xy2[i][j]==data_ship2[f][0]){
-                        if(data_ship2[f][1]!="dead"){
-                            document.getElementById(i+";;"+j).classList.add("Ship_shadow")
-                        }
-                    }
-                }
-            }
-        }
-        setInterval(function(){
-            let result2 = document.getElementById("Win_Lozz")
-            result2.innerText = "Ваши корабли уничтожены, победа робота.";
-        }, 3000);
-    }
-}
-
 function MISS_X(){//Проверка задних координат предпологаймого корабля по Х
     x_last= hit_bot[0][0]
     y_last= hit_bot[0][1]
@@ -923,6 +891,39 @@ function MISS_Y(){//Проверка задних координат предп�
                 }
             }
         }
+    }
+}
+
+/*-----------------------------------------*/ 
+
+//Системные функции
+
+
+
+
+function Result(){
+    if(Ship_Sum == dead_ship){
+        setInterval(function(){
+            let result2 = document.getElementById("Win_Lozz")
+            result2.innerText = "Вы уничтожели все корабли, победа игрока";
+        }, 3000);
+    }
+    if(Ship_Sum == dead_ship2){
+        for(i=0;i<10;i++){
+            for(j=0;j<10;j++){
+                for(f=0;f<10;f++){
+                    if(field_xy2[i][j]==data_ship2[f][0]){
+                        if(data_ship2[f][1]!="dead"){
+                            document.getElementById(i+";;"+j).classList.add("Ship_shadow")
+                        }
+                    }
+                }
+            }
+        }
+        setInterval(function(){
+            let result2 = document.getElementById("Win_Lozz")
+            result2.innerText = "Ваши корабли уничтожены, победа робота.";
+        }, 3000);
     }
 }
 
