@@ -1336,11 +1336,3 @@ function Hover_off(event){
     
     //document.getElementById(event.srcElement.id).classList.remove("Hover_on")
 }
-
-function sleep(milsec){
-    const date = Date.now();
-    let = currentDate = null;
-    do{
-        currentDate = Date.now(); 
-    }while(currentDate - date<milsec)
-}
