@@ -107,8 +107,11 @@ coord_xy = 0
 
 Ship = 0
 var move
-var move_pc = false
-var move_user = false
+var move_pc = false//Бот
+
+var move_user = false//Игрок 1
+var move_user2 = false//Игрок 2
+
 var move_pc_cycle = false
 var Shelling_of_field = false
 
@@ -312,7 +315,7 @@ function Position(){
     
 }
 
-function Play_game(){
+function Play_game(){//Начать игру с ботом.
     if(key_play == true){
         if(Random2()==true){
             Block_button.style.display = "none"
