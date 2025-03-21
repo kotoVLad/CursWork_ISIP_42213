@@ -660,8 +660,11 @@ function move_bot(){//Функция ход бота
 
 function Sof(){
     if(Ship_Sum > dead_ship2){
-        kx_sof = shell_field[0][0]
-        ky_sof = shell_field[0][1]
+        min = 0
+        max = shell_field.length
+        xy_coord = Math.floor(Math.random() * (max - min + 1)) + min
+        kx_sof = shell_field[xy_coord][0]
+        ky_sof = shell_field[xy_coord][1]
         att = document.getElementById(kx_sof+";"+ky_sof)
         console.log(att)
         if(field_CanShot[kx_sof][ky_sof]==true){
@@ -673,7 +676,7 @@ function Sof(){
                     hp = hp-1
                     hit_bot.push([kx_sof,ky_sof,"hit"])
                     data_ship[i][1] = hp
-                    shell_field.shift()
+                    shell_field.splice(xy_coord,1)
                     dead_ship_check()
                     move_bot()
                     break
@@ -683,12 +686,12 @@ function Sof(){
                 field_CanShot[kx_sof][ky_sof]=false
                 console.log("1. Мимо")
                 att.classList.add("miss")
-                shell_field.shift()
+                shell_field.splice(xy_coord,1)
                 move_pc= false
                 move_user = true
             } 
         }else{
-            shell_field.shift()
+            shell_field.splice(xy_coord,1)
             Sof()
         }
     }
