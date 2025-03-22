@@ -1044,6 +1044,7 @@ function Again_start(){//Полная отчистака.
     check_Fl_full()// Очищаем 2 поля.
     Block_Win_Lozz.style.display = "none"
     Block_button.style.display = "block"
+    Play.style.display="none"
 }
 
 function Again_1(){
