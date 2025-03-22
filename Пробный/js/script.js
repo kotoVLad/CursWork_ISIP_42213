@@ -144,6 +144,9 @@ var Block_button = document.getElementById("Block_button")
 
 var Block_Win_Lozz = document.getElementById("Block_Win_Lozz") 
 
+
+var move_label = document.getElementById("move_label")
+
 /*-----------------------------------------*/ 
 
 //Кнопки.
@@ -336,9 +339,11 @@ function Play_game(){//Начать игру с ботом.
             console.log("0-Я, 1-ПК",move)
             console.log(field_xy)
             if(move==0){
+                move_label.innerText= "Ход Игрока"
                 move_user = true
                 move= false
             }if(move==1){
+                move_label.innerText= "Ход Бота"
                 move_pc_cycle = true
                 move_pc = true
                 move= false
@@ -393,6 +398,7 @@ function handleClick(event){//Выстрел.
                         att.classList.add("hit") //Цвет, что ты попал.
 
                     }else if(field_xy2[x_coord][y_coord]==0 || field_xy2[x_coord][y_coord]==1){ //Промах.
+                        move_label.innerText= "Ход Бота"
                         att.classList.add("miss") //Цвет, что ты промазал.
                         move_user=false
                         move_pc = true
@@ -697,6 +703,7 @@ function Sof(){
                 }
             }
             if(field_xy[kx_sof][ky_sof]==0 || field_xy[kx_sof][ky_sof]==1){//Мимо
+                move_label.innerText= "Ход Игрока"
                 test_move++
                 console.log("Ход робота:",test_move)
                 field_CanShot[kx_sof][ky_sof]=false
@@ -742,6 +749,7 @@ function Naw_hit(){//Первый или новый выстрел
             }
             if(field_xy[x][y]==0 || field_xy[x][y]==1){//Мимо
                 test_move++
+                move_label.innerText= "Ход Игрока"
                 console.log("Ход робота:",test_move)
                 console.log("1. Мимо")
                 att.classList.add("miss")
@@ -783,6 +791,7 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
                     }
                 }
                 if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
+                    move_label.innerText= "Ход Игрока"
                     test_move++
                     console.log("Ход робота:",test_move)
                     att.classList.add("miss")
@@ -817,6 +826,7 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
                     }
                 }
                 if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
+                    move_label.innerText= "Ход Игрока"
                     test_move++
                     console.log("Ход робота:",test_move)
                     att.classList.add("miss")
@@ -851,6 +861,7 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
                     }
                 }
                 if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
+                    move_label.innerText= "Ход Игрока"
                     test_move++
                     console.log("Ход робота:",test_move)
                     att.classList.add("miss")
@@ -921,6 +932,7 @@ function Hit_Finishing(){//Добить корабль
                         }
                     }
                     if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
+                        move_label.innerText= "Ход Игрока"
                         test_move++
                         console.log("Ход робота:",test_move)
                         console.log(">>3.Мимо<<")
@@ -963,6 +975,7 @@ function Hit_Finishing(){//Добить корабль
                         }
                     }
                     if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
+                        move_label.innerText= "Ход Игрока"
                         test_move++
                         console.log("Ход робота:",test_move)
                         console.log(">>3.Мимо<<")
@@ -1042,6 +1055,7 @@ function Again_start(){//Полная отчистака.
     Again_1()//Очищаем переменные
     Again_2()//Возращаем обратно изначальные значения
     check_Fl_full()// Очищаем 2 поля.
+    move_label.innerText= " "
     Block_Win_Lozz.style.display = "none"
     Block_button.style.display = "block"
     Play.style.display="none"

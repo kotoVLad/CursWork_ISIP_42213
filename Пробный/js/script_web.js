@@ -66,4 +66,5 @@ function remove_wind(){//Убрать окно.
 function solo_play(){
     document.getElementById("web").style.display = 'none';
     document.getElementById("Bord_ship").style.display = 'block';
+    setTimeout(()=>{document.getElementById("Block_button").style.display = 'block'},1000)
 }
