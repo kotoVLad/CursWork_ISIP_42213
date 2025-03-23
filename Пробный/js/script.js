@@ -169,6 +169,10 @@ Play.addEventListener('click', Play_game)
 let Again = document.getElementById("Again")
 Again.addEventListener('click', Again_start)
 
+//Выйти
+let Log_out = document.getElementById("Log_out")
+Log_out.addEventListener('click', Log_end)
+
 /*-----------------------------------------*/ 
 
 //Создаём 2 поля.
@@ -1050,6 +1054,12 @@ function MISS_Y(){//Проверка задних координат предп�
 /*-----------------------------------------*/ 
 
 //Системные функции
+function Log_end(){
+    Again_start()
+    Block_button.style.display = "none"
+    document.getElementById("Bord_ship").style.display = 'none';
+    document.getElementById("web").style.display = 'block';
+}
 
 function Again_start(){//Полная отчистака.
     Again_1()//Очищаем переменные
@@ -1270,8 +1280,6 @@ function dead_ship_check2(){//Проверка: уничтожен корабл�
     console.log("Конец")
     console.log("-------------------------------------")
 }
-
-
 
 function Delet(xd,yd){//Проверка и удаление кораблей, если они уже на поле.
     if (field_xy[xd][yd]==0){ // Нет в массиве ничего

@@ -57,6 +57,19 @@
 
 .block_wind{ /*Слывающие окна*/
     width: 500px;
+    height: 500px;
+    background-color: rgb(212, 212, 212);
+    border-radius: 25px;
+    z-index: 1;
+
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.block_wind2{ /*Слывающие окна*/
+    width: 500px;
     height: 300px;
     background-color: rgb(212, 212, 212);
     border-radius: 25px;
@@ -67,6 +80,7 @@
     left: 50%;
     transform: translate(-50%,-50%);
 }
+
 .block_btn{ /*Слывающие окна*/
     width: 500px;
     height: 500px;
@@ -96,11 +110,11 @@
     left: 50%;
     transform: translate(-50%,-50%);
 }
-
+/*
 #Block_button{
     display: none;
 }
-
+*/
 #Block_Win_Lozz{
     display: none;
 }
