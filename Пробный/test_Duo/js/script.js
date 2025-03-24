@@ -205,6 +205,7 @@ function Play_game(){//Начать игру с ботом.
     if(key_play == true || Ship==10){
         key_play = false
         Pos.innerText = "Вручную"
+        document.getElementById("User").innerText="Игрок 2"
         Ship=0
         triger = 0
         key_p_us = 1
@@ -987,6 +988,8 @@ function Again_start(){
     Again_1()//Очищаем переменные
     Again_2()//Возращаем обратно изначальные значения
     check_Fl_full()// Очищаем 2 поля.
+    document.getElementById("Block_button").style.left = "76%"
+    document.getElementById("User").innerText="Игрок 2"
     move_label.innerText= " "
     Block_Win_Lozz.style.display = "none"
     Block_button.style.display = "block"
