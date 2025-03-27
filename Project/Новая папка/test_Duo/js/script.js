@@ -169,15 +169,13 @@ Log_out.addEventListener('click', Log_end)
 /*-----------------------------------------*/ 
 
 //Создаём 2 поля.
-
+/*
 for(i=0;i<10;i++){//С ботом.
     
     // Поле 1 
     for(j=0;j<10;j++){
         var square = document.createElement("div");
         square.classList.add("square");
-        //square.addEventListener("mouseover", Hover_maus_on)
-        //square.addEventListener("mouseout", Hover_maus_off)
         square.id=i+";"+j;
         square.addEventListener('click',handleClick2);
         square.addEventListener("mouseover", Hover_maus_on)
@@ -189,8 +187,6 @@ for(i=0;i<10;i++){//С ботом.
     for(j=0;j<10;j++){
         var square2 = document.createElement("div");
         square2.classList.add("square2");
-        //square2.addEventListener("mouseover", Hover_maus_on)
-        //square2.addEventListener("mouseout", Hover_maus_off)
         square2.id=i+";;"+j;
         square2.addEventListener('click',handleClick);
         square2.addEventListener("mouseover", Hover_maus_on)
@@ -199,7 +195,7 @@ for(i=0;i<10;i++){//С ботом.
         wrapperBlock2.appendChild(square2)
     }
 }
-
+*/
 /*-----------------------------------------*/ 
 //Общие.
 
