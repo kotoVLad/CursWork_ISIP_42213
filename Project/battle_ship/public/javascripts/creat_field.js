@@ -49,6 +49,5 @@ let obj_creat={
         }
     }
 }
-module.exports ={
-    obj_creat: obj_creat
-}
+
+export default obj_creat

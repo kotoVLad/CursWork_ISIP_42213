@@ -1,5 +1,5 @@
 //Импортные файлы-функции.
-const obj_c = require('./creat_field');
+import obj_creat from './creat_field.js'
 
 
 /*-----------------------------------------*/ 
@@ -100,7 +100,7 @@ function solo_play(){
     document.getElementById("block_game").style.display = 'none';
     document.getElementById("web").style.display = 'none';
     //Создаём поле.
-    obj_c.obj_creat.creat_solo()
+    obj_creat.obj_creat.creat_solo()
 
     //Через время появляется окно с расстановкой кораблей.
 
