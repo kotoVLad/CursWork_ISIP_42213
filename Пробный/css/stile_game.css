@@ -1,0 +1,188 @@
+/*.Field{
+    background-color: rgb(255, 205, 205);
+    width: 700px;
+    height: 172px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cletca{
+    display: inline-block;
+    border: 1px solid #aaa;
+    background-color: #eee;
+    width: 66px;
+    height: 66px;
+}*/
+
+#wrapperBlock{
+    padding: 0;
+    display: flex;
+    flex-flow: row wrap;
+    /*width: calc(100vmin - 10px); //Соотношение 1-поле,2-промежуток
+    height: calc(100vmin - 10px);*/
+    width: calc(50vmin - 10px); /**/
+    /*height: calc(10ыvmin - 10px);*/
+}
+
+#wrapperBlock2 {
+    padding: 0;
+    display: flex;
+    flex-flow: row wrap;
+    /*width: calc(100vmin - 10px); //Соотношение 1-поле,2-промежуток
+    height: calc(100vmin - 10px);*/
+    width: calc(50vmin - 10px); /**/
+    /*height: calc(10ыvmin - 10px);*/
+}
+
+
+.square{
+    margin: 0;
+    padding: 0;
+    width: calc(5vmin - 1px); /* Размер клетки*/
+    height: calc(5vmin - 1px);
+    border: 1px solid #aaa;
+    background-color: #eee;
+    box-sizing: border-box;
+}
+
+.square2{
+    margin: 0;
+    padding: 0;
+    width: calc(5vmin - 1px);
+    height: calc(5vmin - 1px);
+    border: 1px solid #aaa;
+    background-color: #eee;
+    box-sizing: border-box;
+}
+
+.block_wind{ /*Слывающие окна*/
+    width: 500px;
+    height: 500px;
+    background-color: rgb(212, 212, 212);
+    border-radius: 25px;
+    z-index: 1;
+
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.block_wind2{ /*Слывающие окна*/
+    width: 500px;
+    height: 300px;
+    background-color: rgb(212, 212, 212);
+    border-radius: 25px;
+    z-index: 1;
+
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.block_btn{ /*Слывающие окна*/
+    width: 500px;
+    height: 500px;
+    border: 1px solid #aaa;
+    background-color: rgb(212, 212, 212);
+    border-radius: 25px;
+    z-index: 1;
+
+    position: absolute;
+    top:  52%;
+    left: 76%;
+    transform: translate(-50%,-50%);
+}
+
+.block_box{
+    padding-top: 25%;
+}
+
+
+#box_bt{
+    padding-top: 13%;
+}
+
+#big_box{
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#Block_button{
+    display: none;
+}
+
+#Block_Win_Lozz{
+    display: none;
+}
+
+#box{
+    column-count: 2;
+    
+    
+}
+
+#Play{
+    display: none;
+}
+/*
+.square_fill{
+    margin: 0;
+    padding: 0;
+    width: calc(5vmin - 1px);
+    height: calc(5vmin - 1px);
+    border: 1px solid #aaa;
+    background-color: #1100ff;
+    box-sizing: border-box;
+}
+*/
+.Hover_on{
+    background-color: rgb(142, 200, 255);
+    z-index: 1;
+}
+
+.Hover_on_red{
+    background-color: #ff3636;
+    z-index: 1;
+}
+
+.hover_on2{
+    background-color: rgb(175, 255, 228);
+}
+
+
+/*
+.square2:hover{
+    background-color: rgb(175, 255, 228);
+}
+*/
+.Clk{
+    width: 200px;
+    height: 50px;
+    background-color: #aaa;
+    align-content: center;
+    text-align: center;
+}
+.Clk:hover{
+    background-color: #4e4e4e;
+    color: #f7f7f7;
+}
+
+.Ship_shadow{
+    background-color: #abffd6;
+}
+
+.miss{
+    background-color: #b882ff;
+}
+
+.hit{
+    background-color: #ffa1a1;
+}
+
+.dead{
+    background-color: #0a9afa;
+}

@@ -1,0 +1,86 @@
+.block{
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.button{
+    width: 200px;
+    height: 50px;
+    background-color: rgb(95, 169, 255);
+    
+}
+
+.button:hover{
+    background-color: rgb(17, 17, 255);
+    color: rgb(255, 255, 255);
+}
+
+.button_game{
+    
+    width: 200px;
+    height: 50px;
+    background-color: rgb(95, 169, 255);
+}
+
+.button_game:hover{
+    background-color: rgb(17, 17, 255);
+    color: rgb(255, 255, 255);
+}
+
+.crests{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: aquamarine;
+    float: right;
+    margin-right: 2%;
+    margin-top: 2%;
+    
+}
+
+.crests:hover{
+    background-color: rgb(64, 192, 149);
+}
+
+.block_wind{ /*Слывающие окна*/
+    width: 500px;
+    height: 500px;
+    background-color: rgb(212, 212, 212);
+    border-radius: 25px;
+    z-index: 1;
+
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#block_game{
+    display: none;
+}
+
+#block_settings{
+    display: none;
+}
+
+#block_description{
+    display: none;
+}
+
+.block_bt{
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+p{
+    padding: 4%;
+    text-align: center;
+    font-size: 24px;
+}
+
+#Bord_ship{
+    display: none;
+}
