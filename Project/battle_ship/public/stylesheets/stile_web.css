@@ -80,3 +80,7 @@ p{
     text-align: center;
     font-size: 24px;
 }
+
+#Bord_ship{
+    display: none;
+}

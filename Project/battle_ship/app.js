@@ -5,9 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var CenterRouter = require('./routes/Battal_Ship');
-var Solo_gameRouter = require('./routes/Solo_game');
 var testRouter = require('./routes/test_game');
-
 //var usersRouter = require('./routes/users');
 
 var app = express();
@@ -23,7 +21,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', CenterRouter);
-app.use('/Solo_game', Solo_gameRouter);
 app.use('/test_game', testRouter);
 //app.use('/users', usersRouter);
 

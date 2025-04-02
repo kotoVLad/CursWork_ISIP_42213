@@ -1,3 +1,7 @@
+//Импортные файлы-функции.
+import obj_creat from './creat_field.'
+var obj_c = new obj_creat()
+
 /*-----------------------------------------*/ 
 //Режим игры.
 var key_solo_play = false
@@ -96,6 +100,7 @@ function solo_play(){
     document.getElementById("block_game").style.display = 'none';
     document.getElementById("web").style.display = 'none';
     //Создаём поле.
+    obj_c.creat_solo()
 
     //Через время появляется окно с расстановкой кораблей.
 
