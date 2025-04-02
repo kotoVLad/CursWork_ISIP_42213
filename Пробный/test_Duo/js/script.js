@@ -95,8 +95,6 @@ var key_p_us = 0
 var us1 = false
 var us2 = false
 
-var key_Pl = 0
-
 var key_f_pos = false
 var key_f_pos2 = false
 var key_pos = false
@@ -201,26 +199,20 @@ for(i=0;i<10;i++){//С ботом.
 
 function Play_game(){//Начать игру с ботом.
     if(key_play == true || Ship==10){
-        if(key_Pl==0){
-            key_Pl = 1
-            key_play = false
-            Pos.innerText = "Вручную"
-            document.getElementById("User").innerText="Игрок 2"
-            Ship=0
-            triger = 0
-            key_p_us = 1
-            key_f_pos = false
-            key_f_pos2 = true
-            Play.style.display = "none"
-            document.getElementById("Block_button").style.left = "24%"
-        }
+        key_play = false
+        Pos.innerText = "Вручную"
+        document.getElementById("User").innerText="Игрок 2"
+        Ship=0
+        triger = 0
+        key_p_us = 1
+        key_f_pos = false
+        key_f_pos2 = true
+        Play.style.display = "none"
+        document.getElementById("Block_button").style.left = "24%"
 
     }
     if(key_play2 == true || Ship==10){
-        if(key_Pl==1){
-            Can_Play_Users = true
-        }
-        
+        Can_Play_Users = true
     }
     if(Can_Play_Users == true){
         for(i=0;i<10;i++){
@@ -993,7 +985,7 @@ function Again_start(){
     Again_2()//Возращаем обратно изначальные значения
     check_Fl_full()// Очищаем 2 поля.
     document.getElementById("Block_button").style.left = "76%"
-    document.getElementById("User").innerText="Игрок 1"
+    document.getElementById("User").innerText="Игрок 2"
     move_label.innerText= " "
     Block_Win_Lozz.style.display = "none"
     Block_button.style.display = "block"
@@ -1016,8 +1008,6 @@ function Again_1(){
 
     us1 = false
     us2 = false
-
-    key_Pl = 0
 
     key_f_pos = false
     key_f_pos2 = false
