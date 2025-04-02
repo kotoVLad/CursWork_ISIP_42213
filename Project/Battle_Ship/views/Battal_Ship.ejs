@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/stile_web.css">
+</head>
+<body>
+    <div id="web">
+        <div class="block">
+            <center>
+                <div class="button" id="Game"><p>Начать игру</p></div>
+                <div class="button" id="Settings"><p>Настройки</p></div>
+                <div class="button" id="Description"><p>О игре</p></div>
+            </center>
+        </div>
+        <div class="block_wind" id="block_game"><!--Блок "Игры"-->
+            <div class="crests" id="crest1"></div>
+            <div class="block_bt">
+                <center>
+                    <a href="/Solo_game"><div class="button_game" id="solo_game"><p>Игра с ботом</p></div></a>
+                    <a href=""><div class="button_game" id="duo_game"><p>Игра на двоих</p></div></a>
+                    <a href=""><div class="button_game" id="network_game"><p>Игра по сети</p></div></a>
+                </center>
+            </div>
+        </div>
+        <div class="block_wind" id="block_settings"><!--Блок "Настройки"-->
+            <div class="crests" id="crest2"></div>
+            <div></div>
+        </div>
+        <div class="block_wind" id="block_description"><!--Блок "О игре"-->
+            <div class="crests" id="crest3"></div>
+            <div></div>
+        </div>
+    </div>
+    <!---------------------------Скрипт--------------------------------->
+    <script src="/javascripts/script_web.js"></script>
+</body>
+</html>

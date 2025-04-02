@@ -6,6 +6,8 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var CenterRouter = require('./routes/Battal_Ship');
+var Solo_game_Router = require('./routes/Solo_game');
 
 var app = express();
 
@@ -19,8 +21,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', CenterRouter);
+app.use('/Solo_game', Solo_game_Router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
