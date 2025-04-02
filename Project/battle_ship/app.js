@@ -4,14 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-<<<<<<< HEAD
-var CenterRouter = require('./routes/Battal_Ship');
-var testRouter = require('./routes/test_game');
-//var usersRouter = require('./routes/users');
-=======
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
->>>>>>> parent of e681d69 (Попытка разобрать по модулям.)
 
 var app = express();
 
@@ -25,14 +19,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-<<<<<<< HEAD
-app.use('/', CenterRouter);
-app.use('/test_game', testRouter);
-//app.use('/users', usersRouter);
-=======
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
->>>>>>> parent of e681d69 (Попытка разобрать по модулям.)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

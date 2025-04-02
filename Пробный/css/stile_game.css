@@ -110,19 +110,13 @@
     left: 50%;
     transform: translate(-50%,-50%);
 }
-<<<<<<< HEAD:Пробный/css/stile_game.css
+
 
 #Block_button{
     display: none;
 }
 
-=======
-/*
-#Block_button{
-    display: none;
-}
-*/
->>>>>>> parent of e681d69 (Попытка разобрать по модулям.):Project/Новая папка/css/stile_game.css
+
 #Block_Win_Lozz{
     display: none;
 }
