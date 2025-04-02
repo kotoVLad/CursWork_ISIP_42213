@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Морской бой</title>
+    <link rel="stylesheet" href="/stylesheets/general_style.css">
     <link rel="stylesheet" href="/stylesheets/stile_web.css">
-    <link rel="stylesheet" href="/stylesheets/stile_game.css">
 </head>
 <body>
     <div id="web">
@@ -20,9 +20,9 @@
             <div class="crests" id="crest1"></div>
             <div class="block_bt">
                 <center>
-                    <div class="button_game" id="solo_game"><p>Игра с ботом</p></div>
-                    <div class="button_game" id="duo_game"><p>Игра на двоих</p></div>
-                    <a href="/test_game"><div class="button_game" id="network_game"><p>Игра по сети</p></div></a>
+                    <a href="/Solo_game" class="a"><div class="button_game" id="solo_game"><p>Игра с ботом</p></div></a>
+                    <a href="" class="a"><div class="button_game" id="duo_game"><p>Игра на двоих</p></div></a>
+                    <a href="/test_game" class="a"><div class="button_game" id="network_game"><p>Игра по сети</p></div></a>
                 </center>
             </div>
         </div>
@@ -35,48 +35,7 @@
             <div></div>
         </div>
     </div>
-    <!---------------------------Само поле--------------------------------->
-    <div id="Bord_ship">
-        <div id="big_box">
-            <center><div><h2 id="move_label"></h2></div></center>
-            <div id="box">
-                <div id="block1">
-                    <div id="wrapperBlock" class="Field"></div><!--Поле1-->
-                </div>
-                <div id="block2">
-                    <div id="wrapperBlock2" class="Field"></div><!--Поле2-->
-                </div>
-                
-            </div>
-            <div id="Block_button" class="block_btn"> <!--Поле где находятся корабли.-->
-                <center>
-                    <div><h2 id="User">Игрок</h2></div>
-                </center>
-                <div class="block_box" id="block_on_of">
-                    <center>
-                        <div id="Random" class="Clk">Рандом</div>
-                        <div id="Position" class="Clk">Вручную</div>
-                        <div id="Play" class="Clk">Играть</div>
-                    </center>
-                </div>
-            </div>
-            <div id="Block_Win_Lozz" class="block_wind2"><!--Победа/поржание-->
-                <div id="box_bt">
-                    <center>
-                        <div><h2 id="Win_Lozz"></h2></div>
-                    </center>
-                    <div id="box">
-                        <center>
-                            <div id="Log_out" class="Clk">Выйти</div>
-                            <div id="Again" class="Clk">Заново</div>
-                        </center>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!---------------------------Скрипт--------------------------------->
-    <script src="/javascripts/script.js"></script>
     <script src="/javascripts/script_web.js"></script>
 </body>
 </html>
