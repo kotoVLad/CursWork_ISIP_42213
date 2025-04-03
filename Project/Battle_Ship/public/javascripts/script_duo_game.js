@@ -96,6 +96,7 @@ var us1 = false
 var us2 = false
 
 var key_pg = false
+var key_hover = false
 
 var key_f_pos = false
 var key_f_pos2 = false
@@ -222,6 +223,7 @@ function Play_game(){//Начать игру с ботом.
         Can_Play_Users = true
     }
     if(Can_Play_Users == true){
+        key_hover = true
         for(i=0;i<10;i++){
             for(j=0;j<10;j++){
                 elm= document.getElementById(i+";"+j)
@@ -256,10 +258,12 @@ function Play_game(){//Начать игру с ботом.
 }
 
 function Hover_maus_on(event){
-    document.getElementById(event.srcElement.id).classList.add("hover_on2")
+    if(key_hover==true){document.getElementById(event.srcElement.id).classList.add("hover_on2")}
+    
 }
 function Hover_maus_off(event){
-    document.getElementById(event.srcElement.id).classList.remove("hover_on2")
+    if(key_hover==true){document.getElementById(event.srcElement.id).classList.remove("hover_on2")}
+    
 
 }
 
@@ -999,7 +1003,7 @@ function Again_start(){
     Again_2()//Возращаем обратно изначальные значения
     check_Fl_full()// Очищаем 2 поля.
     document.getElementById("Block_button").style.left = "76%"
-    document.getElementById("User").innerText="Игрок 2"
+    document.getElementById("User").innerText="Игрок 1"
     move_label.innerText= " "
     Block_Win_Lozz.style.display = "none"
     Block_button.style.display = "block"
@@ -1019,6 +1023,7 @@ function Again_1(){
     Can_Play_Users = false
 
     key_p_us = 0
+    key_hover = false
 
     us1 = false
     us2 = false

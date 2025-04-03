@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var CenterRouter = require('./routes/Battal_Ship');
 var Solo_game_Router = require('./routes/Solo_game');
+var Duo_game_Router = require('./routes/Duo_game');
 
 var app = express();
 
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', CenterRouter);
 app.use('/Solo_game', Solo_game_Router);
+app.use('/Duo_game', Duo_game_Router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
