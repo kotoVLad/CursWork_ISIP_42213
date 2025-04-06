@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    pingTimeout: 30000, // 30 секунд для таймаута
+    pingInterval: 5000  // проверка каждые 5 секунд
+});
 const path = require('path');
 
 
@@ -45,6 +48,44 @@ io.on('connection', (socket) => {
 
     socket.join(Math.round(client/2))
     socket.emit('serverMsg', Math.round(client/2))
+
+    socket.emit('connection_status', { status: 'connected' });
+    
+    // Таймер для отключения
+    let disconnectTimer;
+    
+    const startDisconnectTimer = () => {
+        disconnectTimer = setTimeout(() => {
+            console.log('Пользователь отключился по таймауту');
+            socket.disconnect(true);
+        }, 30000); // 30 секунд
+    };
+    
+    // Остановка таймера при активности
+    const resetDisconnectTimer = () => {
+        if (disconnectTimer) {
+            clearTimeout(disconnectTimer);
+            startDisconnectTimer();
+        }
+    };
+    
+    // События, которые сбрасывают таймер
+    socket.on('activity', resetDisconnectTimer);
+    socket.on('reconnect_attempt', () => {
+        console.log('Попытка переподключения');
+        socket.emit('connection_status', { status: 'reconnecting' });
+    });
+    
+    // Начало таймера
+    startDisconnectTimer();
+    
+    socket.on('disconnect', (reason) => {
+        console.log(`Пользователь отключился. Причина: ${reason}`);
+        if (disconnectTimer) clearTimeout(disconnectTimer);
+    });
+
+
+    
     if(key_click==1){
         console.log("Ждём второго игрока.")
     }else{
