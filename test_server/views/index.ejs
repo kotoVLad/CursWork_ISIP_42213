@@ -11,11 +11,21 @@
     <h1>Добро пожаловать в чат!</h1>
     <p>Это пример приложения с Socket.IO и EJS</p>
     <a href="/User"><div>Открыть</div></a>
+    <!--------------------------------------------------------------------->
     <div ><font class="can">Can</font> и <font class="red">Red</font></div>
     <div id="label" class="red">Нельзя кликать.</div>
-    <div id="status" class="status">Статус: Не подключен</div>
+    <!--------------------------------------------------------------------->
+    <div id="status" > Ваш статус: <font class="red" id="stat">Не подключен</font></div>
+    <div id="status2" > Чужой статус: <font class="red" id="stat2">Не подключен</font></div>
+    <!--------------------------------------------------------------------->
+    <!--Поля ввода.-->
+    <input type="text" value="Nick" id="Name"><input type="text" value="700001" id="id_user">
+    <!--------------------------------------------------------------------->
+    <!--Кнопки.-->
     <div id="Ck" class="btn">Подключиться</div>
+    <div id="Reconect" class="btn">Повторно соедениться</div>
     <div id="clicking" class="btn">Кликать.</div>
+    <!----------Скрипты---------->
     <script src="/javascript/test.js"></script>
 </body>
 </html>

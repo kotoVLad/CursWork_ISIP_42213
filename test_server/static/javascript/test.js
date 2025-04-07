@@ -6,76 +6,37 @@ let activityInterval;
 var Button = document.getElementById("clicking")
 var Button2 = document.getElementById("Ck")
 var label = document.getElementById("label")
-const statusElement = document.getElementById('status');
+
+const User1_status = document.getElementById('status');//Мой статус
+const User2_status = document.getElementById('status2');//Статус второго человека
+
+const mark_status1 = document.getElementById('stat');
+const mark_status2 = document.getElementById('stat');
+
 
 Button.addEventListener("click", conn)
 Button2.addEventListener("click", conne)
 
-const sendActivity = () => {
-    if (socket && socket.connected) {
-        socket.emit('activity');
-    }
-};
+var Nick = document.getElementById("Name")//Ник пользователя.
+var ID_user = document.getElementById("id_user")//Id пользователя.
 
-// Установка интервала активности (каждые 10 секунд)
-const setupActivityMonitor = () => {
-    activityInterval = setInterval(sendActivity, 10000);
-};
-
-// Очистка интервала
-const clearActivityMonitor = () => {
-    if (activityInterval) {
-        clearInterval(activityInterval);
-        activityInterval = null;
-    }
-};
-
-
-
-let clientRoom;
+let clientRoom;//Название комнаты
 function conne(){
     if(!socket){
-        socket = io({
-            reconnection: true,
-            reconnectionAttempts: Infinity,
-            reconnectionDelay: 1000,
-            reconnectionDelayMax: 5000
-        });
+        socket = io();
         Button2.textContent = 'Отключиться';
-        statusElement.textContent = 'Статус: Подключение...';
-        statusElement.className = 'status';
-        socket.on('connect', () => {
-            console.log('Connected to server');
-            statusElement.textContent = 'Статус: Подключен';
-            statusElement.className = 'status connected';
-            setupActivityMonitor();
-        });
 
-        socket.on('connection_status', (data) => {
-            if (data.status === 'reconnecting') {
-                statusElement.textContent = 'Статус: Переподключение...';
-                statusElement.className = 'status';
-            }
-        });
+        User1_status.textContent = 'Ваш статус: подключен' 
+        mark_status1.classList.remove("red")
+        mark_status1.classList.remove("add")
 
-        socket.on('disconnect', (reason) => {
-            console.log(`Disconnected: ${reason}`);
-            statusElement.textContent = `Статус: ${reason === 'io server disconnect' ? 'Отключён' : 'Ожидание переподключения...'}`;
-            statusElement.className = 'status disconnected';
-            clearActivityMonitor();
-            
-            if (reason === 'io server disconnect') {
-                socket = null;
-                connectBtn.textContent = 'Подключиться';
-            }
-        });
-    
+        Nick = Nick.value;
+        ID_user = ID_user.value;
 
         //--------------------------------------
         socket.on('serverMsg',(data)=>{
             console.log(`Я в комнате${data}`)
             clientRoom = data;
-            socket.emit('initing', clientRoom)
         })
         socket.on('CanClick',()=>{
             key_click = true
@@ -95,19 +56,14 @@ function conne(){
         // Закрываем существующее подключение
         socket.disconnect();
         socket = null;
-        clearActivityMonitor();
-        
         // Обновляем UI
         Button2.textContent = 'Подключиться';
-        statusElement.textContent = 'Статус: Не подключен';
-        statusElement.className = 'status';
     }
     
 }
 
 
 function conn(){
-    console.log("Button")
     if(key_click==true){
         socket.emit('ButtonClick',clientRoom)
     }
