@@ -4,8 +4,11 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const path = require('path');
 
+//Импорт маршрутов.
+var Solo_gameRouter = require('./routes/Solo_game');
+var Duo_gameRouter = require('./routes/Duo_game');
+var Net_gameRouter = require('./routes/Net_game');
 
-var UserRouter = require('./routes/user');
 const { emit } = require('process');
 const { Console } = require('console');
 
@@ -13,19 +16,23 @@ const { Console } = require('console');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// Middleware для статических файлов
 app.use(express.static(path.join(__dirname, 'static')));
 
 
-// Middleware для статических файлов
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Маршрут для главной страницы
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('Battal_Ship');
 });
 
-app.use('/user', UserRouter);
 
+// Маршрут дополнительных страниц.
+app.use('/Solo_game', Solo_gameRouter);
+app.use('/Duo_game', Duo_gameRouter);
+app.use('/Net_game', Net_gameRouter);
+
+//Soket.io
+/*---------------------------------------------------------*/
 let client = 0
 let key_click = 0
 
@@ -38,7 +45,7 @@ let room_using_person=[]//Для персональных.
 let userSockets={}
 io.on('connection', (socket) => {
     //Тут должны создаваться кастомные ID
-    socket.on('Id_identified',(id)=>{
+    socket.on('Id_identified',(id)=>{//Создаём кастомный id.
         console.log("-----------------------------")
         console.log('Коннект пользователя');
         user = socket.id
@@ -49,7 +56,7 @@ io.on('connection', (socket) => {
         console.log("-----------------------------")
     })
 
-    socket.on('cre_con_room', (data)=>{
+    socket.on('cre_con_room', (data)=>{//Создаём или присоеденяемся к комнате.
         console.log("-----------------------------")
         Nick=data.Nick
         ID_user=data.ID_user
@@ -108,27 +115,35 @@ io.on('connection', (socket) => {
     })
 
     // Можно добавить дополнительные обработчики событий здесь
-    socket.on('ButtonClick',clientRoom=>{
+    socket.on('ButtonClick',clientRoom=>{//Отображаем в комнате изменения.
         io.to(clientRoom).emit('EventServer')//Отобразить у всех действие.
     })
-    socket.on('disconnect', (Room_dis) => {
+    socket.on('disconnect', (Room_dis) => {//Выход
         console.log('Пользователь отключился');
     });
 
-    socket.on('leave_room', (data)=>{
+    socket.on('leave_room', (data)=>{//Выход из комнаты.//Ник и комнаты
         if(socket.rooms.has(data.clientRoom)){
-            if(!data.user_triger){
+            if(!data.user_triger){//Вышел пользователь, ещё не начав игру
                 key_click=0
                 client--
                 console.log(`1.Пользователь ${data.Nick} вышел из комнаты ${data.clientRoom}, комната была удалена.`)
                 socket.leave(data.clientRoom);
+                for(i=0;i<room_using.length;i++){
+                    if(room_using[i][0]==data.clientRoom){
+                        console.log(`Комната ${data.clientRoom} была удалена из массива`)
+                        room_using.splice(i,1)
+                        console.log(JSON.stringify(room_using))
+                        break
+                    }
+                }
 
-            }if(data.user_triger==true){
+            }if(data.user_triger==true){//Вышел один из пользователей.
                 console.log(`2.Пользователь ${data.Nick} вышел из комнаты ${data.clientRoom}.`)
                 socket.leave(data.clientRoom);
                 io.to(data.clientRoom).emit('User2_discon',data.Nick)
 
-            }if(data.user_triger=="end"){
+            }if(data.user_triger=="end"){//В комнате не осталось.
                 console.log(`3.Пользователь ${data.Nick} вышел из комнаты ${data.clientRoom}, комната была удалена.`)
                 socket.leave(data.clientRoom);
                 for(i=0;i<room_using.length;i++){

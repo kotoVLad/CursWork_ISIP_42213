@@ -1,0 +1,14 @@
+#Log_out_cr{
+  
+  position: absolute;
+  top:  10%;
+  right: 1%;
+  transform: translate(-50%,-50%);
+
+}
+a{
+  text-decoration: none;
+}
+a:link, a:visited { 
+  color: rgb(0, 0, 0); 
+}
