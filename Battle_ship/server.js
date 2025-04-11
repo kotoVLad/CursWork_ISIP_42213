@@ -3,14 +3,30 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const path = require('path');
+const session = require('express-session')
+const socketIoSession = require('express-socket.io-session');
+app.use(session({
+    secret:"Secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {maxAge:60000*24}
+}))
+const sessionMiddleware = session({
+    secret: 'your_secret_key', // Замените на ваш секретный ключ
+    resave: false,               // Как правило, устанавливается false
+    saveUninitialized: false,    // Устанавливается false для предотвращения создания пустых сессий
+    cookie: { secure: false }    // Устанавливайте true, если используете HTTPS
+});
+const connection_db = require('./data_base')
 
 //Импорт маршрутов.
-var Solo_gameRouter = require('./routes/Solo_game');
-var Duo_gameRouter = require('./routes/Duo_game');
-var Net_gameRouter = require('./routes/Net_game');
+var indexRouter = require('./routes/index');
 
 const { emit } = require('process');
 const { Console } = require('console');
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Настройка EJS
 app.set('views', path.join(__dirname, 'views'));
@@ -19,17 +35,16 @@ app.set('view engine', 'ejs');
 // Middleware для статических файлов
 app.use(express.static(path.join(__dirname, 'static')));
 
-
+app.use((req,res,next) =>{
+    res.locals.sessionMiddleware= req.session
+    next()
+})
 // Маршрут для главной страницы
-app.get('/', (req, res) => {
-    res.render('Battal_Ship');
-});
 
+app.use('/', indexRouter);
 
-// Маршрут дополнительных страниц.
-app.use('/Solo_game', Solo_gameRouter);
-app.use('/Duo_game', Duo_gameRouter);
-app.use('/Net_game', Net_gameRouter);
+io.use(socketIoSession(sessionMiddleware));
+
 
 //Soket.io
 /*---------------------------------------------------------*/
@@ -45,6 +60,9 @@ let room_using_person=[]//Для персональных.
 let userSockets={}
 io.on('connection', (socket) => {
     //Тут должны создаваться кастомные ID
+
+    console.log()
+
     socket.on('Id_identified',(id)=>{//Создаём кастомный id.
         console.log("-----------------------------")
         console.log('Коннект пользователя');
