@@ -36,6 +36,8 @@ let block_game = document.getElementById("block_game");
 let block_settings = document.getElementById("block_settings");
 let block_description = document.getElementById("block_description");
 
+let n_w = document.getElementById("n_w");
+
 //style.display = 'none'; Выключить
 //style.display = 'block'; Включить
 
@@ -60,4 +62,11 @@ function remove_wind(){//Убрать окно.
     }if(Cod_Wind_3 == 1){
         block_description.style.display = 'none';
     }
+}
+
+function Not_work(){
+    n_w.style.display="block"
+    setInterval(()=>{
+        n_w.style.display="none"
+    },3000)
 }

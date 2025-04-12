@@ -1,3 +1,17 @@
+async function take_session() {
+    const response = await fetch ('/take_data')
+    const data = await response.json();
+    if (data.error) {
+        console.log("Ошибка:", data.error);
+        return;
+    }else{
+        console.log("Данные пользователя",data.Data_session)
+    }
+}
+
+window.addEventListener('DOMContentLoaded', take_session);
+
+
 console.log("test open")
 let key_click = false
 let socket=null

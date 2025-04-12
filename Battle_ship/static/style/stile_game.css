@@ -167,6 +167,11 @@
     color: #f7f7f7;
 }
 
+.Clk:active{
+    color: #000000;
+    background-color: #979797;
+}
+
 .Ship_shadow{
     background-color: #abffd6;
 }

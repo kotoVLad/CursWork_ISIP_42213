@@ -4,19 +4,12 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const path = require('path');
 const session = require('express-session')
-const socketIoSession = require('express-socket.io-session');
 app.use(session({
     secret:"Secret",
     resave: false,
     saveUninitialized: true,
     cookie: {maxAge:60000*24}
 }))
-const sessionMiddleware = session({
-    secret: 'your_secret_key', // Замените на ваш секретный ключ
-    resave: false,               // Как правило, устанавливается false
-    saveUninitialized: false,    // Устанавливается false для предотвращения создания пустых сессий
-    cookie: { secure: false }    // Устанавливайте true, если используете HTTPS
-});
 const connection_db = require('./data_base')
 
 //Импорт маршрутов.
@@ -42,9 +35,6 @@ app.use((req,res,next) =>{
 // Маршрут для главной страницы
 
 app.use('/', indexRouter);
-
-io.use(socketIoSession(sessionMiddleware));
-
 
 //Soket.io
 /*---------------------------------------------------------*/

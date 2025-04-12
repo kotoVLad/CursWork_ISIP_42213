@@ -5,29 +5,154 @@
     transform: translate(-50%,-50%);
 }
 
+.frm{
+    width: 300px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 25px;
+}
+
+#frm2{
+    padding-top: 5%;
+}
+
+.lb{
+    font-weight: 900;
+    font-size: 20px;
+    padding-left: 5%;
+}
+
+.Reg_log{
+    border-radius: 10px;
+    width: 250px;
+    height: 50px;
+    background-color: #979797;
+}
+
+.Reg_log:hover{
+    background-color: #4e4e4e;
+    color: #f7f7f7;
+}
+
+#Reg_log{
+    padding-top: 20%;
+}
+
+.But_log{
+    margin-top: 2%;
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    float: right;
+}
+.But_log:hover{
+    border: 3px solid black;
+    background-color: #4e4e4e;
+    color: #f7f7f7;
+}
+.But_log:active{
+    color: #000000;
+    border: 4px solid black;
+    background-color: #979797;
+}
+
+.But_out{
+    margin-top: 2%;
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+}
+.But_out:hover{
+    border: 3px solid black;
+    background-color: #4e4e4e;
+    color: #f7f7f7;
+}
+.But_out:active{
+    color: #000000;
+    border: 4px solid black;
+    background-color: #979797;
+}
+
+#Forma{
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.block_profil{
+    border: 2px solid black;
+    width: 300px;
+    height: 300px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 25px;
+    float: right;
+    margin-top: 5%;
+    margin-right: 5%;
+}
+
+.statys_prof{
+    padding-top: 3%;
+    padding-left: 10%;
+    font-size: 20px;
+}
+
 .button{
     width: 200px;
     height: 50px;
-    background-color: rgb(95, 169, 255);
+    border-radius: 10px;
+    background-color: #979797;
     
 }
 
 .button:hover{
-    background-color: rgb(17, 17, 255);
-    color: rgb(255, 255, 255);
+    background-color: #4e4e4e;
+    color: #f7f7f7;
+}
+
+.button:active{
+    color: #000000;
+    background-color: #979797;
+}
+
+#n_w{
+    background-color: rgb(240, 240, 240);
+    border: 2px solid black;
+    font-size: 40px;
+    width: 500px;
+    height: 250px;
+    display: none;
+
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index:2;
+}
+#tt{
+    padding-top: 15%;
 }
 
 .button_game{
-    
+    border-radius: 10px;
     width: 200px;
     height: 50px;
-    background-color: rgb(95, 169, 255);
+    background-color: #979797;
 }
 
 .button_game:hover{
-    background-color: rgb(17, 17, 255);
-    color: rgb(255, 255, 255);
+    background-color: #4e4e4e;
+    color: #f7f7f7;
 }
+.button_game:active{
+    color: #000000;
+    background-color: #979797;
+}
+
 
 .crests{
     width: 50px;

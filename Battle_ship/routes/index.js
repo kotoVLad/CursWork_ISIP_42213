@@ -5,7 +5,9 @@ const connection_db =require('../data_base')
 
 //Главный сайт
 router.get('/', function(req, res, next) {
-    res.render('Battal_Ship');
+    res.render('Battal_Ship',{
+        session: req.session
+    });
 });
 
 //Режимы игры
@@ -59,7 +61,8 @@ router.post('/Register', (req, res) => {
         }
     })
 });
-let data_session
+
+//Войти в аккаунт(post)
 router.post('/Login', (req, res) => {
     const {login, password} = req.body;
     
@@ -81,14 +84,13 @@ router.post('/Login', (req, res) => {
             // Проверяем переданный пароль с хэшем
             const isMatch = bcrypt.compareSync(password, user.Password); // здесь происходит сравнение
             if (isMatch) {//Удача
-                req.session.session_id = user.id
-                req.session.session_nick = user.Nick
-                data_session= {
-                    Nick:req.session.session_nick,
-                    ID:req.session.session_id
-                }
-                console.log(data_session)
-
+                req.session.USER = {
+                    Id: user.id,
+                    Nick: user.Nick,
+                    Win: user.Win,
+                    Loss: user.Loss
+                };
+                console.log(req.session.USER)
                 return res.redirect('/')
             } else {//Неудача
                 console.log("Всё не окей")
@@ -104,4 +106,25 @@ router.post('/Login', (req, res) => {
     });
     
 });
+
+//Взять данные с сессии и передать клиенту
+router.get('/take_data', (req,res)=>{
+    if (!req.session.USER) {
+        return res.status(401).json({ error: "Не авторизован" });
+    }
+    res.json({
+        Data_session:req.session.USER
+    })
+})
+//Выйти с аккаунта(post)
+router.post('/go_out',(req,res)=>{
+    req.session.destroy(err => {
+        if (err) {
+            return res.redirect('/'); // Ошибка при выходе
+        }
+        res.redirect('/'); // Успешный выход
+    });
+})
+
+
 module.exports = router;
