@@ -1,0 +1,33 @@
+.block_g{
+    width: 500px;
+    height: 500px;
+    border-radius: 25px;
+    border: 1px solid #aaa;
+    background-color: rgb(212, 212, 212);
+
+    z-index: 1;
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+#User1{
+    float: left;
+}
+#User2{
+    float: right;
+}
+
+#black{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.507);
+
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#col_bt{
+    padding-top: 20%;
+}

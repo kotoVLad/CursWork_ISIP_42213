@@ -5,28 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Socket.IO + EJS Example</title>
     <link rel="stylesheet" href="/style/gene_style.css">
+    <link rel="stylesheet" href="/style/stile_game.css">
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <h1>Добро пожаловать в чат!</h1>
-    <p>Это пример приложения с Socket.IO и EJS</p>
-    <!--<a href="/User"><div>Открыть</div></a>-->
-    <!--------------------------------------------------------------------->
-    <div ><font class="can">Can</font> и <font class="red">Red</font></div>
-    <div id="label" class="red">Нельзя кликать.</div>
-    <!--------------------------------------------------------------------->
-    <div id="status" > Ваш статус: <font class="red" id="stat">Не подключен</font></div>
-    <div id="status2" ><font id="user2">Чужой</font> статус: <font class="red" id="stat2">Не подключен</font></div>
-    <!--------------------------------------------------------------------->
-    <!--Поля ввода.-->
-    <input type="text" value="Nick" id="Name"><input type="text" value="700001" id="id_user"><button id="Save">Сохранить</button>
-    <!--------------------------------------------------------------------->
-    <!--Кнопки.-->
-    <div id="Ck" class="btn">Подключиться к серверу</div>
-    <div id="Conect_room" class="btn">Подключиться к комнате</div>
-    <div id="leave_room" class="btn">Отключиться с комнаты</div>
-    <div id="Reconect" class="btn">Повторно соедениться</div>
-    <div id="clicking" class="btn">Кликать.</div>
+    <div id="Label_i"></div>
+    <div id="big_box">
+        <div id="box">
+            <div id="block1">
+                <div id="wrapperBlock" class="Field">
+                    <%for(let i=0;i<10;i++){%>
+                        <% for(let j=0;j<10;j++){%>
+                            <div id="<%=i%>:<%=j%>:0" class="square"></div>
+                        <%}%>
+                    <%}%>
+                </div><!--Поле1-->
+            </div>
+            <div id="block2">
+                <div id="wrapperBlock2" class="Field">
+                    <%for(let i=0;i<10;i++){%>
+                        <% for(let j=0;j<10;j++){%>
+                            <div id="<%=i%>:<%=j%>:1" class="square2"></div>
+                        <%}%>
+                    <%}%>
+                </div><!--Поле2-->
+            </div>
+        </div>        
+    </div>
+    <!---------------------------------------------------------------------->
+    <div id="black">
+        <div id="Block_button" class="block_g"> 
+            <center>
+                <div><h2 id="User">Меню</h2></div>
+            </center>
+            <center>
+                <div id="col_bt">
+                    <div id="Fast_game" class="Clk">Быстрая игра</div>
+                    <div id="Game_frend" class="Clk">С другом.</div>
+                    <div id="See" class="Clk">Смотреть</div>
+                </div>
+            </center>
+        </div>
+    </div>
+
     <!----------Скрипты---------->
     <script src="/javascript/test.js"></script>
 </body>
