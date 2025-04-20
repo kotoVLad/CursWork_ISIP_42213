@@ -12,6 +12,8 @@ app.use(session({
 }))
 const connection_db = require('./data_base')
 
+const sample = require('./modul/sample')//Шаблон игры: Шаблон поля, поле возможности, общие данные кораблей.
+
 //Импорт маршрутов.
 var indexRouter = require('./routes/index');
 
@@ -37,6 +39,7 @@ app.use((req,res,next) =>{
 app.use('/', indexRouter);
 
 //Soket.io
+
 /*---------------------------------------------------------*/
 let client = 0
 let key_click = 0
@@ -86,37 +89,56 @@ io.on('connection', (socket) => {
             
             console.log(JSON.stringify(room_using))
             console.log("-----------------------------")
-            socket.emit('serverMsg', {Room:name_room, fd: 1})//Комната, поле
+            socket.emit('serverMsg', {Room:name_room, fd: 0})//Комната, поле
             
         }else{
             socket.join(name_room)
+            socket.emit('serverMsg', {Room:name_room, fd: 1})//Комната, поле
+
             key_click=0
             console.log("Второй игрок зашёл в комнту:",name_room)
             for(i=0;i<room_using.length;i++){
                 if(room_using[i][0]==name_room){
                     console.log("Всё ок.")
-                    room_using[i].push({Nick:Nick,ID_user:ID_user})
+                    room_using[i].push(
+                        {Nick:Nick,ID_user:ID_user},
+                        {
+                            field_xy: JSON.parse(JSON.stringify(sample.field_xy)),
+                            field_CanShot: JSON.parse(JSON.stringify(sample.field_CanShot)),
+                            dead_ship: JSON.parse(JSON.stringify(sample.data_ship))
+                        },
+                        {
+                            field_xy: JSON.parse(JSON.stringify(sample.field_xy)),
+                            field_CanShot: JSON.parse(JSON.stringify(sample.field_CanShot)),
+                            dead_ship: JSON.parse(JSON.stringify(sample.data_ship))
+                        },
+                        {
+                            See_field1: JSON.parse(JSON.stringify(sample.field_xy)),
+                            See_field2: JSON.parse(JSON.stringify(sample.field_xy))
+                        },
+                        0
+                    )
                     room_using[i][1] = "play"
                     room_using[i][2] = 2
-                    // console.log("Отправка User")
-                    // use1 = room_using[i][1].ID_user//id 1 пользователя комнаты
-                    // socket = userSockets[use1];//Soket 1 пользователя комнаты
-                    // Room_us2 = room_using[i][2].Nick//Ник 2 пользователя комнаты
-                    // console.log(Room_us2)
-                    // socket.emit('Cann_us', Room_us2)
-                    
-                    // use2 = room_using[i][2].ID_user//id 2 пользователя комнаты
-                    // socket = userSockets[use2];//Soket 2 пользователя комнаты
-                    // Room_us1 = room_using[i][1].Nick//Ник 1 пользователя комнаты
-                    // socket.emit('Cann_us', Room_us1)
-                    
+
+                    console.log("Отправка Ников.")
+
+                    use1 = room_using[i][3].ID_user//id 1 пользователя комнаты
+                    use2 = room_using[i][4].ID_user//id 2 пользователя комнаты
+
+                    Room_Users = {User1_Nick:room_using[i][3].Nick, User2_Nick:room_using[i][4].Nick}
+
+                    socket = userSockets[use1];//Soket 1 пользователя комнаты
+                    socket.emit('Conn_us', Room_Users)
+
+                    socket = userSockets[use2];//Soket 2 пользователя комнаты
+                    socket.emit('Conn_us', Room_Users)
                     break
                 }
             }
-            console.log(JSON.stringify(room_using))
+            // console.log(JSON.stringify(room_using))
+            console.log(room_using)
             console.log("-----------------------------")
-
-            socket.emit('serverMsg', {Room:name_room, fd: 2})//Комната, поле
             io.to(name_room).emit('Play_game')
             //socket.emit('CanClick', true)
         }
@@ -132,13 +154,54 @@ io.on('connection', (socket) => {
         io.to(clientRoom).emit('EventServer')//Отобразить у всех действие.
     })
 
+    socket.on('Random', (data)=>{
+        console.log("-----------------------------")
+        console.log(JSON.stringify(data))
+        let field_open_user = Random(data)
+        socket.emit('field_create', field_open_user)
+    })
+    socket.on('cancel',()=>{
+        name_room="Room:"+rooms
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][0]==name_room){
+                console.log(`Комната ${room_using[i][0]} была удалина из массиве.`)
+                socket.leave(room_using[i][0]);
+                room_using.splice(i,1)
+            }
+        }
+        socket.leave(name_room);
+        key_click=0
+        client--
+        console.log(`Поиск был отменинё в комнате ${name_room}`)
+        console.log(JSON.stringify(room_using))
+    })
+
+    socket.on('Ready',(data)=>{
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==data||room_using[i][4].ID_user==data){
+                att = room_using[i].length - 1
+                rd = room_using[i][att]
+                rd++
+                console.log(`Готов ${rd}`)
+                if(rd==2){
+                    var rd = Math.round(Math.random()) //Рандомное число от 0 до 1
+                    room_using[i][room_using[i].length - 1] = rd
+                    io.to(room_using[i][0]).emit('Play_game_ship', rd)
+                }else{
+                    room_using[i][att] = rd
+                }
+                break
+            }
+        }
+    })
+    
     socket.on("disconnect", () => {//Выход
         console.log('Пользователь отключился');
         // Удаляем отключённый сокет
         for (const [id, sock] of Object.entries(userSockets)) {
           if (sock === socket) {
             for(i=0;i<room_using.length;i++){//Проверяем, есть ли пользователь в комнате.
-                if(room_using[i][3].ID_user==id){//3 4
+                if(room_using[i][3].ID_user==id||room_using[i][4].ID_user==id){//3 4
                     console.log(`Пользователь ${id} вышел`);
                     if(room_using[i][1]=="expec"){// Пользователь вышел, не начав игру в комнате.
                         console.log("expec")
@@ -176,35 +239,6 @@ io.on('connection', (socket) => {
                         break
                     }
                 }
-                if(room_using[i][4].ID_user==id){//3 4
-                    console.log(`Пользователь ${id} вышел`);
-                    if(room_using[i][1]=="end"){
-                        console.log("end")
-                        socket.leave(room_using[i][0]);
-                        us = room_using[i][2]
-                        us--
-                        room_using[i][2] = us
-                        if(room_using[i][2]==0){
-                            console.log(`Комната ${room_using[i][0]} была удалина из массиве.`)
-                            room_using.splice(i,1)
-                        }
-                        break
-                    }
-                    if(room_using[i][1]=="play"||room_using[i][1]=="t_stusy"){
-                        console.log("play-t_stusy")
-                        room_using[i][1] = "t_stusy"
-                        console.log(`Пользователь ${id} вышел из игры.`);
-                        socket.leave(room_using[i][0]);
-                        us = room_using[i][2]
-                        us--
-                        room_using[i][2] = us
-                        if(room_using[i][2]==0){
-                            console.log(`Игра была отменина в комнате: ${room_using[i][0]}. `)
-                            room_using.splice(i,1)
-                        }
-                        break
-                    }
-                }
             }
             delete userSockets[id];
             console.log(`Пользователь ${id} отключён`);
@@ -212,44 +246,162 @@ io.on('connection', (socket) => {
           }
         }
     });
-
-    socket.on('leave_room', (data)=>{//Выход из комнаты.//Ник и комнаты
-        if(socket.rooms.has(data.clientRoom)){
-            if(!data.user_triger){//Вышел пользователь, ещё не начав игру
-                key_click=0
-                client--
-                console.log(`1.Пользователь ${data.Nick} вышел из комнаты ${data.clientRoom}, комната была удалена.`)
-                socket.leave(data.clientRoom);
-                for(i=0;i<room_using.length;i++){
-                    if(room_using[i][0]==data.clientRoom){
-                        console.log(`Комната ${data.clientRoom} была удалена из массива`)
-                        room_using.splice(i,1)
-                        console.log(JSON.stringify(room_using))
-                        break
-                    }
-                }
-
-            }if(data.user_triger==true){//Вышел один из пользователей.
-                console.log(`2.Пользователь ${data.Nick} вышел из комнаты ${data.clientRoom}.`)
-                socket.leave(data.clientRoom);
-                io.to(data.clientRoom).emit('User2_discon',data.Nick)
-
-            }if(data.user_triger=="end"){//В комнате не осталось.
-                console.log(`3.Пользователь ${data.Nick} вышел из комнаты ${data.clientRoom}, комната была удалена.`)
-                socket.leave(data.clientRoom);
-                for(i=0;i<room_using.length;i++){
-                    if(room_using[i][0]==data.clientRoom){
-                        console.log(`Комната ${data.clientRoom} была удалена из массива`)
-                        room_using.splice(i,1)
-                        console.log(JSON.stringify(room_using))
-                        break
-                    }
-                }
-            }
-            
-        }
-    })
 });
+
+
+function Random(data){//(В)Создание кораблей по методу рандома.
+    console.log("-----------------------------")
+    console.log("Рандом.")
+    // 0 - горизонталь; 1 - вертекаль
+    //remove('active')
+    //Добавить отчистку, если игрок решит заново пересгенерировать положение кораблей.
+    console.log(JSON.stringify(data))
+    console.log("-----------------------------")
+    console.log("Пустое поле.")
+    console.log(sample.field_xy)
+    console.log("-----------------------------")
+    test=1
+    let vr_field = JSON.parse(JSON.stringify(sample.field_xy));
+    ships = sample.data_ship
+    for(r=0;r<10;r++){
+        console.log(test)
+        test++
+        Name_Ship = ships[r][0]//Название корабля.
+        dask = ships[r][1]//Кол-во палуб.
+        let vr_coord =[]//Временый массив, мнимых координат корабля на поле.
+        Wh_tf=true
+        /* 
+            Цикл while нужен, чтобы генерировать координаты и проверять(функция checkShipBoard), можно ли на этих координатах ставить корабль.
+            Есла "да", то выполнится функция и прервётся цикл while.
+            Если "нет", то цикл не завершится и заново будет генерировать координаты.
+        */
+        while(Wh_tf == true){
+            var xy = Math.round(Math.random()) //Рандомное число от 0 до 1
+            if (xy==0){ // 0 - горизонталь
+                min = 0
+                max = 9
+                x = Math.floor(Math.random() * (max - min + 1)) + min
+                y = Math.floor(Math.random() * (max - dask - min + 2)) + min;//Диапозон с учётом с размером корабля.
+                absl = max - dask+1 //Максимум по координатам, котором можно поставить корабль,
+                                    //чтобы не зайти за поле.
+                alf = dask//Временный массив координат кораблей.
+                
+                /*--------------------------------------------------------------------------------- */
+        
+                //Из первой координаты создаём уже сам корабль.
+                for (i=0;i<alf;i++){
+                    
+                    vr_coord[i] = [x,y]//Координаты временного массива.
+                    y= y+1
+                }
+        
+                
+            }else{     // 1 - вертекаль
+                min = 0 
+                max = 9
+                x = Math.floor(Math.random() * (max - dask - min + 2)) + min;//Диапозон с учётом с размером корабля.
+                y = Math.floor(Math.random() * (max - min + 1)) + min
+                absl = max - dask+1
+                alf = dask//Координаты временного массива.
+        
+                /*--------------------------------------------------------------------------------- */
+        
+                //Из первой координаты создаём уже сам корабль.
+                for (i=0;i<alf;i++){
+                    vr_coord[i] = [x,y]
+                    x= x+1
+                }    
+            }
+            if(checkShipBoard(vr_coord, vr_field)==true){
+                
+                for(r1=0;r1<vr_coord.length;r1++){
+                    x5=vr_coord[r1][0]
+                    y5=vr_coord[r1][1]
+                    //document.getElementById(x5+";"+y5).classList.add("Ship_shadow")
+                    vr_field[x5][y5] = Name_Ship
+                }
+                for(c=0;c<vr_coord.length;c++){ //Обводка вокруг корабля.
+                    let vr_Check_Ship =[]
+                    //Начальные координаты палубы корабля.
+                    x1=vr_coord[c][0]
+                    y1=vr_coord[c][1]
+                    y1=y1+1 //Сдвиг вправо 1 раз.
+                    vr_Check_Ship.push([x1,y1])
+                    x1=x1+1//Сдвиг вниз 1 раз.
+                    vr_Check_Ship.push([x1,y1])
+                    for(t=0;t<2;t++){//Сдвиг влево 2 раза.
+                        y1=y1-1
+                        vr_Check_Ship.push([x1,y1])
+                    }
+                    for(tg=0;tg<2;tg++){//Сдвиг вверх 2 раза
+                        x1=x1-1
+                        vr_Check_Ship.push([x1,y1])
+                    }
+                    for(th=0;th<2;th++){//Сдвиг право 2 раза
+                        y1=y1+1
+                        vr_Check_Ship.push([x1,y1])
+                    }
+                    //console.log(vr_Check_Ship) //Координаты вокруг клетки.
+            
+                    //Проверка координат, чтобы пометить поле возле корабля.
+                    for(chk=0;chk<vr_Check_Ship.length;chk++){
+                        x2= vr_Check_Ship[chk][0]
+                        y2= vr_Check_Ship[chk][1]
+                        if (x2>-1 && x2<10){ //9>=x2>=0
+                            if (y2>-1 && y2<10){
+                                if(vr_field[x2][y2]==0){
+                                    vr_field[x2][y2] = 1
+                                }
+                            }
+                            
+                        }
+                    }
+            
+                }
+                Wh_tf = false
+            }
+
+        }//Конец цикла while
+        
+    }//Конец цикла for
+    console.log(vr_field)
+    console.log("-----------------------------")
+    for(i=0;i<room_using.length;i++){
+        if(room_using[i][3].ID_user==data.ID_user||room_using[i][4].ID_user==data.ID_user){
+            if(data.field_user==0){//5 //user[3]
+                room_using[i][5].field_xy = JSON.parse(JSON.stringify(vr_field));
+                console.log("Отправить 1-ому пользователю.")
+                return vr_field
+            }else{//6 //user[4]
+                room_using[i][6].field_xy = JSON.parse(JSON.stringify(vr_field));
+                console.log("Отправить 2-ому пользователю.")
+                return vr_field
+            }
+        }
+    }
+    
+
+}
+function checkShipBoard(vr_coord, vr_field){ //Проверяем можно ли поставить корабль
+    Can=0
+    for(i=0;i<vr_coord.length;i++){
+        x4= vr_coord[i][0]
+        y4= vr_coord[i][1]
+        if(vr_field[x4][y4] == 0){
+            Can=Can+1    
+        } else {
+            break;
+        }
+    }
+    if(Can==vr_coord.length){
+        return true;
+    }else{
+        return false;
+    } 
+    
+
+
+}
 
 // Запуск сервера
 const PORT = 3000;

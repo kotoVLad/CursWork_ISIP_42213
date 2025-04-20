@@ -11,12 +11,6 @@
     left: 50%;
     transform: translate(-50%,-50%);
 }
-#User1{
-    float: left;
-}
-#User2{
-    float: right;
-}
 
 #black{
     width: 100vw;
@@ -30,4 +24,57 @@
 
 #col_bt{
     padding-top: 20%;
+}
+
+#bl_time{
+    padding-top: 10%;
+    font-size: 20px;
+}
+#time{
+    font-size: 30px;
+}
+
+#Label_i{
+    column-count: 2;
+    font-size: 28px;
+    width: 100%;
+}
+
+#User1{
+    text-align: left;
+}
+#User2{
+    text-align: right;
+}
+
+#expec{
+    width: 400px;
+    height: 200px;
+    border: 1px solid #aaa;
+    background-color: rgb(212, 212, 212);
+
+    display: none;
+
+    z-index: 1;
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.blockk{
+    font-size: 40px;
+
+    width: 400px;
+    height: 200px;
+    border: 1px solid #aaa;
+    background-color: rgb(212, 212, 212);
+
+    display: none;
+
+    z-index: 1;
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
 }

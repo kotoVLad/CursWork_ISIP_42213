@@ -21,7 +21,6 @@ router.get('/Net_game', function(req, res, next) {
     res.render('Net_game');
 });
 
-
 //Вход(get)
 router.get('/Login', function(req, res, next) {
     res.render('Login');
