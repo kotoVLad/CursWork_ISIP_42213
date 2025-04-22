@@ -6,6 +6,7 @@
     <title>Socket.IO + EJS Example</title>
     <link rel="stylesheet" href="/style/gene_style.css">
     <link rel="stylesheet" href="/style/stile_game.css">
+    <link rel="stylesheet" href="/style/style.css">
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -14,6 +15,7 @@
             <div id="User1">User1</div>
             <div id="User2">User2</div>
         </div>
+        <div id="Move">Move</div>
         <div id="box">
             <div id="block1">
                 <div id="wrapperBlock" class="Field">
@@ -62,6 +64,21 @@
         </div>
         <div id="expec_game" class="blockk">
             Ожидаем игрока
+        </div>
+        <div id="end">
+            <center>
+                <div id="WIN">
+                    Победил
+                </div>
+            
+                <div id="USER">Кто-то</div>
+            
+                <div id="col_2">
+                    <div id="Revenge" class="Clk">Реванш</div>
+                    <div id="New_game" class="Clk">Новая игра</div>
+                    <a href="/"><div id="Log_out" class="Clk">Выйти</div></a>
+                </div>
+            </center>
         </div>
     </div>
 

@@ -105,12 +105,12 @@ io.on('connection', (socket) => {
                         {
                             field_xy: JSON.parse(JSON.stringify(sample.field_xy)),
                             field_CanShot: JSON.parse(JSON.stringify(sample.field_CanShot)),
-                            dead_ship: JSON.parse(JSON.stringify(sample.data_ship))
+                            data_ship: JSON.parse(JSON.stringify(sample.data_ship))
                         },
                         {
                             field_xy: JSON.parse(JSON.stringify(sample.field_xy)),
                             field_CanShot: JSON.parse(JSON.stringify(sample.field_CanShot)),
-                            dead_ship: JSON.parse(JSON.stringify(sample.data_ship))
+                            data_ship: JSON.parse(JSON.stringify(sample.data_ship))
                         },
                         {
                             See_field1: JSON.parse(JSON.stringify(sample.field_xy)),
@@ -140,7 +140,6 @@ io.on('connection', (socket) => {
             console.log(room_using)
             console.log("-----------------------------")
             io.to(name_room).emit('Play_game')
-            //socket.emit('CanClick', true)
         }
 
         console.log("-----------------------------")
@@ -195,6 +194,169 @@ io.on('connection', (socket) => {
         }
     })
     
+    socket.on('handleClick',(data)=>{//id, coord
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==data.ID_user||room_using[i][4].ID_user==data.ID_user){
+                console.log("Чей-то выстрел")
+                coord=data.coord_click//x,y,p
+                att = room_using[i].length - 1//Последняя элемент комныты в массиве.
+                rd = room_using[i][att]//Чей ход
+                let resl//Результат выстела
+                if(coord[2]==1){//Выстрел первого человека
+                    console.log("Выстрел 1-го игрока.")
+                    arr = room_using[i][6].field_xy//Поле 2-го игрока.
+                    data_ship_user = room_using[i][6].data_ship//Данные кораблей 2-го игрока.
+                    field_C_S = room_using[i][6].field_CanShot//Поля куда можно стрелять.
+                    Se_field = room_using[i][7].See_field2//Видемае поля
+                    if(field_C_S[coord[0]][coord[1]]==true){
+                        room_using[i][6].field_CanShot[coord[0]][coord[1]]=false
+                        if(arr[coord[0]][coord[1]]!=0 && arr[coord[0]][coord[1]]!=1){//Попал
+                            console.log('Попал')
+                            for(j=0;j<10;j++){
+                                if(data_ship_user[j][0]==arr[coord[0]][coord[1]]){
+                                    room_using[i][6].data_ship[j][1]=data_ship_user[j][1]-1
+                                    room_using[i][6].data_ship[j].push(`${coord[0]}:${coord[1]}:${coord[2]}`)
+                                    console.log("Попал", room_using[i][6].data_ship[j])
+                                    if(room_using[i][6].data_ship[j][1]==0){
+                                        room_using[i][7].See_field2[coord[0]][coord[1]]="h"
+                                        room_using[i][6].data_ship[j][1] = "dead"
+                                        resl={Ship:room_using[i][6].data_ship[j], Status:"dead"}
+                                        console.log("Убит", resl.Ship)
+                                        //Нужно сделать Функцию обводки вокруг корабля.
+                                        dead_ship({//Все данные второго поля.
+                                            Room:i,
+                                            Ship:j,
+                                            fiel:6,
+                                            See_fiel:7
+                                        })
+                                        if(check_dead_win({Room:i,Ship:j,fiel:6})==true){
+                                            resl={
+                                                Ship:room_using[i][6].data_ship[j], 
+                                                Status:"dead", 
+                                                Game:"end",
+                                                p:0,
+                                                Win: room_using[i][3].Nick,
+                                                ID_user: room_using[i][3].ID_user,
+                                                field:room_using[i][5].field_xy 
+                                            }
+                                        }
+                                    }else{
+                                        room_using[i][7].See_field2[coord[0]][coord[1]]="h"
+                                        resl={coord:`${coord[0]}:${coord[1]}:${coord[2]}` ,Status:"hit"}
+                                    }
+                                    break
+                                }
+                            }
+
+                        }else{//Мимо
+                            console.log("Мимо.")
+                            room_using[i][7].See_field2[coord[0]][coord[1]]="m"
+                            resl={coord:`${coord[0]}:${coord[1]}:${coord[2]}` ,Status:"miss"}
+                            //Нужно сделать мимо.
+                        }
+                        io.to(room_using[i][0]).emit('Result', resl)
+                    }else{
+                        console.log("Сюда нет смысла стрелять.")
+                    }
+                }else{
+                    console.log("Выстрел 2-го игрока.")
+                    arr = room_using[i][5].field_xy//Поле 1-го игрока.
+                    data_ship_user = room_using[i][5].data_ship//Данные кораблей 1-го игрока.
+                    field_C_S = room_using[i][5].field_CanShot//Поля куда можно стрелять.
+                    Se_field = room_using[i][7].See_field1//Видемае поля
+                    if(field_C_S[coord[0]][coord[1]]==true){
+                        room_using[i][5].field_CanShot[coord[0]][coord[1]]=false
+                        if(arr[coord[0]][coord[1]]!=0 && arr[coord[0]][coord[1]]!=1){//Попал
+                            console.log('Попал')
+                            for(j=0;j<10;j++){
+                                if(data_ship_user[j][0]==arr[coord[0]][coord[1]]){
+                                    room_using[i][5].data_ship[j][1]=data_ship_user[j][1]-1
+                                    room_using[i][5].data_ship[j].push(`${coord[0]}:${coord[1]}:${coord[2]}`)
+                                    console.log("Попал", room_using[i][5].data_ship[j])
+                                    if(room_using[i][5].data_ship[j][1]==0){
+                                        room_using[i][7].See_field1[coord[0]][coord[1]]="h"
+                                        room_using[i][5].data_ship[j][1] = "dead"
+                                        resl={Ship:room_using[i][5].data_ship[j], Status:"dead"}
+                                        console.log("Убит", resl.Ship)
+                                        //Нужно сделать Функцию обводки вокруг корабля.
+                                        dead_ship({//Все данные второго поля.
+                                            Room:i,
+                                            Ship:j,
+                                            fiel:5,
+                                            See_fiel:7
+                                        })
+                                        if(check_dead_win({Room:i,Ship:j,fiel:5})==true){
+                                            resl={
+                                                Ship:room_using[i][5].data_ship[j], 
+                                                Status:"dead", 
+                                                Game:"end",
+                                                p:1,
+                                                Win: room_using[i][4].Nick,
+                                                ID_user: room_using[i][4].ID_user,
+                                                field:room_using[i][6].field_xy 
+                                            }
+                                        }
+                                    }else{
+                                        room_using[i][7].See_field1[coord[0]][coord[1]]="h"
+                                        resl={coord:`${coord[0]}:${coord[1]}:${coord[2]}` ,Status:"hit"}
+                                    }
+                                    break
+                                }
+                            }
+
+                        }else{//Мимо
+                            console.log("Мимо.")
+                            room_using[i][7].See_field1[coord[0]][coord[1]]="m"
+                            resl={coord:`${coord[0]}:${coord[1]}:${coord[2]}` ,Status:"miss"}
+                            //Нужно сделать мимо.
+                        }
+                        console.log("Поле 1",room_using[i][7].See_field1)
+                        io.to(room_using[i][0]).emit('Result', resl)
+                    }else{
+                        console.log("Сюда нет смысла стрелять.")
+                    }
+                }
+                break
+            }
+        }
+    })
+    socket.on('Revenge', (ID_user)=>{
+        console.log("Запрос")
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==ID_user||room_using[i][4].ID_user==ID_user){
+                console.log("Хочу реванш")
+                att = room_using[i].length - 1//Последняя элемент комныты в массиве.
+                rd = room_using[i][att]
+                if(rd==0){
+                    room_using[i][att]=1
+                    io.to(room_using[i][0]).emit('revenge',room_using[i][att])
+                }else{
+                    room_using[i][att]=0
+
+                    room_using[i][5].field_xy = JSON.parse(JSON.stringify(sample.field_xy))
+                    room_using[i][6].field_xy = JSON.parse(JSON.stringify(sample.field_xy))
+
+                    room_using[i][5].field_CanShot = JSON.parse(JSON.stringify(sample.field_CanShot))
+                    room_using[i][6].field_CanShot = JSON.parse(JSON.stringify(sample.field_CanShot))
+
+                    room_using[i][5].data_ship = JSON.parse(JSON.stringify(sample.data_ship))
+                    room_using[i][6].data_ship = JSON.parse(JSON.stringify(sample.data_ship))
+
+                    room_using[i][7].See_field1 = JSON.parse(JSON.stringify(sample.field_xy))
+                    room_using[i][7].See_field2 = JSON.parse(JSON.stringify(sample.field_xy))
+                    
+                    room_using[i][1] = "play"
+                    console.log("---1---")
+                    io.to(room_using[i][0]).emit('clear')
+                    console.log("---2---")
+                    io.to(room_using[i][0]).emit('Play_game')
+                    break
+                }
+            }else{
+                console.log("Ненашёл комнату")
+            }
+        }
+    })
     socket.on("disconnect", () => {//Выход
         console.log('Пользователь отключился');
         // Удаляем отключённый сокет
@@ -248,6 +410,65 @@ io.on('connection', (socket) => {
     });
 });
 
+//Обводка
+function dead_ship(data){// Room:i, Ship:j, fiel:6, See_fiel:7 
+    // Ship:room_using[Room][fiel].data_ship[Ship],                       //Корабли
+    // Can:room_using[Room][fiel].field_CanShot,                          //Можно по ней стрелять
+    // See:room_using[Room][See_fiel].See_field1||See_field2 (p = 0 || 1) //Видемые поля
+    console.log("-------------------------------------")
+    console.log("Обводка.")
+    ship_deck = room_using[data.Room][data.fiel].data_ship[data.Ship]//Корабль.
+    console.log("-------------------------------------")
+    console.log(ship_deck)
+    console.log("-------------------------------------")
+    for(g=2;g<ship_deck.length;g++){
+        coord_xy_p = ship_deck[g].split(":")
+        console.log(coord_xy_p)
+        x = Number(coord_xy_p[0])
+        y = Number(coord_xy_p[1])
+        p = Number(coord_xy_p[2])//Протокол поля, на котором воздействуют. (Определяет поле)
+        if(p==1){
+            room_using[data.Room][data.See_fiel].See_field2[x][y]="d"
+        }else{
+            room_using[data.Room][data.See_fiel].See_field1[x][y]="d"
+        }
+        let vr_Check_Ship =[]
+        y++ //Сдвиг вправо 1 раз.
+        vr_Check_Ship.push([x,y])
+        x++//Сдвиг вниз 1 раз.
+        vr_Check_Ship.push([x,y])
+        for(h=0;h<2;h++){//Сдвиг влево 2 раза.
+            y--
+            vr_Check_Ship.push([x,y])
+        }
+        for(h=0;h<2;h++){//Сдвиг вверх 2 раза
+            x--
+            vr_Check_Ship.push([x,y])
+        }
+        for(h=0;h<2;h++){//Сдвиг право 2 раза
+            y++
+            vr_Check_Ship.push([x,y])
+        }
+        for(h=0;h<vr_Check_Ship.length;h++){
+            x= vr_Check_Ship[h][0]
+            y= vr_Check_Ship[h][1]
+            if (x>-1 && x<10){ //9>=x>=0
+                if (y>-1 && y<10){ //9>=y>=0
+                    room_using[data.Room][data.fiel].field_CanShot[x][y] = false
+                    if(p==1){
+                        room_using[data.Room][data.See_fiel].See_field2[x][y]="m"
+                    }else{
+                        room_using[data.Room][data.See_fiel].See_field1[x][y]="m"
+                    }
+                }
+                        
+            }
+        }
+    }
+    //Отправка во всех массивы.
+    console.log("Конец")
+    console.log("-------------------------------------")
+}
 
 function Random(data){//(В)Создание кораблей по методу рандома.
     console.log("-----------------------------")
@@ -402,7 +623,30 @@ function checkShipBoard(vr_coord, vr_field){ //Проверяем можно л�
 
 
 }
-
+function check_dead_win(data){
+    can = 0
+    data_ships = room_using[data.Room][data.fiel].data_ship
+    console.log(data_ships)
+    for(w=0;w<10;w++){
+        console.log(data_ships[w])
+        if(data_ships[w][1]=="dead"){
+            can++
+        }else{
+            break
+        }
+    }
+    console.log(can)
+    if(can==10){
+        console.log("Целых кораблей не осталось.")
+        att = room_using[data.Room].length - 1//Последняя элемент комныты в массиве.
+        room_using[data.Room][att]=0
+        room_using[data.Room][1]="end"
+        console.log(room_using[data.Room])
+        return true
+    }else{
+        return false
+    }
+}
 // Запуск сервера
 const PORT = 3000;
 http.listen(PORT, () => {
