@@ -213,6 +213,8 @@ Play.addEventListener('click', play_game)
 var Revenge = document.getElementById("Revenge")
 Revenge.addEventListener('click', revenge)
 
+var New_game = document.getElementById("New_game")
+New_game.addEventListener('click', new_game)
 
 var black = document.getElementById("black")
 var Menu = document.getElementById("Block_button")
@@ -357,6 +359,11 @@ function dead_ship(ship){
             }
         }
     }
+}
+
+function new_game(){
+    ID_user = data_o_user.Data_session.Id
+    socket.io('Log_out_Room',ID_user)
 }
 
 function Mous_hover_on(event){

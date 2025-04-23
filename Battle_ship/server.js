@@ -239,6 +239,22 @@ io.on('connection', (socket) => {
                                                 ID_user: room_using[i][3].ID_user,
                                                 field:room_using[i][5].field_xy 
                                             }
+                                            id = room_using[i][3].ID_user
+                                            connection_db.addwin(id,(err)=>{
+                                                if(err){
+                                                    console.log(err)
+                                                }else{
+                                                    console.log(`Выйграл пользователь с id:${id}`)
+                                                }
+                                            })
+                                            id = room_using[i][4].ID_user
+                                            connection_db.addloss(id,(err)=>{
+                                                if(err){
+                                                    console.log(err)
+                                                }else{
+                                                    console.log(`Проиграл пользователь с id:${id}`)
+                                                }
+                                            })
                                         }
                                     }else{
                                         room_using[i][7].See_field2[coord[0]][coord[1]]="h"
@@ -295,7 +311,24 @@ io.on('connection', (socket) => {
                                                 ID_user: room_using[i][4].ID_user,
                                                 field:room_using[i][6].field_xy 
                                             }
+                                            id = room_using[i][4].ID_user
+                                            connection_db.addwin(id,(err)=>{
+                                                if(err){
+                                                    console.log(err)
+                                                }else{
+                                                    console.log(`Выйграл пользователь с id:${id}`)
+                                                }
+                                            })
+                                            id = room_using[i][3].ID_user
+                                            connection_db.addloss(id,(err)=>{
+                                                if(err){
+                                                    console.log(err)
+                                                }else{
+                                                    console.log(`Проиграл пользователь с id:${id}`)
+                                                }
+                                            })
                                         }
+                                        
                                     }else{
                                         room_using[i][7].See_field1[coord[0]][coord[1]]="h"
                                         resl={coord:`${coord[0]}:${coord[1]}:${coord[2]}` ,Status:"hit"}
@@ -357,6 +390,10 @@ io.on('connection', (socket) => {
             }
         }
     })
+    socket.on('Log_out_Room',(ID_user)=>{
+
+    })
+
     socket.on("disconnect", () => {//Выход
         console.log('Пользователь отключился');
         // Удаляем отключённый сокет
@@ -638,7 +675,7 @@ function check_dead_win(data){
     console.log(can)
     if(can==10){
         console.log("Целых кораблей не осталось.")
-        att = room_using[data.Room].length - 1//Последняя элемент комныты в массиве.
+        att = room_using[data.Room].length - 1//Последний элемент комныты в массиве.
         room_using[data.Room][att]=0
         room_using[data.Room][1]="end"
         console.log(room_using[data.Room])

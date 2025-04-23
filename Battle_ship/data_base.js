@@ -25,8 +25,18 @@ function findUserByUsername(login, callback) {
     connection_db.query(query, [login], callback);
 }
 
+function addwin(id,callback){
+    const query = 'UPDATE user SET Win = Win+1 WHERE id = ?'
+    connection_db.query(query, [id], callback);
+}
+function addloss(id,callback){
+    const query = 'UPDATE user SET Loss = Loss+1 WHERE id = ?'
+    connection_db.query(query, [id], callback);
+}
 module.exports={ 
     connection_db, 
     createUser,
-    findUserByUsername
+    findUserByUsername,
+    addwin,
+    addloss
 }
