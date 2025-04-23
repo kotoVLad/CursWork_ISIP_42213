@@ -52,7 +52,7 @@ let rooms//Комната
 // user1={Ник,id-user1},user2={Ник,id-user2}, fields{},fiekd_can{},See_field{Видемый поля,для показания поля.}, move=0/1(ход.)]] 
 //expec - ожидание, play - игра , end - конец.
 let room_using = []//Уже созданные комнаты.  Комната 1 = 0 в массиве и тд.
-let room_using_person=[]//Для персональных.
+let vr_field_pos=[]//[[Room,2,{ID, V_G, data_ship},{ID, V_G, data_ship}]]
 let userSockets={}
 io.on('connection', (socket) => {
     //Тут должны создаваться кастомные ID
@@ -148,7 +148,118 @@ io.on('connection', (socket) => {
         console.log("-----------------------------")
     })
 
-    // Можно добавить дополнительные обработчики событий здесь
+    socket.on('mouseover', (data)=>{
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==data.ID_user||room_using[i][4].ID_user==ID_user){
+
+            }
+            
+        }
+    })
+
+    socket.on('position',(ID_user)=>{
+        console.log("-----------------------------")
+        var not = 0
+        let vr_room
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==ID_user||room_using[i][4].ID_user==ID_user){
+                vr_room = room_using[i][0]
+                break
+            }
+        }
+        console.log("Комната пользовтеля:",vr_room)
+        if(vr_field_pos.length!=0){
+            console.log("-----------------------------")
+            console.log("Что-то есть.")
+            for(i=0;i<vr_field_pos.length;i++){
+                if(vr_field_pos[i][0]==vr_room){//да //Есть ли в нём название Комнаты в массиве
+                    console.log(`Комната ${vr_room} найдена во временном.`)
+                    if(vr_field_pos[i][1]==1){
+                        if(vr_field_pos[i][2].ID_user==ID_user){
+                            console.log("Есть такой пользователь, он 1, так что будет заменна.")
+                            for(j=0;j<room_using.length;j++){
+                                if(room_using[j][0]==vr_room){
+                                    if(room_using[j][3].ID_user==ID_user){
+                                        room_using[j][5].field_xy=JSON.parse(JSON.stringify(sample.field_xy))
+                                        console.log("1. Успешно")
+                                    }
+                                    if(room_using[j][4].ID_user==ID_user){
+                                        room_using[j][6].field_xy=JSON.parse(JSON.stringify(sample.field_xy))
+                                        console.log("2. Успешно")
+                                    }
+                                }
+                            }
+                            vr_field_pos[i][2].data_ship=JSON.parse(JSON.stringify(sample.data_ship))
+                        }else{
+                            console.log("Нет такого пользователя, так что создадим 2-го в комнате во временном массиве.")
+                            vr_field_pos[i][1]=2
+                            vr_field_pos[i].push(
+                                {
+                                    ID_user:ID_user,
+                                    V_G:0,// 0-горизонтальный 1-вертикальный.
+                                    data_ship:JSON.parse(JSON.stringify(sample.data_ship))
+                                }
+                            )
+                        }
+                    }else{
+                        console.log("В комнате 2 человека, кто-то хочет сделать замену.")
+                        for(j=0;j<room_using.length;j++){
+                            if(room_using[j][0]==vr_room){
+                                if(room_using[j][3].ID_user==ID_user){
+                                    room_using[j][5].field_xy=JSON.parse(JSON.stringify(sample.field_xy))
+                                    console.log("1. Успешно")
+                                }
+                                if(room_using[j][4].ID_user==ID_user){
+                                    room_using[j][6].field_xy=JSON.parse(JSON.stringify(sample.field_xy))
+                                    console.log("2. Успешно")
+                                }
+                            }
+                        }
+                        if(vr_field_pos[i][2].ID_user==ID_user){
+                            vr_field_pos[i][2].data_ship=JSON.parse(JSON.stringify(sample.data_ship))
+                            console.log("1.1. Успешно")
+                        }
+                        if(vr_field_pos[i][3].ID_user==ID_user){
+                            vr_field_pos[i][3].data_ship=JSON.parse(JSON.stringify(sample.data_ship))
+                            console.log("2.1. Успешно")
+                        }
+                    }
+                    break
+                }else{
+                    not++
+                    if(vr_field_pos.length==not){//Нет//Новый
+                        console.log(`Нет комнаты ${vr_room} найдена во временном массиве.`)
+                        console.log("Создать комнату во временном массиве")
+                        vr_field_pos.push([
+                            vr_room,
+                            1,
+                            {
+                                ID_user:ID_user,
+                                V_G:0,// 0-горизонтальный 1-вертикальный.
+                                data_ship:JSON.parse(JSON.stringify(sample.data_ship))
+                            }
+                        ])
+                    }
+                }
+                
+            }
+        }else{
+            console.log("Нет существующих комнат во временном массиве")
+            console.log("Создать комнату во временном массиве")
+            vr_field_pos.push([//Новый
+                vr_room,
+                1,
+                {
+                    ID_user:ID_user,
+                    V_G:0,// 0-горизонтальный 1-вертикальный.
+                    data_ship:JSON.parse(JSON.stringify(sample.data_ship))
+                }
+            ])
+        }
+        console.log(vr_field_pos)
+        console.log("-----------------------------")
+    })
+
     socket.on('ButtonClick',clientRoom=>{//Отображаем в комнате изменения.
         io.to(clientRoom).emit('EventServer')//Отобразить у всех действие.
     })
@@ -364,26 +475,28 @@ io.on('connection', (socket) => {
                     room_using[i][att]=1
                     io.to(room_using[i][0]).emit('revenge',room_using[i][att])
                 }else{
-                    room_using[i][att]=0
+                    if(room_using[i][1]!="---"){
+                        room_using[i][att]=0
 
-                    room_using[i][5].field_xy = JSON.parse(JSON.stringify(sample.field_xy))
-                    room_using[i][6].field_xy = JSON.parse(JSON.stringify(sample.field_xy))
+                        room_using[i][5].field_xy = JSON.parse(JSON.stringify(sample.field_xy))
+                        room_using[i][6].field_xy = JSON.parse(JSON.stringify(sample.field_xy))
 
-                    room_using[i][5].field_CanShot = JSON.parse(JSON.stringify(sample.field_CanShot))
-                    room_using[i][6].field_CanShot = JSON.parse(JSON.stringify(sample.field_CanShot))
+                        room_using[i][5].field_CanShot = JSON.parse(JSON.stringify(sample.field_CanShot))
+                        room_using[i][6].field_CanShot = JSON.parse(JSON.stringify(sample.field_CanShot))
 
-                    room_using[i][5].data_ship = JSON.parse(JSON.stringify(sample.data_ship))
-                    room_using[i][6].data_ship = JSON.parse(JSON.stringify(sample.data_ship))
+                        room_using[i][5].data_ship = JSON.parse(JSON.stringify(sample.data_ship))
+                        room_using[i][6].data_ship = JSON.parse(JSON.stringify(sample.data_ship))
 
-                    room_using[i][7].See_field1 = JSON.parse(JSON.stringify(sample.field_xy))
-                    room_using[i][7].See_field2 = JSON.parse(JSON.stringify(sample.field_xy))
-                    
-                    room_using[i][1] = "play"
-                    console.log("---1---")
-                    io.to(room_using[i][0]).emit('clear')
-                    console.log("---2---")
-                    io.to(room_using[i][0]).emit('Play_game')
-                    break
+                        room_using[i][7].See_field1 = JSON.parse(JSON.stringify(sample.field_xy))
+                        room_using[i][7].See_field2 = JSON.parse(JSON.stringify(sample.field_xy))
+                        
+                        room_using[i][1] = "play"
+                        console.log("---1---")
+                        io.to(room_using[i][0]).emit('clear')
+                        console.log("---2---")
+                        io.to(room_using[i][0]).emit('Play_game')
+                        break
+                    }
                 }
             }else{
                 console.log("Ненашёл комнату")
@@ -391,9 +504,124 @@ io.on('connection', (socket) => {
         }
     })
     socket.on('Log_out_Room',(ID_user)=>{
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==ID_user||room_using[i][4].ID_user==ID_user){
+                console.log("Кто-то вышел из комнаты.")
+                room_using[i][1]="---"
 
+                if(room_using[i][3].ID_user==ID_user){
+                    room_using[i][3].ID_user="---"
+                }if(room_using[i][4].ID_user==ID_user){
+                    room_using[i][4].ID_user="---"
+                }
+                socket.leave(room_using[i][0]);
+
+                us = room_using[i][2]
+                us--
+                room_using[i][2] = us
+                if(room_using[i][2]==1){
+                    io.to(room_using[i][0]).emit('no_revang')
+                }
+                socket.emit('clear')
+                if(room_using[i][2]==0){
+                    room_using.splice(i,1)
+                }
+            }
+        }
     })
+    socket.on('Give_up',(ID_user)=>{
+        console.log("Кто-то сдался")
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==ID_user){
+                console.log("Сдался пользовтель с ID:", ID_user)
+                resl={
+                    Status:"Giv",
+                    Game:"end",
+                    p:1,
+                    Win: room_using[i][4].Nick,
+                    ID_user: room_using[i][4].ID_user
+                }
+                id = room_using[i][4].ID_user
+                connection_db.addwin(id,(err)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        console.log(`Выйграл пользователь с id:${id}`)
+                    }
+                })
+                id = room_using[i][3].ID_user
+                connection_db.addloss(id,(err)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        console.log(`Проиграл пользователь с id:${id}`)
+                    }
+                })
+                att = room_using[i].length - 1//Последний элемент комныты в массиве.
+                room_using[i][att]=0
+                room_using[i][1]="end"
+                io.to(room_using[i][0]).emit('Result', resl)
+                break
+            }if(room_using[i][4].ID_user==ID_user){
+                console.log("Сдался пользовтель с ID:", ID_user)
+                resl={ 
+                    Status:"Giv",
+                    Game:"end",
+                    p:0,
+                    Win: room_using[i][3].Nick,
+                    ID_user: room_using[i][3].ID_user 
+                }
+                id = room_using[i][3].ID_user
+                connection_db.addwin(id,(err)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        console.log(`Выйграл пользователь с id:${id}`)
+                    }
+                })
+                id = room_using[i][4].ID_user
+                connection_db.addloss(id,(err)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        console.log(`Проиграл пользователь с id:${id}`)
+                    }
+                })
+                att = room_using[i].length - 1//Последний элемент комныты в массиве.
+                room_using[i][att]=0
+                room_using[i][1]="end"
+                io.to(room_using[i][0]).emit('Result', resl)
+                break
+            }
+        }
+    })
+    socket.on('No_revang',(ID_user)=>{
+        console.log("Вышел из комнаты кто-то.")
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==ID_user||room_using[i][4].ID_user==ID_user){
+                room_using[i][1]="---"
 
+                if(room_using[i][3].ID_user==ID_user){
+                    room_using[i][3].ID_user="---"
+                }if(room_using[i][4].ID_user==ID_user){
+                    room_using[i][4].ID_user="---"
+                }
+                socket.leave(room_using[i][0]);
+
+                us = room_using[i][2]
+                us--
+                room_using[i][2] = us
+                if(room_using[i][2]==1){
+                    io.to(room_using[i][0]).emit('no_revang')
+                }
+                socket.emit('clear')
+                if(room_using[i][2]==0){
+                    room_using.splice(i,1)
+                }
+                break
+            }
+        }
+    })
     socket.on("disconnect", () => {//Выход
         console.log('Пользователь отключился');
         // Удаляем отключённый сокет
@@ -411,12 +639,18 @@ io.on('connection', (socket) => {
                         client--
                         break
                     }
-                    if(room_using[i][1]=="end"){
+                    if(room_using[i][1]=="end"||room_using[i][1]=="---"){
                         console.log("end")
+                        if(room_using[i][3].ID_user==id){
+                            room_using[i][3].ID_user="---"
+                        }if(room_using[i][4].ID_user==id){
+                            room_using[i][4].ID_user="---"
+                        }
                         socket.leave(room_using[i][0]);
                         us = room_using[i][2]
                         us--
                         room_using[i][2] = us
+                        io.to(room_using[i][0]).emit('no_revang')
                         if(room_using[i][2]==0){
                             console.log(`Комната ${room_using[i][0]} была удалина из массиве.`)
                             room_using.splice(i,1)
@@ -645,11 +879,20 @@ function checkShipBoard(vr_coord, vr_field){ //Проверяем можно л�
     for(i=0;i<vr_coord.length;i++){
         x4= vr_coord[i][0]
         y4= vr_coord[i][1]
-        if(vr_field[x4][y4] == 0){
-            Can=Can+1    
-        } else {
+        if(x4<10 && x4>-1){
+            if(y4<10 && y4>-1){
+                if(vr_field[x4][y4] == 0){
+                    Can=Can+1    
+                }else {
+                    break;
+                }
+            }else{
+                break;
+            }
+        }else{
             break;
         }
+        
     }
     if(Can==vr_coord.length){
         return true;

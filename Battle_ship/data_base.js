@@ -1,10 +1,16 @@
 const mysql = require('mysql2');
 
 const connection_db = mysql.createConnection({
+    //Моя
     host: 'localhost',
     user: 'root',
     password: 'qwer',
     database: 'battle_ship_user'
+    //Для курсовой.
+    //host: '192.168.88.188',
+    //user: 'student11',
+    //password: '04bti9',
+    //database: 'battle_ship_user'
 });
 
 connection_db.connect((err)=>{
@@ -33,10 +39,17 @@ function addloss(id,callback){
     const query = 'UPDATE user SET Loss = Loss+1 WHERE id = ?'
     connection_db.query(query, [id], callback);
 }
+
+function updatasession(id,callback){
+    const query = 'SELECT * FROM user WHERE id = ?'
+    connection_db.query(query, [id], callback)
+}
+
 module.exports={ 
     connection_db, 
     createUser,
     findUserByUsername,
     addwin,
-    addloss
+    addloss,
+    updatasession
 }

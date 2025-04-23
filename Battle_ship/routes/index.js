@@ -5,9 +5,26 @@ const connection_db =require('../data_base')
 
 //Главный сайт
 router.get('/', function(req, res, next) {
-    res.render('Battal_Ship',{
-        session: req.session
-    });
+    if(req.session.USER){
+        id = req.session.USER.Id
+        connection_db.updatasession(id,(err,result)=>{
+            if(err){
+                console.log(err)
+            }else if(result.length > 0) {
+                // Проверяем переданный пароль с хэшем
+                req.session.USER.Win = result[0].Win
+                req.session.USER.Loss = result[0].Loss
+                console.log("Данные пользователя:", req.session.USER)
+                res.render('Battal_Ship',{
+                    session: req.session
+                })
+            }
+        })
+    }else{
+        res.render('Battal_Ship',{
+            session: req.session
+        });
+    }
 });
 
 //Режимы игры

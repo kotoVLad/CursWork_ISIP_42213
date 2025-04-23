@@ -2,9 +2,10 @@ let field_user=null
 let data_o_user
 let moving=null
 let revenge_user=null
+let key_position = false
 async function take_session() {
     const response = await fetch ('/take_data')
-    const data = await response.json();//Data_session.Id, Nick, Win,Loss
+    const data = await response.json();// data_o_user // Data_session.Id, Nick, Win,Loss
     if (data.error) {
         console.log("Ошибка:", data.error);
         return;
@@ -34,6 +35,7 @@ async function take_session() {
         })
         socket.on('Play_game',()=>{
             Stop_Timer()
+            key_position = true
             Expec.style.display="none"
             black.style.display="none"
             end.style.display="none"
@@ -64,6 +66,7 @@ async function take_session() {
             Play.style.display="none"
             expec_game.style.display="none"
             black.style.display="none"
+            mine_Menu.style.display="block"
             for(i=0;i<10;i++){
                 for(j=0;j<10;j++){
                     if(field_user==0){
@@ -115,6 +118,8 @@ async function take_session() {
             field:room_using[i][5].field_xy
             */
             if(data.Game=="end"){
+                mine_Menu.style.display="none"
+                Move.innerText='Конец.'
                 revenge_user=true
                 for(i=0;i<10;i++){
                     for(j=0;j<10;j++){
@@ -131,13 +136,15 @@ async function take_session() {
                         }
                     }
                 }
-                for(i=0;i<10;i++){
-                    for(j=0;j<10;j++){
-                        att = document.getElementById(i+":"+j+":"+data.p)
-                        console.log(att)
-                        if(data.field[i][j]!=0 && data.field[i][j]!=1){
-                            if(!att.classList.contains("dead")){
-                                att.classList.add("Ship_shadow")
+                if(data.Status!="Giv"){
+                    for(i=0;i<10;i++){
+                        for(j=0;j<10;j++){
+                            att = document.getElementById(i+":"+j+":"+data.p)
+                            console.log(att)
+                            if(data.field[i][j]!=0 && data.field[i][j]!=1){
+                                if(!att.classList.contains("dead")){
+                                    att.classList.add("Ship_shadow")
+                                }
                             }
                         }
                     }
@@ -146,7 +153,7 @@ async function take_session() {
                     black.style.display="block"
                     end.style.display="block"
                     USER.innerText=`${data.Win}`
-                },8000)
+                },6000)
             }
             
         })
@@ -155,27 +162,17 @@ async function take_session() {
             console.log("Очистить")
             moving=null
             revenge_user=null
-            for(i=0;i<10;i++){
-                for(j=0;j<10;j++){
-                    cletka = document.getElementById(i+":"+j+":"+0)
-                    if(cletka.classList.contains("Ship_shadow")){cletka.classList.remove("Ship_shadow")}
-                    if(cletka.classList.contains("miss")){cletka.classList.remove("miss")}
-                    if(cletka.classList.contains("hit")){cletka.classList.remove("hit")}
-                    if(cletka.classList.contains("dead")){cletka.classList.remove("dead")}
-                    if(cletka.classList.contains("hover_on2")){cletka.classList.remove("hover_on2")}
-
-                    cletka2 = document.getElementById(i+":"+j+":"+1)
-                    if(cletka2.classList.contains("Ship_shadow")){cletka2.classList.remove("Ship_shadow")}
-                    if(cletka2.classList.contains("miss")){cletka2.classList.remove("miss")}
-                    if(cletka2.classList.contains("hit")){cletka2.classList.remove("hit")}
-                    if(cletka2.classList.contains("dead")){cletka2.classList.remove("dead")}
-                    if(cletka2.classList.contains("hover_on2")){cletka2.classList.remove("hover_on2")}
-                }
-            }
+            Delet_class()
+            
         })
         socket.on('revenge',(data)=>{
             Revenge.innerText=`Реванш (${data}/2)`
         })
+        socket.on('no_revang',()=>{
+            revenge_user=false
+            Revenge.innerText=`Реванш не возможен.`
+        })
+
     }
 }
 /*for(i=0;i<10;i++){
@@ -216,6 +213,24 @@ Revenge.addEventListener('click', revenge)
 var New_game = document.getElementById("New_game")
 New_game.addEventListener('click', new_game)
 
+var m_m1 = document.getElementById("m_m1")
+m_m1.addEventListener('click', Open_menu)
+
+var set = document.getElementById("set")
+set.addEventListener('click', Open_set)
+var give_up = document.getElementById("give_up")
+give_up.addEventListener('click', Give_up)
+
+var yes = document.getElementById("Yes")
+yes.addEventListener('click', Yes)
+var no = document.getElementById("No")
+no.addEventListener('click', No)
+var Log_out = document.getElementById("Log_out")
+Log_out.addEventListener('click', log_out)
+
+var Position = document.getElementById("Position")
+Position.addEventListener('click', position)
+
 var black = document.getElementById("black")
 var Menu = document.getElementById("Block_button")
 var Expec = document.getElementById("expec")
@@ -226,10 +241,152 @@ var expec_game = document.getElementById("expec_game")
 var Move = document.getElementById("Move")
 var end = document.getElementById("end")
 var USER = document.getElementById("USER")
-
+var mine_Menu = document.getElementById("mine_Menu")
 var Menu_pos = document.getElementById("Block_button_net")
+var exp_end = document.getElementById("exp_end")
 
 var clientRoom//Комната.
+
+function position(){
+    Delet_ship()
+    Position.innerText="Очистить"
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('position',ID_user)
+    if(key_position = true){
+        key_position = false
+        for(i=0;i<10;i++){
+            for(j=0;j<10;j++){
+                if(field_user==0){
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('click',Can_pos)
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('mouseover',Mous_hover_ov)
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('mouseout',Mous_hover_ou)
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('contextmenu', Change_position)
+                }else{
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('click',Can_pos)
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('mouseover',Mous_hover_ov)
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('mouseout',Mous_hover_ou)
+                    document.getElementById(i+":"+j+":"+field_user).addEventListener('contextmenu', Change_position)
+                }
+            }
+        }
+    } 
+}
+
+function Can_pos(event){//На сервер.
+    console.log("ЛКМ")
+    coord_xy_p = event.srcElement.id.split(":")
+}
+function Mous_hover_ov(event){//На сервер
+    console.log("На клетке")
+    coord_xy_p = event.srcElement.id.split(":")
+    //socket.emit('mouseover',{coord_xy_p:coord_xy_p, ID_user:data_o_user.Data_session.Id,field_user:field_user})
+}
+
+function Change_position(event){//На сервер
+    console.log("ПКМ")
+    coord_xy_p = event.srcElement.id.split(":")
+}
+
+function Mous_hover_ou(event){//Клиент
+    console.log("Не на клетке.")
+}
+
+function log_out(){
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('No_revang',ID_user)
+    end.style.display="none"
+    black.style.display="block"
+    Menu.style.display="block"
+}
+
+function Delet_class(){
+    for(i=0;i<10;i++){
+        for(j=0;j<10;j++){
+            cletka = document.getElementById(i+":"+j+":"+0)
+            if(cletka.classList.contains("Ship_shadow")){cletka.classList.remove("Ship_shadow")}
+            if(cletka.classList.contains("miss")){cletka.classList.remove("miss")}
+            if(cletka.classList.contains("hit")){cletka.classList.remove("hit")}
+            if(cletka.classList.contains("dead")){cletka.classList.remove("dead")}
+            if(cletka.classList.contains("hover_on2")){cletka.classList.remove("hover_on2")}
+
+            cletka2 = document.getElementById(i+":"+j+":"+1)
+            if(cletka2.classList.contains("Ship_shadow")){cletka2.classList.remove("Ship_shadow")}
+            if(cletka2.classList.contains("miss")){cletka2.classList.remove("miss")}
+            if(cletka2.classList.contains("hit")){cletka2.classList.remove("hit")}
+            if(cletka2.classList.contains("dead")){cletka2.classList.remove("dead")}
+            if(cletka2.classList.contains("hover_on2")){cletka2.classList.remove("hover_on2")}
+        }
+    }
+}
+function Delet_ship(){
+    for(i=0;i<10;i++){
+        for(j=0;j<10;j++){
+            //Очищаем массив и поле.
+            cletka = document.getElementById(i+":"+j+":"+field_user)
+            if(cletka.classList.contains("Ship_shadow")){
+                cletka.classList.remove("Ship_shadow") //Удаляем палубу на поле.
+            }
+        }
+    }
+}
+
+function Delet_handler_pos(){
+    for(i=0;i<10;i++){
+        for(j=0;j<10;j++){
+            if(field_user==0){
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('click',Can_pos)
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('mouseover',Mous_hover_ov)
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('mouseout',Mous_hover_ou)
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('contextmenu', Change_position)
+            }else{
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('click',Can_pos)
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('mouseover',Mous_hover_ov)
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('mouseout',Mous_hover_ou)
+                document.getElementById(i+":"+j+":"+field_user).removeEventListener('contextmenu', Change_position)
+            }
+        }
+    }
+}
+
+
+function new_game(){
+    end.style.display="none"
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('Log_out_Room',ID_user)
+    Cre_Con_room()
+}
+
+
+function Open_set(){
+    console.log("Настройки")
+}
+
+function Give_up(){
+    black.style.display="block"
+    exp_end.style.display="block"
+}
+
+function Yes(){
+    black.style.display="none"
+    exp_end.style.display="none"
+    set.style.display="none"
+    give_up.style.display="none"
+
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('Give_up',ID_user)
+}
+
+function No(){
+    black.style.display="none"
+    exp_end.style.display="none"
+    set.style.display="none"
+    give_up.style.display="none"
+}
+
+function Open_menu(){
+    set.style.display="block"
+    give_up.style.display="block"
+}
 
 function revenge(){
     if(revenge_user==true){
@@ -259,16 +416,12 @@ function Cre_Con_room(){
 }
 
 function random_pos(){
-    Ship=0
-    for(i=0;i<10;i++){
-        for(j=0;j<10;j++){
-            //Очищаем массив и поле.
-            cletka = document.getElementById(i+":"+j+":"+field_user)
-            if(cletka.classList.contains("Ship_shadow")){
-                cletka.classList.remove("Ship_shadow") //Удаляем палубу на поле.
-            }
-        }
+    if(key_position==false){
+        Position.innerText="Вручную"
+        key_position=true
+        Delet_handler_pos()
     }
+    Delet_ship()
     socket.emit('Random', {field_user:field_user, ID_user:data_o_user.Data_session.Id})
 }
 
@@ -359,11 +512,6 @@ function dead_ship(ship){
             }
         }
     }
-}
-
-function new_game(){
-    ID_user = data_o_user.Data_session.Id
-    socket.io('Log_out_Room',ID_user)
 }
 
 function Mous_hover_on(event){
