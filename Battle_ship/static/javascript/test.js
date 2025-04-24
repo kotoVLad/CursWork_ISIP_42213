@@ -172,7 +172,55 @@ async function take_session() {
             revenge_user=false
             Revenge.innerText=`Реванш не возможен.`
         })
+        socket.on('Resl_pos',(data)=>{
+            if(data.Status=="All_ship"){
+                Play.style.display="block"
+            }
+            if(data.Status=="Can"){
+                for(i=0;i<data.vr_coord.length;i++){
+                    x = data.vr_coord[i][0]
+                    y = data.vr_coord[i][1]
+                    document.getElementById(x+":"+y+":"+field_user).classList.add("Hover_on")
+                }
+            }else{
+                for(i=0;i<data.vr_coord.length;i++){
+                    x = data.vr_coord[i][0]
+                    y = data.vr_coord[i][1]
+                    if(x<10 && x>-1){
+                        if(y<10 && y>-1){
+                            document.getElementById(x+":"+y+":"+field_user).classList.add("Hover_on_red")
+                        }
+                    }
+                }
+            }
+        })
+        socket.on('Create_ship',(data)=>{
+            if(data.Status=="yes"){
+                for(i=0;i<data.vr_coord.length;i++){
+                    x=data.vr_coord[i][0]
+                    y=data.vr_coord[i][1]
+                    document.getElementById(x+":"+y+":"+field_user).classList.add("Ship_shadow")
+                }
+            }
+            if(data.Status=="end"){
+                console.log("Все корабли расставлены.")
+                Play.style.display="block"
+                for(i=0;i<data.vr_coord.length;i++){
+                    x=data.vr_coord[i][0]
+                    y=data.vr_coord[i][1]
+                    document.getElementById(x+":"+y+":"+field_user).classList.add("Ship_shadow")
+                }
+                Delet_handler_pos()
+            }
+        })
+        socket.on('cancellation',()=>{
 
+            Menu_pos.style.display="none"
+            expec_game.style.display="none"
+
+            black.style.display="block"
+            cancell_game.style.display="block"
+        })
     }
 }
 /*for(i=0;i<10;i++){
@@ -213,6 +261,9 @@ Revenge.addEventListener('click', revenge)
 var New_game = document.getElementById("New_game")
 New_game.addEventListener('click', new_game)
 
+var New_game2 = document.getElementById("New_game2")
+New_game2.addEventListener('click', new_game2)
+
 var m_m1 = document.getElementById("m_m1")
 m_m1.addEventListener('click', Open_menu)
 
@@ -223,10 +274,15 @@ give_up.addEventListener('click', Give_up)
 
 var yes = document.getElementById("Yes")
 yes.addEventListener('click', Yes)
+
 var no = document.getElementById("No")
 no.addEventListener('click', No)
+
 var Log_out = document.getElementById("Log_out")
 Log_out.addEventListener('click', log_out)
+
+var Log_out2 = document.getElementById("Log_out2")
+Log_out2.addEventListener('click', log_out2)
 
 var Position = document.getElementById("Position")
 Position.addEventListener('click', position)
@@ -244,11 +300,13 @@ var USER = document.getElementById("USER")
 var mine_Menu = document.getElementById("mine_Menu")
 var Menu_pos = document.getElementById("Block_button_net")
 var exp_end = document.getElementById("exp_end")
+var cancell_game =  document.getElementById("cancell")
 
 var clientRoom//Комната.
 
 function position(){
     Delet_ship()
+    Play.style.display="none"
     Position.innerText="Очистить"
     ID_user = data_o_user.Data_session.Id
     socket.emit('position',ID_user)
@@ -275,26 +333,111 @@ function position(){
 function Can_pos(event){//На сервер.
     console.log("ЛКМ")
     coord_xy_p = event.srcElement.id.split(":")
+    socket.emit('Can_pos',{coord_xy_p:coord_xy_p, ID_user:data_o_user.Data_session.Id})
 }
 function Mous_hover_ov(event){//На сервер
-    console.log("На клетке")
     coord_xy_p = event.srcElement.id.split(":")
-    //socket.emit('mouseover',{coord_xy_p:coord_xy_p, ID_user:data_o_user.Data_session.Id,field_user:field_user})
+    socket.emit('mouseover',{coord_xy_p:coord_xy_p, ID_user:data_o_user.Data_session.Id})
+    //,field_user:field_user
 }
 
 function Change_position(event){//На сервер
+    event.preventDefault();
     console.log("ПКМ")
     coord_xy_p = event.srcElement.id.split(":")
+    Change_position_del(coord_xy_p)
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('Change_position',ID_user)
+    socket.emit('mouseover',{coord_xy_p:coord_xy_p, ID_user:data_o_user.Data_session.Id})
 }
 
 function Mous_hover_ou(event){//Клиент
-    console.log("Не на клетке.")
+    coord_x_y = event.srcElement.id.split(":")
+    x1 = Number(coord_x_y[0])
+    y1 = Number(coord_x_y[1])
+    p1 = Number(coord_x_y[2])
+    a_x = x1+1
+    a_y = y1+1
+    for(g=x1;g<10;g++){
+        for(h=y1;h<10;h++){
+            att_id = document.getElementById(g+":"+h+":"+p1)
+            if(att_id.classList.contains("Hover_on")){
+                att_id.classList.remove("Hover_on")
+            }
+            if(att_id.classList.contains("Hover_on_red")){
+                att_id.classList.remove("Hover_on_red")
+            }
+        }
+    }
+    /*
+    if(document.getElementById(x1+":"+a_y+":"+p1).classList.contains("Hover_on")||document.getElementById(x1+":"+a_y+":"+p1).classList.contains("Hover_on_red")){
+        for(g=y1;g<10;g++){
+            if(!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")||!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
+                break
+            }
+            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")){
+                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on")
+            }
+            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
+                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on_red")
+            }
+        }
+    }else if(document.getElementById(x1+":"+a_x+":"+p1).classList.contains("Hover_on")||document.getElementById(x1+":"+a_x+":"+p1).classList.contains("Hover_on_red")){
+        for(g=x1;g<10;g++){
+            if(!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")||!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
+                break
+            }
+            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")){
+                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on")
+            }
+            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
+                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on_red")
+            }
+        }
+    }else{
+        if(document.getElementById(event.srcElement.id).classList.contains("Hover_on")){
+            document.getElementById(event.srcElement.id).classList.remove("Hover_on")
+        }
+        if(document.getElementById(event.srcElement.id).classList.contains("Hover_on_red")){
+            document.getElementById(event.srcElement.id).classList.remove("Hover_on_red")
+        }
+    }
+    */
+}
+
+function Change_position_del(coord_x_y){
+    x1 = Number(coord_x_y[0])
+    y1 = Number(coord_x_y[1])
+    p1 = Number(coord_x_y[2])
+    a_x = x1+1
+    a_y = y1+1
+    for(g=x1;g<10;g++){
+        for(h=y1;h<10;h++){
+            att_id = document.getElementById(g+":"+h+":"+p1)
+            if(att_id.classList.contains("Hover_on")){
+                att_id.classList.remove("Hover_on")
+            }
+            if(att_id.classList.contains("Hover_on_red")){
+                att_id.classList.remove("Hover_on_red")
+            }
+        }
+    }
 }
 
 function log_out(){
     ID_user = data_o_user.Data_session.Id
     socket.emit('No_revang',ID_user)
     end.style.display="none"
+    cancell_game.style.display="none"
+    black.style.display="block"
+    Menu.style.display="block"
+}
+
+function log_out2(){
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('No_revang',ID_user)
+    end.style.display="none"
+    cancell_game.style.display="none"
     black.style.display="block"
     Menu.style.display="block"
 }
@@ -351,11 +494,18 @@ function Delet_handler_pos(){
 
 function new_game(){
     end.style.display="none"
+    cancell_game.style.display="none"
     ID_user = data_o_user.Data_session.Id
     socket.emit('Log_out_Room',ID_user)
     Cre_Con_room()
 }
-
+function new_game2(){
+    end.style.display="none"
+    cancell_game.style.display="none"
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('Log_out_Room',ID_user)
+    Cre_Con_room()
+}
 
 function Open_set(){
     console.log("Настройки")
@@ -458,6 +608,7 @@ function play_game(){
     Menu_pos.style.display="none"
     black.style.display="block"
     expec_game.style.display="block"
+    Play.style.display="none"
     ID_user = data_o_user.Data_session.Id
     socket.emit('Ready',ID_user)
 }

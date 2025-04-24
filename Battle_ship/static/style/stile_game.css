@@ -82,8 +82,8 @@
 }
 
 .block_btn{ /*Слывающие окна*/
-    width: 550px;
-    height: 550px;
+    width: 500px;
+    height: 500px;
     border: 1px solid #aaa;
     background-color: rgb(212, 212, 212);
     border-radius: 25px;
@@ -96,32 +96,32 @@
 }
 
 .block_btn_net1{ /*Слывающие окна*/
-    width: 550px;
-    height: 550px;
+    width: 540px;
+    height: 540px;
     border: 1px solid #aaa;
     background-color: rgb(212, 212, 212);
     border-radius: 25px;
     z-index: 1;
 
     position: absolute;
-    top:  50%;
-    left: 63%;
+    top:  55%;
+    left: 75%;
     transform: translate(-50%,-50%);
 }
 #Block_button_net{
     display: none;
 }
 .block_btn_net2{ /*Слывающие окна*/
-    width: 550px;
-    height: 550px;
+    width: 540px;
+    height: 540px;
     border: 1px solid #aaa;
     background-color: rgb(212, 212, 212);
     border-radius: 25px;
     z-index: 1;
 
     position: absolute;
-    top:  50%;
-    left: 37%;
+    top:  55%;
+    left: 25%;
     transform: translate(-50%,-50%);
 }
 

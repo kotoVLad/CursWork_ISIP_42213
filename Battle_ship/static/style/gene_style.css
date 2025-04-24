@@ -86,6 +86,34 @@
     transform: translate(-50%,-50%);
 }
 
+.blockk2{
+    font-size: 28px;
+
+    border-radius: 25px;
+    width: 500px;
+    height: 400px;
+    border: 1px solid #aaa;
+    background-color: rgb(212, 212, 212);
+
+    display: none;
+
+    z-index: 1;
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#col_4{
+    padding-top: 20%;
+
+    column-count: 2;
+}
+
+#lb_1{
+    padding-top: 5%;
+}
+
 #end{
     border-radius: 25px;
     width: 700px;
