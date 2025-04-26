@@ -55,6 +55,7 @@ let rooms//Комната
 let room_using = []//Уже созданные комнаты.  Комната 1 = 0 в массиве и тд.
 let vr_field_pos=[]//[[Room,2,{ID, V_G, data_ship},{ID, V_G, data_ship}]]
 let userSockets={}
+let roomsTimers = {};
 io.on('connection', (socket) => {
     //Тут должны создаваться кастомные ID
 
@@ -67,6 +68,37 @@ io.on('connection', (socket) => {
         userSockets[ID_user] = socket
         console.log('Кастомный-Id:',ID_user);
         console.log("-----------------------------")
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i].length>4){
+                if(room_using[i][3].ID_user==id||room_using[i][4].ID_user==id){
+                    if(room_using[i][1]=="t_stusy"){
+                        console.log("Нашлась комната:",room_using[i][0])
+                        prot = null
+                        field_see = null
+                        if(room_using[i][3].ID_user==id){
+                            field_see = room_using[i][5].field_xy
+                            prot = 0
+                        }if(room_using[i][4].ID_user==id){
+                            field_see = room_using[i][6].field_xy
+                            prot = 1
+                        }
+                        room_using[i][1] = "play"
+                        room_using[i][2] = 2
+                        console.log(room_using[i])
+                        socket.join(room_using[i][0])
+                        socket.emit('Recon', {
+                            See_field1:room_using[i][7].See_field1,
+                            See_field2:room_using[i][7].See_field2,
+                            move:room_using[i][8],
+                            Nick1:room_using[i][3].Nick,
+                            Nick2:room_using[i][4].Nick,
+                            prot:prot,
+                            field_see:field_see
+                        })
+                    }
+                }
+            }
+        }
     })
 
     socket.on('cre_con_room', (data)=>{//Создаём или присоеденяемся к комнате.
@@ -86,7 +118,9 @@ io.on('connection', (socket) => {
 
             room_using.push([name_room,"expec", 1 ,{Nick:Nick,ID_user:ID_user}])//expec - ожидание, play - игра , end - конец, t_stus - один из них вышел.
             
-            console.log(JSON.stringify(room_using))
+            for(j=0;j<room_using.length;j++){
+                console.log(room_using[j])
+            }
             console.log("-----------------------------")
             socket.emit('serverMsg', {Room:name_room, fd: 0})//Комната, поле
             
@@ -335,6 +369,89 @@ io.on('connection', (socket) => {
         let field_open_user = Random(data)
         socket.emit('field_create', field_open_user)
     })
+
+    socket.on('cancel2',(ID_user)=>{
+        for(i=0;i<room_using.length;i++){
+            if(room_using[i][3].ID_user==ID_user){
+                socket.leave(room_using[i][0]);
+                room_using.splice(i,1)
+                console.log(room_using)
+            }
+        }
+    })
+
+    socket.on('Log_rooming_1', (data)=>{
+        console.log("Я сработал")
+        console.log(data)
+        noting = 0
+        room_prem="ID-"+`${data.ID_room}`
+        for(i=0;i<room_using.length;i++){
+            console.log("Ищем.")
+            if(room_using[i][0]==room_prem){
+                console.log(room_using[i][0])
+                console.log(room_using[i].length)
+                if(room_using[i].length<5){
+                    console.log("Можно присоедениться")
+                    socket.join(room_prem)
+                    socket.emit('serverMsg', {Room:room_prem, fd: 1})
+                    room_using[i].push(
+                        {Nick:data.Nick,ID_user:data.ID_user},
+                        {
+                            field_xy: JSON.parse(JSON.stringify(sample.field_xy)),
+                            field_CanShot: JSON.parse(JSON.stringify(sample.field_CanShot)),
+                            data_ship: JSON.parse(JSON.stringify(sample.data_ship))
+                        },
+                        {
+                            field_xy: JSON.parse(JSON.stringify(sample.field_xy)),
+                            field_CanShot: JSON.parse(JSON.stringify(sample.field_CanShot)),
+                            data_ship: JSON.parse(JSON.stringify(sample.data_ship))
+                        },
+                        {
+                            See_field1: JSON.parse(JSON.stringify(sample.field_xy)),
+                            See_field2: JSON.parse(JSON.stringify(sample.field_xy))
+                        },
+                        0
+                    )
+                    room_using[i][1] = "expec_play"
+                    console.log("Статус:",room_using[i][1])
+                    room_using[i][2] = 2
+
+                    console.log("Отправка Ников.")
+
+                    use1 = room_using[i][3].ID_user//id 1 пользователя комнаты
+                    use2 = room_using[i][4].ID_user//id 2 пользователя комнаты
+
+                    Room_Users = {User1_Nick:room_using[i][3].Nick, User2_Nick:room_using[i][4].Nick}
+
+                    socket = userSockets[use1];//Soket 1 пользователя комнаты
+                    socket.emit('Conn_us', Room_Users)
+
+                    socket = userSockets[use2];//Soket 2 пользователя комнаты
+                    socket.emit('Conn_us', Room_Users)
+
+                    io.to(room_prem).emit('Play_game')
+                    break
+                }else{
+                    console.log("Она есть, но уже заполнена.")
+                    Status = "Простите, эта комната уже занята."
+                    socket.emit('err_status',Status)
+                }
+            }else{
+                noting++
+                console.log(noting)
+                if(noting==room_using.length){
+                    console.log("Нет таких комнат")
+                    Status = "Такой комнаты нет."
+                    socket.emit('err_status',Status)
+                }
+            }
+        }
+        if(room_using.length==0){
+            Status = "Такой комнаты нет."
+            socket.emit('err_status',Status)
+        }
+    })
+
     socket.on('cancel',()=>{
         console.log("Отмена по кнопки")
         name_room="Room:"+rooms
@@ -367,6 +484,7 @@ io.on('connection', (socket) => {
                     var rd = Math.round(Math.random()) //Рандомное число от 0 до 1
                     room_using[i][room_using[i].length - 1] = rd
                     io.to(room_using[i][0]).emit('Play_game_ship', rd)
+                    console.log(rd)
                 }else{
                     room_using[i][att] = rd
                 }
@@ -501,6 +619,27 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('Crear_Con_Prem', (data)=>{
+        sample_name_prem_room = "ID-"
+        name_prem_room = sample_name_prem_room
+        for(i=0;i<10;i++){
+            min = 0
+            max = 9
+            num = Math.floor(Math.random() * (max - min + 1)) + min
+            name_prem_room = name_prem_room+`${num}`
+        }
+        socket.join(name_prem_room)
+
+        console.log("Создана прем-комната:",name_prem_room)
+        console.log("Ждём второго игрока.")
+
+        room_using.push([name_prem_room,"expec", 1 ,{Nick:data.Nick,ID_user:data.ID_user}])//expec - ожидание, play - игра , end - конец, t_stus - один из них вышел.
+        
+        console.log(JSON.stringify(room_using))
+        console.log("-----------------------------")
+        socket.emit('serverMsg_prem', {Room:name_prem_room, fd: 0})//Комната, поле
+    })
+
     socket.on('handleClick',(data)=>{//id, coord
         for(i=0;i<room_using.length;i++){
             if(room_using[i][3].ID_user==data.ID_user||room_using[i][4].ID_user==data.ID_user){
@@ -567,6 +706,8 @@ io.on('connection', (socket) => {
                             }
 
                         }else{//Мимо
+                            room_using[i][8] = 1
+                            console.log("Смена хода",room_using[i][8])
                             room_using[i][7].See_field2[coord[0]][coord[1]]="m"
                             resl={coord:`${coord[0]}:${coord[1]}:${coord[2]}` ,Status:"miss"}
                             //Нужно сделать мимо.
@@ -634,6 +775,8 @@ io.on('connection', (socket) => {
                             }
 
                         }else{//Мимо
+                            room_using[i][8] = 0
+                            console.log("Смена хода",room_using[i][8])
                             room_using[i][7].See_field1[coord[0]][coord[1]]="m"
                             resl={coord:`${coord[0]}:${coord[1]}:${coord[2]}` ,Status:"miss"}
                             //Нужно сделать мимо.
@@ -680,8 +823,10 @@ io.on('connection', (socket) => {
             }
         }
     })
+
     socket.on('Log_out_Room',(ID_user)=>{
         for(i=0;i<room_using.length;i++){
+            console.log(room_using[i])
             if(room_using[i][3].ID_user==ID_user||room_using[i][4].ID_user==ID_user){
                 room_using[i][1]="---"
 
@@ -833,7 +978,7 @@ io.on('connection', (socket) => {
                 if (room_using[i][3].ID_user==id||room_using[i][4].ID_user==id) {
                     console.log(`Пользователь ${id} вышел`);
                     console.log("---------------------------")
-                    console.log(room_using[i][1])
+                    console.log("Статус:",room_using[i][1])
                     console.log("---------------------------")
                     if(room_using[i][1]=="expec"){// Пользователь вышел, не начав игру в комнате.
                         console.log("expec")
@@ -868,8 +1013,16 @@ io.on('connection', (socket) => {
                         }if(room_using[i][4].ID_user==id){
                             room_using[i][4].ID_user="---"
                         }
+
+                        for(j=0;j<vr_field_pos.length;j++){
+                            if(vr_field_pos[j][0]==room_using[i][0]){
+                                vr_field_pos.splice(j,1)
+                            }
+                        }
+
                         room_using[i][1] = "end"
                         socket.leave(room_using[i][0]);
+                        console.log("Vr_:",vr_field_pos)
                         us = room_using[i][2]
                         us--
                         room_using[i][2] = us
@@ -978,9 +1131,13 @@ function dead_ship(data){// Room:i, Ship:j, fiel:6, See_fiel:7
                 if (y>-1 && y<10){ //9>=y>=0
                     room_using[data.Room][data.fiel].field_CanShot[x][y] = false
                     if(p==1){
-                        room_using[data.Room][data.See_fiel].See_field2[x][y]="m"
+                        if(room_using[data.Room][data.See_fiel].See_field2[x][y]!="d"){
+                            room_using[data.Room][data.See_fiel].See_field2[x][y]="m"
+                        }
                     }else{
-                        room_using[data.Room][data.See_fiel].See_field1[x][y]="m"
+                        if(room_using[data.Room][data.See_fiel].See_field1[x][y]!="d"){
+                            room_using[data.Room][data.See_fiel].See_field1[x][y]="m"
+                        }
                     }
                 }
                         

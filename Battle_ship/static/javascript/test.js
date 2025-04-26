@@ -3,6 +3,10 @@ let data_o_user
 let moving=null
 let revenge_user=null
 let key_position = false
+
+let coom_len=null
+
+User_status = null
 async function take_session() {
     const response = await fetch ('/take_data')
     const data = await response.json();// data_o_user // Data_session.Id, Nick, Win,Loss
@@ -17,7 +21,9 @@ async function take_session() {
         socket.emit('Id_identified', data.Data_session.Id)
 
         socket.on('serverMsg',(data)=>{
+            coom_len = data.Room
             console.log(`Я в комнате ${data.Room}, поле ${data.fd}`)
+            ROOM.innerText = data.Room
             clientRoom = data.Room;
             field_user = data.fd
         })
@@ -35,10 +41,17 @@ async function take_session() {
         })
         socket.on('Play_game',()=>{
             Stop_Timer()
+            col_2.style.display="none"
+            col__4.style.display="none"
+
             key_position = true
             Expec.style.display="none"
             black.style.display="none"
             end.style.display="none"
+            Crear_Con_Prem.style.display="none"
+            bt_c_c_l.style.display="none"
+            cancel2.style.display="none"
+
             Menu_pos.style.display="block"
             if(field_user==0){
                 Menu_pos.classList.add("block_btn_net1")
@@ -152,6 +165,13 @@ async function take_session() {
                 setTimeout(()=>{
                     black.style.display="block"
                     end.style.display="block"
+                    if(coom_len.length<10){
+                        console.log("<")
+                        col_2.style.display="block"
+                    }if(coom_len.length>10){
+                        console.log(">")
+                        col__4.style.display="block"
+                    }
                     USER.innerText=`${data.Win}`
                 },6000)
             }
@@ -159,6 +179,7 @@ async function take_session() {
         })
         socket.on('clear',()=>{
             Revenge.innerText="Реванш"
+            Revenge4.innerText="Реванш"
             console.log("Очистить")
             moving=null
             revenge_user=null
@@ -171,6 +192,7 @@ async function take_session() {
         socket.on('no_revang',()=>{
             revenge_user=false
             Revenge.innerText=`Реванш не возможен.`
+            Revenge4.innerText=`Реванш не возможен.`
         })
         socket.on('Resl_pos',(data)=>{
             if(data.Status=="All_ship"){
@@ -214,12 +236,89 @@ async function take_session() {
             }
         })
         socket.on('cancellation',()=>{
-
+            if(key_position = false){
+                Delet_handler_pos()
+            }
             Menu_pos.style.display="none"
             expec_game.style.display="none"
 
             black.style.display="block"
             cancell_game.style.display="block"
+        })
+        socket.on('Recon', (data)=>{
+            black.style.display="none"
+            Menu.style.display="none"
+            mine_Menu.style.display="block"
+            moving = data.move
+            field_user = data.prot
+            for(i=0;i<10;i++){
+                for(j=0;j<10;j++){
+                    if(field_user==0){
+                        a_click=1
+                        document.getElementById(i+":"+j+":"+a_click).addEventListener('click',Click)
+                        document.getElementById(i+":"+j+":"+a_click).addEventListener('mouseover',Mous_hover_on)
+                        document.getElementById(i+":"+j+":"+a_click).addEventListener('mouseout',Mous_hover_off)
+                    }else{
+                        b_click=0
+                        document.getElementById(i+":"+j+":"+b_click).addEventListener('click',Click)
+                        document.getElementById(i+":"+j+":"+b_click).addEventListener('mouseover',Mous_hover_on)
+                        document.getElementById(i+":"+j+":"+b_click).addEventListener('mouseout',Mous_hover_off)
+                    }
+                }
+            }
+            for(i=0;i<10;i++){
+                for(j=0;j<10;j++){
+                    if(data.field_see[i][j]!=0 && data.field_see[i][j]!=1){
+                        document.getElementById(i+":"+j+":"+field_user).classList.add("Ship_shadow")
+                    }
+                }
+            }
+            User1.innerText=data.Nick1
+            User2.innerText=data.Nick2
+            if(moving == 0){
+                Move.innerText='>'
+            }else{
+                Move.innerText='<'
+            }
+            console.log(data.See_field1)
+            console.log(data.See_field2)
+            for(i=0;i<10;i++){
+                for(j=0;j<10;j++){
+                    if(data.See_field1[i][j]!=0){
+                        if(data.See_field1[i][j]=="m"){
+                            document.getElementById(i+":"+j+":"+0).classList.add("miss")
+                        }if(data.See_field1[i][j]=="h"){
+                            document.getElementById(i+":"+j+":"+0).classList.add("hit")
+                        }if(data.See_field1[i][j]=="d"){
+                            document.getElementById(i+":"+j+":"+0).classList.add("dead")
+                        }
+                    }
+                    if(data.See_field2[i][j]!=0){
+                        if(data.See_field2[i][j]=="m"){
+                            document.getElementById(i+":"+j+":"+1).classList.add("miss")
+                        }if(data.See_field2[i][j]=="h"){
+                            document.getElementById(i+":"+j+":"+1).classList.add("hit")
+                        }if(data.See_field2[i][j]=="d"){
+                            document.getElementById(i+":"+j+":"+1).classList.add("dead")
+                        }
+                    }
+                }
+            }
+        })
+        socket.on('err_status', (Status)=>{
+            err_status.style.display="block"
+            err_status.innerText = Status
+            setTimeout(()=>{
+                err_status.style.display="none"
+            },2000)
+        })
+        socket.on('serverMsg_prem',(data)=>{
+            ROOM.innerText = data.Room
+            coom_len = data.Room
+            text2.innerText=`Отправте друго id: ${data.Room} (только цифры)`
+            field_user = data.fd
+            bt_c_c_l.style.display="none"
+            cancel2.style.display="block"
         })
     }
 }
@@ -246,8 +345,6 @@ Button.addEventListener('click',Cre_Con_room);
 var Cancel = document.getElementById("cancel")
 Cancel.addEventListener('click', cancel)
 
-var Button2 = document.getElementById("Game_frend")
-
 var Button3 = document.getElementById("See")
 
 var Random = document.getElementById("Random")
@@ -257,6 +354,9 @@ Play.addEventListener('click', play_game)
 
 var Revenge = document.getElementById("Revenge")
 Revenge.addEventListener('click', revenge)
+
+var Revenge4 = document.getElementById("Revenge4")
+Revenge4.addEventListener('click', revenge4)
 
 var New_game = document.getElementById("New_game")
 New_game.addEventListener('click', new_game)
@@ -287,6 +387,37 @@ Log_out2.addEventListener('click', log_out2)
 var Position = document.getElementById("Position")
 Position.addEventListener('click', position)
 
+var Creat_room = document.getElementById("Creat_room")
+Creat_room.addEventListener('click', creat_room)
+
+var cancel2 = document.getElementById("cancel2")
+cancel2.addEventListener('click', Cancel2)
+
+var Conect_room = document.getElementById("Conect_room")
+Conect_room.addEventListener('click', conect_room)
+
+var Log_rooming = document.getElementById("Log_rooming")
+Log_rooming.addEventListener('click',log_rooming)
+
+var Game_frend = document.getElementById("Game_frend")
+Game_frend.addEventListener('click',game_frend)
+
+var Log_out3 = document.getElementById("Log_out3") 
+Log_out3.addEventListener('click',log_out3)
+
+var Log_out4 = document.getElementById("Log_out4") 
+Log_out4.addEventListener('click',log_out4)
+
+var text2 = document.getElementById("text2")
+var Crear_Con_Prem = document.getElementById("Crear_Con_Prem")
+var bt_c_c_l = document.getElementById("bt_c_c_l")
+var inp_ID = document.getElementById("inp_ID")
+var Conect_block = document.getElementById("Conect_block")
+
+var col_2 = document.getElementById("col_2")
+var col__4 = document.getElementById("col__4")
+var err_status = document.getElementById("err")
+var ROOM = document.getElementById("ROOM")
 var black = document.getElementById("black")
 var Menu = document.getElementById("Block_button")
 var Expec = document.getElementById("expec")
@@ -296,6 +427,7 @@ var User2 = document.getElementById("User2")
 var expec_game = document.getElementById("expec_game")
 var Move = document.getElementById("Move")
 var end = document.getElementById("end")
+var end2 = document.getElementById("end2")
 var USER = document.getElementById("USER")
 var mine_Menu = document.getElementById("mine_Menu")
 var Menu_pos = document.getElementById("Block_button_net")
@@ -303,6 +435,63 @@ var exp_end = document.getElementById("exp_end")
 var cancell_game =  document.getElementById("cancell")
 
 var clientRoom//Комната.
+
+function log_out4(){
+    Conect_block.style.display="none"
+    bt_c_c_l.style.display="block"
+    text2.innerText=""
+
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('No_revang',ID_user)
+    end.style.display="none"
+    cancell_game.style.display="none"
+    black.style.display="block"
+    Menu.style.display="block"
+}
+
+function log_out3(){
+    Menu.style.display="block"
+    Crear_Con_Prem.style.display="none"
+}
+
+function game_frend(){
+    Menu.style.display="none"
+    Crear_Con_Prem.style.display="block"
+}
+
+function log_rooming(){
+    ID_room = inp_ID.value
+    console.log(ID_room)
+    socket.emit('Log_rooming_1', {
+        ID_room:ID_room,
+        ID_user:data_o_user.Data_session.Id,
+        Nick:data_o_user.Data_session.Nick
+    })
+}
+
+function conect_room(){
+    Conect_block.style.display="block"
+    bt_c_c_l.style.display="none"
+    cancel2.style.display="block"
+}
+
+function creat_room(){
+    ID_user = data_o_user.Data_session.Id
+    socket.emit('Crear_Con_Prem', {
+        ID_user:data_o_user.Data_session.Id,
+        Nick:data_o_user.Data_session.Nick
+    })
+}
+
+function Cancel2(){
+    text2.innerText=""
+    Conect_block.style.display="none"
+    bt_c_c_l.style.display="block"
+    cancel2.style.display="none"
+
+    ID_user = data_o_user.Data_session.Id,
+    socket.emit('cancel2', ID_user)
+}
 
 function position(){
     Delet_ship()
@@ -369,40 +558,6 @@ function Mous_hover_ou(event){//Клиент
             }
         }
     }
-    /*
-    if(document.getElementById(x1+":"+a_y+":"+p1).classList.contains("Hover_on")||document.getElementById(x1+":"+a_y+":"+p1).classList.contains("Hover_on_red")){
-        for(g=y1;g<10;g++){
-            if(!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")||!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
-                break
-            }
-            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")){
-                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on")
-            }
-            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
-                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on_red")
-            }
-        }
-    }else if(document.getElementById(x1+":"+a_x+":"+p1).classList.contains("Hover_on")||document.getElementById(x1+":"+a_x+":"+p1).classList.contains("Hover_on_red")){
-        for(g=x1;g<10;g++){
-            if(!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")||!document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
-                break
-            }
-            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on")){
-                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on")
-            }
-            if(document.getElementById(x1+":"+g+":"+p1).classList.contains("Hover_on_red")){
-                document.getElementById(x1+":"+g+":"+p1).classList.remove("Hover_on_red")
-            }
-        }
-    }else{
-        if(document.getElementById(event.srcElement.id).classList.contains("Hover_on")){
-            document.getElementById(event.srcElement.id).classList.remove("Hover_on")
-        }
-        if(document.getElementById(event.srcElement.id).classList.contains("Hover_on_red")){
-            document.getElementById(event.srcElement.id).classList.remove("Hover_on_red")
-        }
-    }
-    */
 }
 
 function Change_position_del(coord_x_y){
@@ -425,6 +580,10 @@ function Change_position_del(coord_x_y){
 }
 
 function log_out(){
+    Conect_block.style.display="none"
+    bt_c_c_l.style.display="block"
+    text2.innerText=""
+
     ID_user = data_o_user.Data_session.Id
     socket.emit('No_revang',ID_user)
     end.style.display="none"
@@ -434,6 +593,10 @@ function log_out(){
 }
 
 function log_out2(){
+    Conect_block.style.display="none"
+    bt_c_c_l.style.display="block"
+    text2.innerText=""
+
     ID_user = data_o_user.Data_session.Id
     socket.emit('No_revang',ID_user)
     end.style.display="none"
@@ -493,6 +656,9 @@ function Delet_handler_pos(){
 
 
 function new_game(){
+    bt_c_c_l.style.display="block"
+    text2.innerText=""
+
     end.style.display="none"
     cancell_game.style.display="none"
     ID_user = data_o_user.Data_session.Id
@@ -539,6 +705,16 @@ function Open_menu(){
 }
 
 function revenge(){
+    if(revenge_user==true){
+        console.log("Хочу реванш")
+        revenge_user=false
+        ID_user = data_o_user.Data_session.Id
+        console.log(ID_user)
+        socket.emit('Revenge',ID_user)
+    }
+}
+
+function revenge4(){
     if(revenge_user==true){
         console.log("Хочу реванш")
         revenge_user=false
