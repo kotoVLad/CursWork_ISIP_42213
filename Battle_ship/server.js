@@ -969,6 +969,7 @@ io.on('connection', (socket) => {
             }
         }
     })
+
     socket.on("disconnect", () => {//Выход
         console.log('Пользователь отключился');
         // Удаляем отключённый сокет

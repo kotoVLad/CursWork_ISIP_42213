@@ -6,7 +6,6 @@ let key_position = false
 
 let coom_len=null
 
-User_status = null
 async function take_session() {
     const response = await fetch ('/take_data')
     const data = await response.json();// data_o_user // Data_session.Id, Nick, Win,Loss
@@ -407,6 +406,7 @@ Log_out3.addEventListener('click',log_out3)
 
 var Log_out4 = document.getElementById("Log_out4") 
 Log_out4.addEventListener('click',log_out4)
+
 
 var text2 = document.getElementById("text2")
 var Crear_Con_Prem = document.getElementById("Crear_Con_Prem")

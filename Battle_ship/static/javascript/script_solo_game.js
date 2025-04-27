@@ -648,11 +648,11 @@ function move_bot(){//Функция ход бота
             console.log(shell_field)
         }
         if(Shelling_of_field == true && move_pc==true){
-            setTimeout(Sof,1000)
+            setTimeout(Sof,1200)
         }
         if(hit==0 && move_pc==true){//Новый выстрел.
             console.log("-------------------------------------")
-            setTimeout(Naw_hit,1000)
+            setTimeout(Naw_hit,1200)
         }
             console.log("-------------------------------------")
             console.log(field_CanShot)
@@ -660,12 +660,12 @@ function move_bot(){//Функция ход бота
 
         if(hit==1 && move_pc==true){//Обстрел первого попадания крестом"+"
             console.log("-------------------------------------")
-            setTimeout(Hit_crest, 1000)
+            setTimeout(Hit_crest, 1200)
         }
               
         if(hit>1 && move_pc==true){//Добить корабль.
             console.log("-------------------------------------")
-            setTimeout(Hit_Finishing, 1000)
+            setTimeout(Hit_Finishing, 1200)
         }
         //Result() <-------------------------------------------------- 
     }

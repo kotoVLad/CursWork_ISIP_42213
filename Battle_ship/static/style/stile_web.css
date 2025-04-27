@@ -154,18 +154,23 @@
 }
 
 .crests{
-    width: 50px;
-    height: 50px;
+    background-image: url('/img/crest_black.svg');
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
-    background-color: aquamarine;
+    background-color: rgb(255, 255, 255); 
     float: right;
     margin-right: 2%;
     margin-top: 2%;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     
 }
 
 .crests:hover{
-    background-color: rgb(64, 192, 149);
+    background-color: rgb(192, 192, 192);
 }
 
 .block_wind{ /*Слывающие окна*/

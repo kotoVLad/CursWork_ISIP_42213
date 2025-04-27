@@ -208,13 +208,27 @@
 }
 
 .miss{
-    background-color: #b882ff;
+    background-image: url('/img/point.svg');
+
+    
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .hit{
-    background-color: #ffa1a1;
+    background-image: url('/img/crest_red.svg');
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .dead{
-    background-color: #0a9afa;
+    background-color: #949494;
+
+    background-image: url('/img/crest_black.svg');
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
