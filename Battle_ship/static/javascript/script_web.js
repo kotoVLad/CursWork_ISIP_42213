@@ -1,13 +1,3 @@
-/*
-var Menu_music = document.getElementById("Center_music");
-
-function play_music(){
-    console.log("Запуск песни.")
-    Menu_music.play()
-}
-*/
-
-window.addEventListener('DOMContentLoaded', play_music);
 //          Кнопки меню.
     //Игра
 let game_bt = document.getElementById("Game");
