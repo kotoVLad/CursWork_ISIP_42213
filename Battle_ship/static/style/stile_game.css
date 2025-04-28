@@ -40,7 +40,7 @@
     padding: 0;
     width: calc(5vmin - 1px); /* Размер клетки*/
     height: calc(5vmin - 1px);
-    border: 1px solid #aaa;
+    border: 1px solid #686868;
     background-color: #eee;
     box-sizing: border-box;
 }
@@ -50,7 +50,7 @@
     padding: 0;
     width: calc(5vmin - 1px);
     height: calc(5vmin - 1px);
-    border: 1px solid #aaa;
+    border: 1px solid #686868;
     background-color: #eee;
     box-sizing: border-box;
 }

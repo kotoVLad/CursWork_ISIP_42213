@@ -12,3 +12,10 @@ a{
 a:link, a:visited { 
   color: rgb(0, 0, 0); 
 }
+body {
+  background-image: url('/img/bg.png');
+  background-size: cover;  /* Растягивает изображение, сохраняя пропорции */
+  background-position: center;  /* Центрирует изображение */
+  background-repeat: no-repeat;  /* Отключает повторение */
+  background-attachment: fixed;  /* Фиксирует фон (опционально) */
+}
