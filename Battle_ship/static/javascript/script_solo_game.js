@@ -287,7 +287,6 @@ function Random(){//Создание кораблей по методу ранд
                         y1=y1+1
                         vr_Check_Ship.push([x1,y1])
                     }
-                    //console.log(vr_Check_Ship) //Координаты вокруг клетки.
             
                     //Проверка координат, чтобы пометить поле возле корабля.
                     for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -336,14 +335,12 @@ function Play_game(){//Начать игру с ботом.
         if(Random2()==true){
             Block_button.style.display = "none"
             move = Math.round(Math.random())
-            console.log("0-Я, 1-ПК",move)
-            console.log(field_xy)
             if(move==0){
-                move_label.innerText= "Ход Игрока"
+                move_label.innerText= ">"
                 move_user = true
                 move= false
             }if(move==1){
-                move_label.innerText= "Ход Бота"
+                move_label.innerText= "<"
                 move_pc_cycle = true
                 move_pc = true
                 move= false
@@ -355,7 +352,6 @@ function Play_game(){//Начать игру с ботом.
         if(Random2()==true){
             Block_button.style.display = "none"
             move = Math.round(Math.random())
-            console.log("0-Я, 1-ПК",move)
             if(move==0){
                 move_user = true
                 move= false
@@ -398,13 +394,12 @@ function handleClick(event){//Выстрел.
                         att.classList.add("hit") //Цвет, что ты попал.
 
                     }else if(field_xy2[x_coord][y_coord]==0 || field_xy2[x_coord][y_coord]==1){ //Промах.
-                        move_label.innerText= "Ход Бота"
+                        move_label.innerText= "<"
                         att.classList.add("miss") //Цвет, что ты промазал.
                         move_user=false
                         move_pc = true
                         move_pc_cycle = true
                         move_bot()
-                        console.log(">>Я сработал<<")
                         break
                     }
                     //Мертвяк.
@@ -469,8 +464,6 @@ function Pos_ship(event){
                 y1=y1+1
                 vr_Check_Ship.push([x1,y1])
             }
-            
-            //console.log(vr_Check_Ship) //Координаты вокруг клетки.
 
             //Проверка координат, чтобы пометить поле возле корабля.
             for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -500,10 +493,8 @@ function Change_Pos(event){//ПКМ
         event.preventDefault(); // Отменяем вызов стандартного контекстного меню браузера
         if(coord_xy == 0){
             coord_xy = 1
-            console.log(coord_xy)
         }else{
             coord_xy = 0
-            console.log(coord_xy)
         }
     }
 }
@@ -594,7 +585,6 @@ function Random2(){//Создание кораблей по методу ран�
                         y1=y1+1
                         vr_Check_Ship.push([x1,y1])
                     }
-                    //console.log(vr_Check_Ship) //Координаты вокруг клетки.
             
                     //Проверка координат, чтобы пометить поле возле корабля.
                     for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -633,7 +623,6 @@ function move_bot(){//Функция ход бота
                 }
             }
             if(check==6){
-                console.log("Обстрел всех свободных клеток.")
                 hit=false
                 trig=false
                 Shelling_of_field= true
@@ -645,26 +634,19 @@ function move_bot(){//Функция ход бота
                     }
                 }
             }
-            console.log(shell_field)
         }
         if(Shelling_of_field == true && move_pc==true){
             setTimeout(Sof,1200)
         }
         if(hit==0 && move_pc==true){//Новый выстрел.
-            console.log("-------------------------------------")
             setTimeout(Naw_hit,1200)
         }
-            console.log("-------------------------------------")
-            console.log(field_CanShot)
-            console.log("-------------------------------------")
 
         if(hit==1 && move_pc==true){//Обстрел первого попадания крестом"+"
-            console.log("-------------------------------------")
             setTimeout(Hit_crest, 1200)
         }
               
         if(hit>1 && move_pc==true){//Добить корабль.
-            console.log("-------------------------------------")
             setTimeout(Hit_Finishing, 1200)
         }
         //Result() <-------------------------------------------------- 
@@ -684,14 +666,11 @@ function Sof(){
         kx_sof = shell_field[xy_coord][0]
         ky_sof = shell_field[xy_coord][1]
         att = document.getElementById(kx_sof+";"+ky_sof)
-        console.log(att)
         if(field_CanShot[kx_sof][ky_sof]==true){
             for(i=6;i<10;i++){
                 if(field_xy[kx_sof][ky_sof]==data_ship[i][0]){
                     test_move++
-                    console.log("Ход робота:",test_move)
                     field_CanShot[kx_sof][ky_sof]=false
-                    console.log("1. Убил")
                     hp = data_ship[i][1]
                     hp = hp-1
                     hit_bot.push([kx_sof,ky_sof,"hit"])
@@ -703,11 +682,9 @@ function Sof(){
                 }
             }
             if(field_xy[kx_sof][ky_sof]==0 || field_xy[kx_sof][ky_sof]==1){//Мимо
-                move_label.innerText= "Ход Игрока"
+                move_label.innerText= ">"
                 test_move++
-                console.log("Ход робота:",test_move)
                 field_CanShot[kx_sof][ky_sof]=false
-                console.log("1. Мимо")
                 att.classList.add("miss")
                 shell_field.splice(xy_coord,1)
                 move_pc= false
@@ -727,13 +704,10 @@ function Naw_hit(){//Первый или новый выстрел
         x = Math.floor(Math.random() * (max - min + 1)) + min
         y = Math.floor(Math.random() * (max - min + 1)) + min
         att = document.getElementById(x+";"+y)
-        console.log("Hit 0",att)
         if(field_CanShot[x][y]==true){
             for(i=0;i<10;i++){
                 if(field_xy[x][y]==data_ship[i][0]){//Попал
                     test_move++
-                    console.log("Ход робота:",test_move)
-                    console.log("1. Попал")
                     hp = data_ship[i][1]
                     hp = hp-1
                     data_ship[i][1] = hp
@@ -749,19 +723,15 @@ function Naw_hit(){//Первый или новый выстрел
             }
             if(field_xy[x][y]==0 || field_xy[x][y]==1){//Мимо
                 test_move++
-                move_label.innerText= "Ход Игрока"
-                console.log("Ход робота:",test_move)
-                console.log("1. Мимо")
+                move_label.innerText= ">"
                 att.classList.add("miss")
                 move_pc_cycle = false
                 move_pc= false
                 move_user = true
                 field_CanShot[x][y]=false
             }
-            console.log("Ок")
         }
     }
-    console.log("Ок")
 }
 
 function Hit_crest(){//Обстрел вокруг подбитой палубы по кресту
@@ -770,14 +740,12 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
         ky= hit_bot[0][1]
         ky= ky+1
         att = document.getElementById(kx+";"+ky)
-        console.log("Hit 1",att)
         if(ky<10){
             if(field_CanShot[kx][ky]==true){
                 field_CanShot[kx][ky]=false
                 for(i=0;i<10;i++){
                     if(field_xy[kx][ky]==data_ship[i][0]){//Попал
                         test_move++
-                        console.log("Ход робота:",test_move)
                         hp = data_ship[i][1]
                         hp = hp-1
                         data_ship[i][1] = hp
@@ -791,9 +759,8 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
                     }
                 }
                 if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
-                    move_label.innerText= "Ход Игрока"
+                    move_label.innerText= ">"
                     test_move++
-                    console.log("Ход робота:",test_move)
                     att.classList.add("miss")
                     move_pc= false
                     move_user = true
@@ -806,14 +773,12 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
         ky= hit_bot[0][1]
         kx= kx+1
         att = document.getElementById(kx+";"+ky)
-        console.log("Hit 1",att)
         if(kx<10){
             if(field_CanShot[kx][ky]==true){
                 field_CanShot[kx][ky]=false
                 for(i=0;i<10;i++){
                     if(field_xy[kx][ky]==data_ship[i][0]){//Попал
                         test_move++
-                        console.log("Ход робота:",test_move)
                         hp = data_ship[i][1]
                         hp = hp-1
                         data_ship[i][1] = hp
@@ -826,9 +791,8 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
                     }
                 }
                 if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
-                    move_label.innerText= "Ход Игрока"
+                    move_label.innerText= ">"
                     test_move++
-                    console.log("Ход робота:",test_move)
                     att.classList.add("miss")
                     move_pc= false
                     move_user = true
@@ -841,14 +805,12 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
         ky= hit_bot[0][1]
         ky= ky-1
         att = document.getElementById(kx+";"+ky)
-        console.log("Hit 1",att)
         if(ky>-1){
             if(field_CanShot[kx][ky]==true){
                 field_CanShot[kx][ky]=false
                 for(i=0;i<10;i++){
                     if(field_xy[kx][ky]==data_ship[i][0]){//Попал
                         test_move++
-                        console.log("Ход робота:",test_move)
                         hp = data_ship[i][1]
                         hp = hp-1
                         data_ship[i][1] = hp
@@ -861,9 +823,8 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
                     }
                 }
                 if(field_xy[kx][ky]==0 || field_xy[kx][ky]==1){
-                    move_label.innerText= "Ход Игрока"
+                    move_label.innerText= ">"
                     test_move++
-                    console.log("Ход робота:",test_move)
                     att.classList.add("miss")
                     move_pc= false
                     move_user = true
@@ -876,12 +837,10 @@ function Hit_crest(){//Обстрел вокруг подбитой палубы
         ky= hit_bot[0][1]
         kx= kx-1
         att = document.getElementById(kx+";"+ky)
-        console.log("Hit 1",att)
         if(kx>-1){
             if(field_CanShot[kx][ky]==true){
                 field_CanShot[kx][ky]=false
                 test_move++
-                console.log("Ход робота:",test_move)
                 for(i=0;i<10;i++){
                     if(field_xy[kx][ky]==data_ship[i][0]){//Попал
                         hp = data_ship[i][1]
@@ -906,21 +865,15 @@ function Hit_Finishing(){//Добить корабль
         x_last= hit_bot[hit_bot.length-1][0]
         y_last= hit_bot[hit_bot.length-1][1]
         z_last= hit_bot[hit_bot.length-1][2]//Попал или промазал.
-        console.log(x_last,y_last)
-        console.log(hit_bot)
         if(z_last=="hit"){
-            console.log(">>Сработал HIT<<")
             y_last=y_last+1
             att = document.getElementById(x_last+";"+y_last)
-            console.log("Hit 3 X",att)
             if(y_last<10){
                 if(field_CanShot[x_last][y_last]==true){
                     field_CanShot[x_last][y_last]=false
                     for(i=0;i<10;i++){
                         if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
                             test_move++
-                            console.log("Ход робота:",test_move)
-                            console.log(">>3.Попал<<")
                             hp = data_ship[i][1]
                             hp = hp-1
                             data_ship[i][1] = hp
@@ -932,10 +885,8 @@ function Hit_Finishing(){//Добить корабль
                         }
                     }
                     if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
-                        move_label.innerText= "Ход Игрока"
+                        move_label.innerText= ">"
                         test_move++
-                        console.log("Ход робота:",test_move)
-                        console.log(">>3.Мимо<<")
                         att.classList.add("miss")
                         hit_bot.push([x_last,y_last,"miss"])
                         move_pc= false
@@ -951,19 +902,14 @@ function Hit_Finishing(){//Добить корабль
         y_last= hit_bot[hit_bot.length -1][1]
         z_last= hit_bot[hit_bot.length -1][2]//Попал или промазал.
         if(z_last=="hit"){
-            console.log(">>Сработал HIT<<")
             x_last=x_last+1
             att = document.getElementById(x_last+";"+y_last)
-            console.log(att)
-            console.log("Hit 3 Y",att)
             if(x_last<10){
                 if(field_CanShot[x_last][y_last]==true){
                     field_CanShot[x_last][y_last]=false
                     for(i=0;i<10;i++){
                         if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
                             test_move++
-                            console.log("Ход робота:",test_move)
-                            console.log(">>3.Попал<<")
                             hp = data_ship[i][1]
                             hp = hp-1
                             data_ship[i][1] = hp
@@ -975,10 +921,8 @@ function Hit_Finishing(){//Добить корабль
                         }
                     }
                     if(field_xy[x_last][y_last]==0 || field_xy[x_last][y_last]==1){
-                        move_label.innerText= "Ход Игрока"
+                        move_label.innerText= ">"
                         test_move++
-                        console.log("Ход робота:",test_move)
-                        console.log(">>3.Мимо<<")
                         att.classList.add("miss")
                         hit_bot.push([x_last,y_last,"miss"])
                         move_pc= false
@@ -995,16 +939,13 @@ function MISS_X(){//Проверка задних координат предп�
     x_last= hit_bot[0][0]
     y_last= hit_bot[0][1]
     y_last= y_last-1
-    console.log(x_last,y_last)
     att = document.getElementById(x_last+";"+y_last)
-    console.log("MISS_X fun", att)
     if(y_last>-1){
         if(field_CanShot[x_last][y_last]==true){
             field_CanShot[x_last][y_last]=false
             for(i=0;i<10;i++){
                 if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
                     test_move++
-                    console.log("Ход робота:",test_move)
                     hp = data_ship[i][1]
                     hp = hp-1
                     data_ship[i][1] = hp
@@ -1023,16 +964,13 @@ function MISS_Y(){//Проверка задних координат предп�
     x_last= hit_bot[0][0]
     y_last= hit_bot[0][1]
     x_last= x_last-1
-    console.log(x_last,y_last)
     att = document.getElementById(x_last+";"+y_last)
-    console.log("MISS_Y fun", att)
     if(x_last>-1){
         if(field_CanShot[x_last][y_last]==true){
             field_CanShot[x_last][y_last]=false
             for(i=0;i<10;i++){
                 if(field_xy[x_last][y_last]==data_ship[i][0]){//Попал
                     test_move++
-                    console.log("Ход робота:",test_move)
                     hp = data_ship[i][1]
                     hp = hp-1
                     data_ship[i][1] = hp
@@ -1144,11 +1082,8 @@ function Result(){
 
 
 function dead_ship_check(){//Проверка: уничтожен корабль игрока
-    console.log("-------------------------------------")
-    console.log("Проверяем.")
     for(j=0;j<10;j++){//Мертвяк.
         if(data_ship[j][1]==0){
-            console.log("Убит", data_ship[j][0])
             data_ship[j][1]="dead"
             for(g=0;g<hit_bot.length;g++){
                 if(hit_bot[g][2]=="hit"){
@@ -1179,7 +1114,6 @@ function dead_ship_check(){//Проверка: уничтожен корабль
                         y2=y2+1
                         vr_Check_Ship.push([x2,y2])
                     }
-                    //console.log(vr_Check_Ship) //Координаты вокруг клетки.
             
                     //Проверка координат, чтобы пометить поле возле корабля.
                     for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -1210,14 +1144,9 @@ function dead_ship_check(){//Проверка: уничтожен корабль
             break
         }
     }//конец мертвека
-    console.log("Конец")
-    console.log("-------------------------------------")
 }
 
 function dead_ship_check2(){//Проверка: уничтожен корабль игрока
-    console.log("-------------------------------------")
-    console.log("Проверяем.")
-
     for(i=0;i<10;i++){
         if(data_ship2[i][1]==0){
             for(j=2;j<data_ship2[i].length;j++){
@@ -1242,7 +1171,6 @@ function dead_ship_check2(){//Проверка: уничтожен корабл�
                     y2=y2+1
                     vr_Check_Ship.push([x2,y2])
                 }
-                //console.log(vr_Check_Ship) //Координаты вокруг клетки.
 
                 //Проверка координат, чтобы пометить поле возле корабля.
                 for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -1263,12 +1191,6 @@ function dead_ship_check2(){//Проверка: уничтожен корабл�
             break
         }
     }
-    
-        
-    
-    //конец мертвека
-    console.log("Конец")
-    console.log("-------------------------------------")
 }
 
 function Delet(xd,yd){//Проверка и удаление кораблей, если они уже на поле.
@@ -1403,7 +1325,6 @@ function Hover_maus_on(event){
 }
 function Hover_maus_off(event){
     document.getElementById(event.srcElement.id).classList.remove("hover_on2")
-
 }
 
 function Hover_on(event){//Hover

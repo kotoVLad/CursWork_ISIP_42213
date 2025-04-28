@@ -82,8 +82,8 @@
 }
 
 .block_btn{ /*Слывающие окна*/
-    width: 500px;
-    height: 500px;
+    width: 540px;
+    height: 540px;
     border: 1px solid #aaa;
     background-color: rgb(212, 212, 212);
     border-radius: 25px;
@@ -91,7 +91,20 @@
 
     position: absolute;
     top:  52%;
-    left: 76%;
+    left: 75%;
+    transform: translate(-50%,-50%);
+}
+
+#move_label{
+    font-size: 28px;
+}
+
+#Inf{
+
+    z-index: 1;
+    position: absolute;
+    top:  52%;
+    left: 80%;
     transform: translate(-50%,-50%);
 }
 
@@ -101,8 +114,8 @@
     border: 1px solid #aaa;
     background-color: rgb(212, 212, 212);
     border-radius: 25px;
+    
     z-index: 1;
-
     position: absolute;
     top:  55%;
     left: 75%;
@@ -166,7 +179,7 @@
 }
 */
 .Hover_on{
-    background-color: rgb(142, 200, 255);
+    background-color: #94ffdb;
     z-index: 1;
 }
 
@@ -176,7 +189,7 @@
 }
 
 .hover_on2{
-    background-color: rgb(111, 218, 182);
+    background-color: rgb(180, 180, 180);
 }
 
 
@@ -202,9 +215,9 @@
     color: #000000;
     background-color: #979797;
 }
-
+/* #b5eeff */
 .Ship_shadow{
-    background-color: #abffd6;
+    background-color: #a1e1ff;
 }
 
 .miss{

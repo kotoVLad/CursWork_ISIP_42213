@@ -13,7 +13,6 @@ async function take_session() {
         console.log("Ошибка:", data.error);
         return;
     }else{
-        console.log("Данные пользователя",data.Data_session)
         data_o_user= data
 
         socket = io();
@@ -21,7 +20,6 @@ async function take_session() {
 
         socket.on('serverMsg',(data)=>{
             coom_len = data.Room
-            console.log(`Я в комнате ${data.Room}, поле ${data.fd}`)
             ROOM.innerText = data.Room
             clientRoom = data.Room;
             field_user = data.fd
@@ -64,7 +62,6 @@ async function take_session() {
             User2.innerText=data.User2_Nick
         })
         socket.on('field_create',(data)=>{
-            console.log(data)
             for(i=0;i<10;i++){
                 for(j=0;j<10;j++){
                     if(data[i][j]!=0&&data[i][j]!=1){
@@ -103,7 +100,6 @@ async function take_session() {
             }
         })
         socket.on('Result',(data)=>{
-            console.log(data)
             if(data.Status=="miss"){
                 if(moving==0){
                     moving=1
@@ -114,10 +110,8 @@ async function take_session() {
                 }
                 document.getElementById(data.coord).classList.add("miss")
             }if(data.Status=="hit"){
-                console.log("Попал в корабль по координатам:", data.coord)
                 document.getElementById(data.coord).classList.add('hit')
             }if(data.Status=="dead"){
-                console.log("Убил корабль:",data.Ship)
                 dead_ship(data.Ship)
             }
             /*
@@ -152,7 +146,6 @@ async function take_session() {
                     for(i=0;i<10;i++){
                         for(j=0;j<10;j++){
                             att = document.getElementById(i+":"+j+":"+data.p)
-                            console.log(att)
                             if(data.field[i][j]!=0 && data.field[i][j]!=1){
                                 if(!att.classList.contains("dead")){
                                     att.classList.add("Ship_shadow")
@@ -165,10 +158,8 @@ async function take_session() {
                     black.style.display="block"
                     end.style.display="block"
                     if(coom_len.length<10){
-                        console.log("<")
                         col_2.style.display="block"
                     }if(coom_len.length>10){
-                        console.log(">")
                         col__4.style.display="block"
                     }
                     USER.innerText=`${data.Win}`
@@ -179,7 +170,6 @@ async function take_session() {
         socket.on('clear',()=>{
             Revenge.innerText="Реванш"
             Revenge4.innerText="Реванш"
-            console.log("Очистить")
             moving=null
             revenge_user=null
             Delet_class()
@@ -224,7 +214,6 @@ async function take_session() {
                 }
             }
             if(data.Status=="end"){
-                console.log("Все корабли расставлены.")
                 Play.style.display="block"
                 for(i=0;i<data.vr_coord.length;i++){
                     x=data.vr_coord[i][0]
@@ -279,8 +268,6 @@ async function take_session() {
             }else{
                 Move.innerText='<'
             }
-            console.log(data.See_field1)
-            console.log(data.See_field2)
             for(i=0;i<10;i++){
                 for(j=0;j<10;j++){
                     if(data.See_field1[i][j]!=0){
@@ -329,7 +316,6 @@ async function take_session() {
 
 
 window.addEventListener('DOMContentLoaded', take_session);
-console.log("test open")
 let socket=null
 let activityInterval;
 let tim
@@ -366,8 +352,6 @@ New_game2.addEventListener('click', new_game2)
 var m_m1 = document.getElementById("m_m1")
 m_m1.addEventListener('click', Open_menu)
 
-var set = document.getElementById("set")
-set.addEventListener('click', Open_set)
 var give_up = document.getElementById("give_up")
 give_up.addEventListener('click', Give_up)
 
@@ -461,7 +445,6 @@ function game_frend(){
 
 function log_rooming(){
     ID_room = inp_ID.value
-    console.log(ID_room)
     socket.emit('Log_rooming_1', {
         ID_room:ID_room,
         ID_user:data_o_user.Data_session.Id,
@@ -520,7 +503,6 @@ function position(){
 }
 
 function Can_pos(event){//На сервер.
-    console.log("ЛКМ")
     coord_xy_p = event.srcElement.id.split(":")
     socket.emit('Can_pos',{coord_xy_p:coord_xy_p, ID_user:data_o_user.Data_session.Id})
 }
@@ -532,7 +514,6 @@ function Mous_hover_ov(event){//На сервер
 
 function Change_position(event){//На сервер
     event.preventDefault();
-    console.log("ПКМ")
     coord_xy_p = event.srcElement.id.split(":")
     Change_position_del(coord_xy_p)
     ID_user = data_o_user.Data_session.Id
@@ -673,10 +654,6 @@ function new_game2(){
     Cre_Con_room()
 }
 
-function Open_set(){
-    console.log("Настройки")
-}
-
 function Give_up(){
     black.style.display="block"
     exp_end.style.display="block"
@@ -685,7 +662,6 @@ function Give_up(){
 function Yes(){
     black.style.display="none"
     exp_end.style.display="none"
-    set.style.display="none"
     give_up.style.display="none"
 
     ID_user = data_o_user.Data_session.Id
@@ -695,31 +671,25 @@ function Yes(){
 function No(){
     black.style.display="none"
     exp_end.style.display="none"
-    set.style.display="none"
     give_up.style.display="none"
 }
 
 function Open_menu(){
-    set.style.display="block"
     give_up.style.display="block"
 }
 
 function revenge(){
     if(revenge_user==true){
-        console.log("Хочу реванш")
         revenge_user=false
         ID_user = data_o_user.Data_session.Id
-        console.log(ID_user)
         socket.emit('Revenge',ID_user)
     }
 }
 
 function revenge4(){
     if(revenge_user==true){
-        console.log("Хочу реванш")
         revenge_user=false
         ID_user = data_o_user.Data_session.Id
-        console.log(ID_user)
         socket.emit('Revenge',ID_user)
     }
 }
@@ -791,7 +761,6 @@ function play_game(){
 
 function Click(event){
     coord_xy_p = event.srcElement.id.split(":")
-    console.log(coord_xy_p)
     if(moving==field_user){
         socket.emit('handleClick',{
             ID_user:data_o_user.Data_session.Id,
@@ -801,7 +770,6 @@ function Click(event){
 }
 
 function dead_ship(ship){
-    console.log(ship)
     for(i=2;i<ship.length;i++){
         document.getElementById(ship[i]).classList.add('dead')
         coord_xy_p = ship[i].split(":")

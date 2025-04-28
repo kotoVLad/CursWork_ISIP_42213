@@ -213,7 +213,7 @@ function Play_game(){//Начать игру с ботом.
             key_f_pos = false
             key_f_pos2 = true
             Play.style.display = "none"
-            document.getElementById("Block_button").style.left = "24%"
+            document.getElementById("Block_button").style.left = "25%"
         }
         
 
@@ -245,13 +245,12 @@ function Play_game(){//Начать игру с ботом.
         }
         Block_button.style.display = "none"
         move = Math.round(Math.random())
-        console.log("0-Игрок1, 1-Игрок2",move)
         if(move == 0){
             move_user=true
-            move_label.innerText= "------>"
+            move_label.innerText= ">"
         }else{
             move_user2=true
-            move_label.innerText= "<------"
+            move_label.innerText= "<"
         }
     }
 
@@ -551,7 +550,6 @@ function Random(){//(В)Создание кораблей по методу ра
                             y1=y1+1
                             vr_Check_Ship.push([x1,y1])
                         }
-                        //console.log(vr_Check_Ship) //Координаты вокруг клетки.
                 
                         //Проверка координат, чтобы пометить поле возле корабля.
                         for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -662,7 +660,6 @@ function Random(){//(В)Создание кораблей по методу ра
                             y1=y1+1
                             vr_Check_Ship.push([x1,y1])
                         }
-                        //console.log(vr_Check_Ship) //Координаты вокруг клетки.
                 
                         //Проверка координат, чтобы пометить поле возле корабля.
                         for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -755,7 +752,7 @@ function handleClick(event){//Выстрел.
                         att.classList.add("hit") //Цвет, что ты попал.
 
                     }else if(field_xy2[x_coord][y_coord]==0 || field_xy2[x_coord][y_coord]==1){ //Промах.
-                        move_label.innerText= "<------"
+                        move_label.innerText= "<"
                         att.classList.add("miss") //Цвет, что ты промазал.
                         move_user=false
                         move_user2=true
@@ -805,7 +802,7 @@ function handleClick2(event){//Выстрел.
                         att.classList.add("hit") //Цвет, что ты попал.
 
                     }else if(field_xy[x_coord][y_coord]==0 || field_xy[x_coord][y_coord]==1){ //Промах.
-                        move_label.innerText= "------>"
+                        move_label.innerText= ">"
                         att.classList.add("miss") //Цвет, что ты промазал.
                         move_user=true
                         move_user2=false
@@ -874,8 +871,6 @@ function Pos_ship(event){
                     y1=y1+1
                     vr_Check_Ship.push([x1,y1])
                 }
-                
-                //console.log(vr_Check_Ship) //Координаты вокруг клетки.
     
                 //Проверка координат, чтобы пометить поле возле корабля.
                 for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -937,8 +932,6 @@ function Pos_ship(event){
                     y1=y1+1
                     vr_Check_Ship.push([x1,y1])
                 }
-                
-                //console.log(vr_Check_Ship) //Координаты вокруг клетки.
     
                 //Проверка координат, чтобы пометить поле возле корабля.
                 for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -969,20 +962,16 @@ function Change_Pos(event){//ПКМ
         event.preventDefault(); // Отменяем вызов стандартного контекстного меню браузера
         if(coord_xy == 0){
             coord_xy = 1
-            console.log(coord_xy)
         }else{
             coord_xy = 0
-            console.log(coord_xy)
         }
     }
     if(key_f_pos2==true && Ship<11){
         event.preventDefault(); // Отменяем вызов стандартного контекстного меню браузера
         if(coord_xy == 0){
             coord_xy = 1
-            console.log(coord_xy)
         }else{
             coord_xy = 0
-            console.log(coord_xy)
         }
     }
 }
@@ -1060,8 +1049,6 @@ function Again_2(){
 
 
 function dead_ship_check(){//Проверка: уничтожен корабль 2 игрока
-    console.log("-------------------------------------")
-    console.log("Проверяем.")
 
     for(i=0;i<10;i++){
         if(data_ship2[i][1]==0){
@@ -1087,7 +1074,6 @@ function dead_ship_check(){//Проверка: уничтожен корабль
                     y2=y2+1
                     vr_Check_Ship.push([x2,y2])
                 }
-                //console.log(vr_Check_Ship) //Координаты вокруг клетки.
 
                 //Проверка координат, чтобы пометить поле возле корабля.
                 for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -1108,16 +1094,8 @@ function dead_ship_check(){//Проверка: уничтожен корабль
             break
         }
     }
-    
-        
-    
-    //конец мертвека
-    console.log("Конец")
-    console.log("-------------------------------------")
 }
 function dead_ship_check2(){//Проверка: уничтожен корабль 1 игрока
-    console.log("-------------------------------------")
-    console.log("Проверяем.")
 
     for(i=0;i<10;i++){
         if(data_ship[i][1]==0){
@@ -1143,7 +1121,6 @@ function dead_ship_check2(){//Проверка: уничтожен корабл�
                     y2=y2+1
                     vr_Check_Ship.push([x2,y2])
                 }
-                //console.log(vr_Check_Ship) //Координаты вокруг клетки.
 
                 //Проверка координат, чтобы пометить поле возле корабля.
                 for(chk=0;chk<vr_Check_Ship.length;chk++){
@@ -1164,12 +1141,6 @@ function dead_ship_check2(){//Проверка: уничтожен корабл�
             break
         }
     }
-    
-        
-    
-    //конец мертвека
-    console.log("Конец")
-    console.log("-------------------------------------")
 }
 
 //Удаление кораблей при растановки.

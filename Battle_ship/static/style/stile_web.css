@@ -12,6 +12,30 @@
     font-size: 25px;
 }
 
+#info{
+    width: 300px;
+    height: auto;
+    font-size: 20px;
+    
+    position: absolute;
+    top:  40%;
+    left: 65%;
+    transform: translate(-50%,-50%);
+}
+
+#er{
+    width: auto;
+    height: auto;
+    border: 2px solid red;
+    color: red;
+    font-size: 20px;
+
+    position: absolute;
+    top:  30%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
 #frm2{
     padding-top: 5%;
 }
@@ -167,6 +191,11 @@
     background-repeat: no-repeat;
     background-position: center;
     
+}
+
+#block_info{
+    font-size: 28px;
+    padding-top: 20%;
 }
 
 .crests:hover{

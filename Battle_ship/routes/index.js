@@ -52,18 +52,28 @@ router.post('/Register', (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, 10);
     // Проверяем, что username, password и email не пустые
     if (!nick || !password || !login) {
-        return res.redirect('/Register')
+        return res.render('Register',{ error: "Заполните полностью форму." })
     };
     console.log(login)
-    /*
-    if(password.length < 8){
-        return res.render('layout', { error: 'Хотябы 8 циферок напиши', body: 'register' });
+    
+    if(login.length < 4){
+        return res.render('Register', { error: 'Ваш логин меньше 4-ёх синволов.'});
     };
-    */
+
+    if(password.length < 4){
+        return res.render('Register', { error: 'Ваш пароль меньше 4-ёх синволов.'});
+    };
+    if(login.length >8){
+        return res.render('Register', { error: 'Ваш пароль больше 8-ми синволов.'});
+    };
+    if(nick==login){
+        return res.render('Register', { error: 'Пожалуйста, с цели безопасности аккаунта, Логин и ваш Ник не должен совпадать.'});
+    }
+
     connection_db.findUserByUsername(login, (err, results) => {
         if(Object.keys(results).length > 0){
             console.error(err);
-            return res.redirect('/Register')
+            return res.render('Register', { error: 'Простите, такой логин уже существует.'});
         }
         else{
             connection_db.createUser(nick,login, hashedPassword, (err, results) => {
@@ -85,13 +95,13 @@ router.post('/Login', (req, res) => {
     // Проверяем, что username, password и email не пустые
     if (!password || !login) {
         console.log("Заполните поля")
-        return res.redirect('/Login')
+        return res.render('Login',{ error: "Заполните полностью форму." })
     };
     connection_db.findUserByUsername(login, (err, results) => {
         if (err) {
             console.log("Пользователь не найден.")
             console.log(err);
-            return res.redirect('/Login')
+            return res.render('Login',{ error: "Неправильно набран логин." })
         }
 
         // Проверяем наличие пользователя с таким именем
@@ -111,12 +121,12 @@ router.post('/Login', (req, res) => {
             } else {//Неудача
                 console.log("Всё не окей")
                 console.log(err)
-                return res.redirect('/Login')
+                return res.render('Login',{ error: "Неправильно набран пароль." })
             }
         } else {
             console.log("Не знаем таких")
             console.log(err)
-            return res.redirect('/Login')
+            return res.render('Login',{ error: "Неправильно набран логин." })
             
         }
     });

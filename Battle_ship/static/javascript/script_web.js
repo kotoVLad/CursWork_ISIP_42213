@@ -4,9 +4,10 @@ let game_bt = document.getElementById("Game");
 game_bt.addEventListener('click', Game_button);
 
     //Настройки
+/*
 let settings_bt = document.getElementById("Settings");
 settings_bt.addEventListener('click', Settings_button);
-
+*/
     //О игре
 let description_bt = document.getElementById("Description");
 description_bt.addEventListener('click', Description_button);

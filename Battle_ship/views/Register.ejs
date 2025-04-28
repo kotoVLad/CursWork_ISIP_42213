@@ -17,17 +17,21 @@
             
             <div id="frm2">
                 <div class="lb">Логин</div>
-                <input type="text" name="login" class="frm">
+                <input type="text" name="login" class="frm" placeholder="От 4 синволов">
             </div>
             
             <div id="frm2">
                 <div class="lb">Пароль</div>
-                <input type="text" name="password" class="frm">
+                <input type="text" name="password" class="frm"
+                placeholder="От 4 до 8 синволов">
             </div>
             
             <button type="submit" class="But_log">Войти</button>
         </form>
+        <div id="info">Когда регистрация произошла верно, вы автоматически вернётесь на главную страницу.</div>
+        <% if(typeof error !== 'undefined') {%>
+            <div id="er"><%= error %></div>
+        <% } %>
     </div>
-
 </body>
 </html>

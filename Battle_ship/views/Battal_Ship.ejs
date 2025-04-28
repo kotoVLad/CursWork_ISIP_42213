@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="/style/style.css">
 </head>
 <body>
+    <% if(typeof error !== 'undefined') {%>
+        <div id="er"><%= error %></div>
+    <% } %>
     <div class="block_profil">
         <% if(session.USER) {%>
             <div id="profil" class="block_log_reg">
@@ -36,7 +39,7 @@
         <div class="block">
             <center>
                 <div class="button" id="Game"><p>Начать игру</p></div>
-                <div class="button" id="Settings"><p>Настройки</p></div>
+                <!--<div class="button" id="Settings"><p>Настройки</p></div>-->
                 <div class="button" id="Description"><p>О игре</p></div>
             </center>
         </div>
@@ -61,7 +64,14 @@
         </div>
         <div class="block_wind" id="block_description"><!--Блок "О игре"-->
             <div class="crests" id="crest3"></div>
-            <div></div>
+            <center>
+                <div id="block_info">
+                    <div>Автор: Каталеев Влад</div>
+                    <div>Студент: АТСТ</div>
+                    <div>Игра: Морской бой</div>
+                    <div>Описание: всеми известная игра, где происходит сражение кораблей.</div>
+                </div>
+            </center>
         </div>
     </div>
 
